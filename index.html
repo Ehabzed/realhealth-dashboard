@@ -1077,7 +1077,7 @@ const CONFIG = {
    Published artifacts run in a sandbox that blocks fetch(). When a fetch fails,
    the dashboard falls back to this snapshot so it still shows real numbers.
    Hosted outside Claude, the live fetch works and this is ignored.
-   Snapshot taken 20 Aug 2026. Refresh via Cowork weekly until hosted. */
+   Snapshot taken 19 Aug 2026. Refresh via Cowork weekly until hosted. */
 const SNAPSHOT = {
 recovery: `Date,Recovery %,HRV (ms),RHR (bpm),SpO2,Skin Temp C
 2026-08-19,86,86.069016,50,97.25,33.97867
@@ -1110,7 +1110,6 @@ sleep: `Date,Performance %,Duration (min),Efficiency %,Respiratory Rate,Consiste
 2026-08-06,87,502.8123333,94.92853,15.234375,83,79.76601667
 2026-08-05,83,429.7753333,94.87713,14.255859,81,73.41025`,
 workouts: `Key,Date,Time,Activity,Strain,Avg HR,Max HR,Kcal,Duration (min)
-6f940560,2026-08-19,8:18,walking,4.3841186,102,117,36,13
 6f08485b,2026-08-18,10:55,walking,5.485309,105,126,132,40
 d0106022,2026-08-18,9:16,boxing,5.279469,111,167,87,20
 2420f669,2026-08-18,8:02,boxing,15.383288,149,199,726,62
@@ -1118,8 +1117,6 @@ d0106022,2026-08-18,9:16,boxing,5.279469,111,167,87,20
 f04ad3a1,2026-08-17,9:06,walking,4.7584076,107,125,71,19
 438db4b8,2026-08-17,8:02,weightlifting,11.4985075,112,151,227,49
 8c0fd6ad,2026-08-16,10:37,walking,5.6578937,102,115,137,51
-688653a0,2026-08-16,2:06,walking,4.0518026,91,106,37,31
-89ed35d6,2026-08-15,10:49,walking,4.5122857,98,109,47,22
 55238520,2026-08-15,7:01,weightlifting,10.327295,101,140,118,45`,
 cycles: `Date,Day Strain,Avg HR,Max HR,Kcal
 2026-08-18,3.122178,56,110,809
@@ -1136,10 +1133,12 @@ cycles: `Date,Day Strain,Avg HR,Max HR,Kcal
 2026-08-07,8.257211,68,130,1858
 2026-08-06,15.347271,72,198,2673
 2026-08-05,12.425667,66,150,1906`,
-food: `Date,Time,Meal,Kcal,Protein,Carbs,Fat,Water_ml,VitC,VitA,VitD,B12,Folate,Iron,Calcium,Magnesium,Potassium,Zinc,Omega3`,
-checkin: `Date,Time,Weight_kg,Regulation_1to5,Notes`,
+food: `Date,Time,Meal,Kcal,Protein,Carbs,Fat,Water_ml,VitC,VitA,VitD,B12,Folate,Iron,Calcium,Magnesium,Potassium,Zinc,Omega3
+2026-08-19,13:59,Test,100,,,,,,,,,,,,,,,`,
+checkin: `Date,Time,Weight_kg,Regulation_1to5,Notes
+2026-08-19,13:50,65,4,test`,
 steps: `Date,Time,Steps
-2026-08-19,20:02,4353`
+2026-08-19,17:42,4194`
 };
 
 let lastValues = {};
@@ -1203,6 +1202,21 @@ function daysAgo(dateStr) {
   return Math.floor((now - d) / 86400000);
 }
 function avg(arr) { return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0; }
+/* Sheets get rows appended in whatever order they arrive — a bulk historical
+   import in one order, then each new day tacked onto the end going forward.
+   Row position is NOT reliable as a recency signal. Every render function in
+   this file assumes array[0] is "most recent" (today's vitals, 7-day/3-day
+   windows, sparklines, weight trend, the sync-stamp date) — so instead of
+   patching each of those call sites, every cached array is sorted newest-first
+   by its actual Date field once here, right after it arrives. That keeps the
+   rest of the file's [0]/.slice(0,N) assumptions correct without touching them. */
+function sortByDateDesc(rows, dateField) {
+  dateField = dateField || 'Date';
+  return rows.slice().sort((a, b) => {
+    const da = a[dateField] || '', db = b[dateField] || '';
+    return da < db ? 1 : da > db ? -1 : 0;
+  });
+}
 function sparklinePath(values, w, h) {
   if (!values.length) return '';
   const min = Math.min(...values), max = Math.max(...values);
@@ -1232,13 +1246,13 @@ async function refreshAll() {
     fetchCSV(CONFIG.urls.food), fetchCSV(CONFIG.urls.checkin),
     fetchCSV(CONFIG.urls.steps)
   ]);
-  cache.recovery = rec || (cache.recovery.length ? cache.recovery : parseCSV(SNAPSHOT.recovery));
-  cache.sleep    = sleep || (cache.sleep.length ? cache.sleep : parseCSV(SNAPSHOT.sleep));
-  cache.workouts = work || (cache.workouts.length ? cache.workouts : parseCSV(SNAPSHOT.workouts));
-  cache.cycles   = cyc || (cache.cycles.length ? cache.cycles : parseCSV(SNAPSHOT.cycles));
-  cache.food     = food || (cache.food.length ? cache.food : parseCSV(SNAPSHOT.food));
-  cache.checkin  = checkin || (cache.checkin.length ? cache.checkin : parseCSV(SNAPSHOT.checkin));
-  cache.steps    = steps || (cache.steps.length ? cache.steps : parseCSV(SNAPSHOT.steps));
+  cache.recovery = sortByDateDesc(rec || (cache.recovery.length ? cache.recovery : parseCSV(SNAPSHOT.recovery)));
+  cache.sleep    = sortByDateDesc(sleep || (cache.sleep.length ? cache.sleep : parseCSV(SNAPSHOT.sleep)));
+  cache.workouts = sortByDateDesc(work || (cache.workouts.length ? cache.workouts : parseCSV(SNAPSHOT.workouts)));
+  cache.cycles   = sortByDateDesc(cyc || (cache.cycles.length ? cache.cycles : parseCSV(SNAPSHOT.cycles)));
+  cache.food     = food || (cache.food.length ? cache.food : parseCSV(SNAPSHOT.food)); // filter()-based, not [0]-based — order doesn't matter here
+  cache.checkin  = sortByDateDesc(checkin || (cache.checkin.length ? cache.checkin : parseCSV(SNAPSHOT.checkin)));
+  cache.steps    = sortByDateDesc(steps || (cache.steps.length ? cache.steps : parseCSV(SNAPSHOT.steps)));
   usingSnapshot = !rec; // any live fetch succeeding means we're live
 
   renderVitals();
@@ -1264,7 +1278,7 @@ function renderSteps() {
   if (!steps.length) return;
   const today = new Date().toISOString().split('T')[0];
   const todayRow = steps.find(s => s['Date'] === today);
-  const latest = todayRow || steps[steps.length - 1];
+  const latest = todayRow || steps[0]; // cache.steps is sorted newest-first, so [0] is the most recent day on file
   const count = latest ? parseInt(latest['Steps']) : null;
   if (count === null || isNaN(count)) return;
   setText('val-steps', count.toLocaleString());
@@ -1274,8 +1288,8 @@ function renderSteps() {
   if (tile) tile.className = 'vital-tile ' + (pct >= 1 ? 'tile-green' : pct >= 0.6 ? 'tile-amber' : 'tile-red');
   const whenLabel = todayRow ? 'today' : ('last: ' + (latest['Date'] || ''));
   setText('sub-steps', Math.round(pct * 100) + '% of ' + (goal/1000) + 'k \u00b7 ' + whenLabel);
-  // sparkline: last 14 days, newest first -> renderSpark reverses internally
-  const recent = steps.slice(-14).reverse().map(s => parseInt(s['Steps'])).filter(v => !isNaN(v));
+  // sparkline wants newest-first, same convention as every other spark call — renderSpark reverses internally for left-to-right chronological drawing
+  const recent = steps.slice(0,14).map(s => parseInt(s['Steps'])).filter(v => !isNaN(v));
   renderSpark('spark-steps', recent, '#7EC5E8');
 }
 
