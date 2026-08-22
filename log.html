@@ -61,7 +61,12 @@
      meal, this page only retries when the request never reached Google at
      all (a true network failure) — never after a response of any kind (even
      an error response) was received, since we can't safely tell whether the
-     write happened before that error was returned. */
+     write happened before that error was returned.
+
+     Sent as POST (not GET) so all fields go in the request body instead of
+     the URL — long meals with many micronutrient fields were hitting a
+     length limit on Google's front-end when everything was crammed into
+     the query string, causing a 400 before the script code ever ran. */
 
   const ENDPOINT = 'https://script.google.com/macros/s/AKfycbx1DnPyoKzyc-n9WS_j0YtsCq75HbjQTzlFMG9WUKTP8870v8TKDItCuTZaiy1aq2APtw/exec';
   const params = new URLSearchParams(window.location.search);
@@ -81,7 +86,12 @@
     // we only need the request to actually reach the server and fire the
     // write. A resolved promise (even opaque) means it was sent successfully;
     // only a rejected promise means it never left the browser.
-    await fetch(ENDPOINT + window.location.search, { mode: 'no-cors' });
+    await fetch(ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    });
   }
 
   async function run() {
