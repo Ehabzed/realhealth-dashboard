@@ -50,24 +50,6 @@
   </div>
 
 <script>
-  /* This page exists because Google's script.google.com endpoint occasionally
-     returns a broken/ugly error page even when the underlying write succeeds
-     (or on a genuine transient failure). Rather than the person tapping a
-     sync-link ever seeing that, this page relays the request quietly and
-     always shows a clean, branded confirmation.
-
-     IMPORTANT — food/checkin entries APPEND a new row on every hit. Steps
-     UPSERT by date, so re-sending is harmless. To avoid ever double-logging a
-     meal, this page only retries when the request never reached Google at
-     all (a true network failure) — never after a response of any kind (even
-     an error response) was received, since we can't safely tell whether the
-     write happened before that error was returned.
-
-     Sent as POST (not GET) so all fields go in the request body instead of
-     the URL — long meals with many micronutrient fields were hitting a
-     length limit on Google's front-end when everything was crammed into
-     the query string, causing a 400 before the script code ever ran. */
-
   const ENDPOINT = 'https://script.google.com/macros/s/AKfycbx1DnPyoKzyc-n9WS_j0YtsCq75HbjQTzlFMG9WUKTP8870v8TKDItCuTZaiy1aq2APtw/exec';
   const params = new URLSearchParams(window.location.search);
   const type = params.get('type') || '';
@@ -82,10 +64,6 @@
   }
 
   async function sendOnce() {
-    // mode:'no-cors' means we can't read Google's response, but that's fine —
-    // we only need the request to actually reach the server and fire the
-    // write. A resolved promise (even opaque) means it was sent successfully;
-    // only a rejected promise means it never left the browser.
     await fetch(ENDPOINT, {
       method: 'POST',
       mode: 'no-cors',
@@ -99,9 +77,8 @@
     for (let attempt = 0; attempt < 3 && !sent; attempt++) {
       try {
         await sendOnce();
-        sent = true; // reached Google — stop here, never retry past this point
+        sent = true;
       } catch (err) {
-        // true network failure — request never sent, safe to retry
         if (attempt < 2) await new Promise(r => setTimeout(r, 700));
       }
     }
