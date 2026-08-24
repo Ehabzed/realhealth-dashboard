@@ -116,8 +116,13 @@
   .focus-card { background: linear-gradient(135deg, var(--gold) 0%, var(--gold-soft) 100%); color: #1a1a1a; padding: 24px 24px 22px; border-radius: 16px; position: relative; overflow: hidden; }
   .focus-card::before { content: ''; position: absolute; top: -20px; right: -20px; width: 140px; height: 140px; border-radius: 50%; background: rgba(255,255,255,0.15); }
   .focus-card h3 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; opacity: 0.7; }
-  .focus-card .focus-headline { font-size: 20px; font-weight: 700; margin-top: 8px; letter-spacing: -0.02em; line-height: 1.25; position: relative; z-index: 1; }
+  .focus-card .focus-headline { font-size: 26px; font-weight: 800; margin-top: 6px; letter-spacing: -0.02em; line-height: 1.15; position: relative; z-index: 1; }
   .focus-card .focus-why { font-size: 13px; margin-top: 12px; opacity: 0.8; line-height: 1.5; position: relative; z-index: 1; }
+  .directive-row { display: flex; align-items: center; gap: 14px; margin: 10px 0 4px; position: relative; z-index: 1; }
+  .directive-icon { width: 46px; height: 46px; flex: 0 0 46px; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: rgba(0,0,0,0.12); }
+  .directive-icon svg { width: 26px; height: 26px; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; position: relative; z-index: 1; }
+  .chip { padding: 6px 12px; border-radius: 999px; background: rgba(0,0,0,0.14); font-size: 12px; font-weight: 600; letter-spacing: 0.01em; }
 
   .readiness-wrap { display: flex; align-items: center; gap: 20px; padding: 8px 0; }
   .readiness-ring { width: 96px; height: 96px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -203,6 +208,11 @@
   .ex-sets-block { text-align: right; flex-shrink: 0; }
   .ex-sets-block .ex-sets { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--gold); white-space: nowrap; }
   .ex-sets-block .ex-rpe { font-family: var(--mono); font-size: 10px; color: var(--ink-3); margin-top: 3px; white-space: nowrap; }
+  .ex-log { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .lift-input { flex: 1; min-width: 130px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line); background: rgba(255,255,255,0.04); color: var(--ink); font-size: 12px; font-family: var(--sans); }
+  .lift-input::placeholder { color: var(--ink-3); }
+  .lift-save { padding: 6px 12px; border-radius: 8px; border: none; background: var(--gold); color: #1a1a1a; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .lift-last { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); }
   .day-section-label { font-family: var(--mono); font-size: 11px; color: var(--blue-light); text-transform: uppercase; letter-spacing: 0.14em; font-weight: 700; margin-bottom: 8px; margin-top: 4px; }
   .day-summary { font-size: 12px; color: var(--ink-2); margin-bottom: 16px; } .day-summary b { color: var(--ink); font-weight: 500; }
 
@@ -266,7 +276,7 @@
 </div>
 
 <div class="tabbar" role="tablist">
-  <button class="tab active" data-tab="week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>This Week</button>
+  <button class="tab active" data-tab="week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Today</button>
   <button class="tab" data-tab="perf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Performance</button>
   <button class="tab" data-tab="nutrition"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C7 2 3 6 3 11c0 4 3 8 9 11 6-3 9-7 9-11 0-5-4-9-9-9z"/></svg>Nutrition</button>
   <button class="tab" data-tab="training"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5h11v11h-11z"/><path d="M6.5 6.5L2 2M22 22l-4.5-4.5M17.5 6.5L22 2M2 22l4.5-4.5"/></svg>Training</button>
@@ -288,10 +298,14 @@
 
   <div class="grid">
     <div class="col-6">
-      <div class="focus-card">
+      <div class="focus-card" id="directiveCard">
         <h3>Auto Readiness · Today</h3>
-        <div class="focus-headline" id="readinessHeadline">Loading today’s readiness…</div>
+        <div class="directive-row">
+          <div class="directive-icon" id="directiveIcon"></div>
+          <div class="focus-headline" id="readinessHeadline">Loading today's readiness…</div>
+        </div>
         <div class="focus-why" id="readinessWhy">Computed live from your recovery, HRV, and recent trend against your baseline.</div>
+        <div class="chip-row" id="directiveChips"></div>
       </div>
     </div>
     <div class="col-6">
@@ -311,23 +325,25 @@
 
     <div class="col-6">
       <div class="card">
-        <h2>Weekly Changes <span class="reviewed-tag">Reviewed 18 Aug</span></h2>
+        <h2>Weekly Changes <span class="reviewed-tag">Reviewed 24 Aug</span></h2>
         <div class="delta-list">
-          <div class="delta-item"><span class="arrow flat">•</span><span class="k">Gut protocol phase</span><span class="v">2 / 3 · active kill</span></div>
-          <div class="delta-item"><span class="arrow up">▲</span><span class="k">Multi-strain probiotic started</span><span class="v">this week</span></div>
-          <div class="delta-item"><span class="arrow up">▲</span><span class="k">Live WHOOP + food pipeline built</span><span class="v">today</span></div>
-          <div class="delta-item"><span class="arrow up">▲</span><span class="k">Sleep consistency trend</span><span class="v">improving</span></div>
-          <div class="delta-item"><span class="arrow up">▲</span><span class="k">Cystatin C + Lp(a) results</span><span class="v">both clean</span></div>
+          <div class="delta-item"><span class="arrow flat">•</span><span class="k">Gut kill-off phase</span><span class="v">22 days left</span></div>
+          <div class="delta-item"><span class="arrow up">▲</span><span class="k">Die-off symptoms easing</span><span class="v">tracking with best recovery stretch</span></div>
+          <div class="delta-item"><span class="arrow flat">•</span><span class="k">Berberine</span><span class="v">holding 2/day, occasional 1</span></div>
+          <div class="delta-item"><span class="arrow down">▼</span><span class="k">BPC-157 finished, KLOW ordered</span><span class="v">arriving ~2wk</span></div>
+          <div class="delta-item"><span class="arrow down">▼</span><span class="k">Recovery dropped hard</span><span class="v">30% then 32%, post 4-session Friday</span></div>
         </div>
       </div>
     </div>
 
     <div class="col-6">
       <div class="card">
-        <h2>Top Priorities <span class="reviewed-tag">Reviewed 18 Aug</span></h2>
-        <div class="todo-item"><div class="todo-priority p-high">1</div><div class="todo-body"><div class="t-main">Book TSH retest in calm/rested state</div><div class="t-sub">6.38 → confirm before treatment · pause iodine</div></div></div>
-        <div class="todo-item"><div class="todo-priority p-med">2</div><div class="todo-body"><div class="t-main">Schedule next full bloodwork panel</div><div class="t-sub">TSH retest + full panel · target Oct–Nov 2026</div></div></div>
-        <div class="todo-item"><div class="todo-priority p-med">3</div><div class="todo-body"><div class="t-main">Reorder magnesium glycinate</div><div class="t-sub">out of stock · pair with threonate for full pre-bed support</div></div></div>
+        <h2>Top Priorities <span class="reviewed-tag">Reviewed 24 Aug</span></h2>
+        <div class="todo-item"><div class="todo-priority p-high">1</div><div class="todo-body"><div class="t-main">Back off training intensity 1-2 days</div><div class="t-sub">recovery/HRV moved before you felt it, don't wait for the crash</div></div></div>
+        <div class="todo-item"><div class="todo-priority p-high">2</div><div class="todo-body"><div class="t-main">Confirm KLOW shipment</div><div class="t-sub">you'll run dry on CJC/Ipamorelin before it lands if it slips</div></div></div>
+        <div class="todo-item"><div class="todo-priority p-med">3</div><div class="todo-body"><div class="t-main">Book TSH retest</div><div class="t-sub">target early Sept · 6.38 → confirm before treatment · pause iodine · calm/rested state</div></div></div>
+        <div class="todo-item"><div class="todo-priority p-med">4</div><div class="todo-body"><div class="t-main">Kill-off phase transition plan</div><div class="t-sub">ends Sept 15, 22 days out, start thinking through next phase</div></div></div>
+        <div class="todo-item"><div class="todo-priority p-med">5</div><div class="todo-body"><div class="t-main">Reorder magnesium glycinate</div><div class="t-sub">out of stock · pair with threonate for full pre-bed support</div></div></div>
       </div>
     </div>
 
@@ -427,7 +443,7 @@
         <div class="row"><span class="k">Latest logged</span><span class="v" id="wt-latest">—</span></div>
         <div class="row"><span class="k">7-day rolling average</span><span class="v" id="wt-avg">—</span></div>
         <div class="row"><span class="k">Trend</span><span class="v" id="wt-trend">—</span></div>
-        <div class="note">Daily weight swings 0.5–1kg on water alone — the rolling average is the number that actually matters for maingain tracking.</div>
+        <div class="note">Daily weight swings 0.5–1kg on water alone. The rolling average is the number that actually matters for maingain tracking.</div>
       </div>
     </div>
 
@@ -465,12 +481,25 @@
 
     <div class="col-12">
       <div class="card">
-        <h2>Typical Day <span class="reviewed-tag">Example, not prescription</span></h2>
-        <div class="stack-block"><div class="stack-time">8:00 AM · Breakfast</div><div class="stack-item"><div class="si-name">Fruit + honey + raw milk + collagen</div><div class="si-desc">~370 kcal · 19g P</div></div></div>
-        <div class="stack-block"><div class="stack-time">12:00 PM · Lunch</div><div class="stack-item"><div class="si-name">Beef rice bowl + broccoli/carrot + extra chicken + boiled eggs</div><div class="si-desc">~820 kcal · 70g P</div></div></div>
-        <div class="stack-block"><div class="stack-time">2:00 PM · Pre-Training Snack</div><div class="stack-item"><div class="si-name">Banana</div><div class="si-desc">~105 kcal</div></div></div>
-        <div class="stack-block"><div class="stack-time">5:00 PM · Post-Training Meal</div><div class="stack-item"><div class="si-name">Protein smoothie (whey + oats + almonds + cocoa)</div><div class="si-desc">~360 kcal · 34g P</div></div></div>
-        <div class="stack-block"><div class="stack-time">8:00 PM · Dinner</div><div class="stack-item"><div class="si-name">Beef pho or steak + mash + veg</div><div class="si-desc">~500–650 kcal · 30–40g P</div></div></div>
+        <h2>Meal Rotation <span class="reviewed-tag">Diversity plan, updated 24 Aug</span></h2>
+        <div class="stack-block"><div class="stack-time">8:00 AM · Breakfast, rotate</div>
+          <div class="stack-item"><div class="si-name">A · Greek yoghurt bowl</div><div class="si-desc">Greek yoghurt 200g + mixed fruit 250g + collagen + 2 Brazil nuts (3-4x/wk) · ~470 kcal · 20g P · calcium, folate, vit C, selenium</div></div>
+          <div class="stack-item"><div class="si-name">B · Fruit + raw milk</div><div class="si-desc">Mixed fruit 250g + raw milk + collagen, pinch of salt on training mornings · ~420 kcal · 15g P · lighter pre-training option</div></div>
+        </div>
+        <div class="stack-block"><div class="stack-time">12:00 PM · Lunch, rotate</div>
+          <div class="stack-item"><div class="si-name">A · Salmon rice bowl</div><div class="si-desc">Search: cơm cá hồi áp chảo · salmon + rice + broccoli + carrot · ~550 kcal · 40g P · vit D, omega-3, calcium, biggest single upgrade</div></div>
+          <div class="stack-item"><div class="si-name">B · Beef rice bowl</div><div class="si-desc">Beef + rice + broccoli/carrot + extra chicken + boiled eggs, extra greens on the side · ~820 kcal · 70g P</div></div>
+          <div class="stack-item"><div class="si-name">C · Chicken + sweet potato</div><div class="si-desc">Search: cơm gà khoai lang · grilled chicken + sweet potato + sautéed greens · ~550 kcal · 45g P · vit A, folate, magnesium</div></div>
+        </div>
+        <div class="stack-block"><div class="stack-time">5:00 PM · Post-Training Meal</div>
+          <div class="stack-item"><div class="si-name">Protein smoothie, low-sugar</div><div class="si-desc">Whey + 1 banana + milk + chia seeds, no added honey or mango · ~360 kcal · 34g P</div></div>
+        </div>
+        <div class="stack-block"><div class="stack-time">8:00 PM · Dinner, rotate</div>
+          <div class="stack-item"><div class="si-name">A · Beef pho + extra greens</div><div class="si-desc">Extra beef, ask for extra rau muống or spinach · ~645 kcal · 53g P · iron, folate</div></div>
+          <div class="stack-item"><div class="si-name">B · Salmon + mash</div><div class="si-desc">Search: cá hồi khoai tây nghiền · salmon + mashed potato + broccoli · ~600 kcal · 40g P · vit D, omega-3, calcium</div></div>
+          <div class="stack-item"><div class="si-name">C · Grilled chicken + greens</div><div class="si-desc">Search: gà nướng rau xào · chicken + rice + sautéed dark greens · ~550 kcal · 50g P · folate, magnesium, vit A</div></div>
+        </div>
+        <div class="note note-gold">Salmon minimum 3x per week is the single biggest lever here. Everything else is secondary to that one rule.</div>
       </div>
     </div>
   </div>
@@ -775,16 +804,17 @@
 
         <div class="stack-block">
           <div class="stack-time">On Waking · Fasted</div>
-          <div class="stack-item"><div class="si-name peptide">BPC-157<span class="subq-tag">SUBQ</span></div><div class="si-desc">9u (~257mcg) · gut lining + tendon/joint repair signalling</div></div>
+          <div class="stack-item"><div class="si-name peptide">KLOW, on arrival<span class="subq-tag">SUBQ</span></div><div class="si-desc">BPC-157 + TB-500 + KPV + GHK-Cu · current BPC vial finished, KLOW ordered and arriving ~2wk · gut lining + systemic tissue repair, KPV lands as kill-phase ends</div></div>
           <div class="stack-item"><div class="si-name">NAC</div><div class="si-desc">600mg fasted · biofilm disruption + glutathione</div></div>
         </div>
 
         <div class="stack-block">
           <div class="stack-time">Breakfast</div>
           <div class="stack-item"><div class="si-name">Vitamin C</div><div class="si-desc">1000mg · collagen cofactor + immune/adrenal support</div></div>
+          <div class="stack-item"><div class="si-name">Tadalafil (Cialis)</div><div class="si-desc">2.5mg · every other day · low-dose regimen, consistent morning slot</div></div>
           <div class="stack-item"><div class="si-name">B-Complex OR TMG</div><div class="si-desc">alternate daily · activated B-complex ×2 caps one day, TMG 1g the next · methylation support for homocysteine</div></div>
           <div class="stack-item"><div class="si-name">Myo-inositol</div><div class="si-desc">standard dose · thyroid/insulin signalling</div></div>
-          <div class="stack-item"><div class="si-name">S. boulardii + Multi-strain probiotic</div><div class="si-desc">both together · S. boulardii competes with Candida, multi-strain rebuilds Lacto/Bifido gaps</div></div>
+          <div class="stack-item"><div class="si-name">Bioflora S. boulardii + Multi-strain probiotic</div><div class="si-desc">Bioflora 200mg, CNCM I-745 strain, together with multi-strain · I-745 competes with Candida, multi-strain rebuilds Lacto/Bifido gaps</div></div>
           <div class="stack-item"><div class="si-name">Fish Oil</div><div class="si-desc">1 tab · EPA/DHA · anti-inflammatory + cognition</div></div>
         </div>
 
@@ -822,7 +852,6 @@
     <div class="col-4">
       <div class="card">
         <h2>Standing Rules</h2>
-        <div class="row"><span class="k">Reta</span><span class="v good">Stopped</span></div>
         <div class="row"><span class="k">Creatine</span><span class="v bad">Excluded</span></div>
         <div class="row"><span class="k">Zinc</span><span class="v warn">Alt days only</span></div>
         <div class="row"><span class="k">Berberine</span><span class="v warn">Always w/ food</span></div>
@@ -832,12 +861,12 @@
 
       <div class="card" style="margin-top:16px">
         <h2>Restock Tracker</h2>
-        <div class="row"><span class="k">Berberine</span><span class="v">~3wk left</span></div>
+        <div class="row"><span class="k">Berberine</span><span class="v warn">~2wk left</span></div>
         <div class="row"><span class="k">NAC</span><span class="v good">~6wk left</span></div>
-        <div class="row"><span class="k">S. boulardii</span><span class="v warn">~2wk left</span></div>
-        <div class="row"><span class="k">L-Glutamine</span><span class="v good">just restocked</span></div>
-        <div class="row"><span class="k">Coconut Oil</span><span class="v good">just restocked</span></div>
-        <div class="row"><span class="k">Probiotic (multi-strain)</span><span class="v good">started today</span></div>
+        <div class="row"><span class="k">Bioflora S. boulardii</span><span class="v good">~30 days</span></div>
+        <div class="row"><span class="k">BPC-157</span><span class="v bad">out, KLOW in transit</span></div>
+        <div class="row"><span class="k">CJC-1295/Ipamorelin</span><span class="v bad">days left, reorder placed</span></div>
+        <div class="row"><span class="k">Raw milk + raw honey</span><span class="v good">arriving this week</span></div>
         <div class="row"><span class="k">Mag glycinate</span><span class="v bad">OUT, reorder</span></div>
       </div>
 
@@ -1340,24 +1369,41 @@ function renderReadiness() {
   setText('readiness7d', Math.round(avg7) + '% · ' + (avg7 >= CONFIG.baseline.recovery - 5 ? 'holding' : 'below baseline'));
   setText('readinessTrend', (avg7 >= CONFIG.baseline.recovery ? 'At/above baseline' : 'Below baseline (was ~' + CONFIG.baseline.recovery + '%)'));
 
-  let headline, why;
+  let headline, why, chips, dstate;
   const last3 = rec.slice(0,3).map(r=>parseFloat(r['Recovery %']));
   const threeLowDays = last3.length===3 && last3.every(v => v < 50);
   if (threeLowDays) {
-    headline = 'Crash risk — 3 straight low-recovery days.';
-    why = 'Cap strain hard today. This is your documented crash threshold — protect sleep and skip anything optional.';
+    dstate = 'red';
+    headline = 'Crash risk. Pull back now.';
+    why = 'Three straight low-recovery days. This is your documented crash threshold, protect sleep and skip anything optional.';
+    chips = ['Rest or walk only', 'Sleep by 10:30', 'Skip everything optional'];
   } else if (todayScore >= 67) {
-    headline = 'Green light — recovery is strong today.';
+    dstate = 'green';
+    headline = 'Green light. Push today.';
     why = 'Recovery ' + Math.round(todayScore) + '% is at or above baseline. Good day for a harder session if the schedule calls for it.';
+    chips = ['Hard session approved', 'Carbs around training', 'Log your lifts'];
   } else if (todayScore >= 34) {
-    headline = 'Moderate — train, don’t push limits.';
-    why = 'Recovery ' + Math.round(todayScore) + '%. Cap strain ≤12 and prioritise technique over intensity today.';
+    dstate = 'amber';
+    headline = 'Moderate. Train smart.';
+    why = 'Recovery ' + Math.round(todayScore) + '%. Cap strain at 12 and prioritise technique over intensity today.';
+    chips = ['Cap strain at 12', 'Technique over intensity', 'No doubles'];
   } else {
-    headline = 'Low recovery — protect today.';
+    dstate = 'red';
+    headline = 'Low recovery. Protect today.';
     why = 'Recovery ' + Math.round(todayScore) + '% is well below baseline. Consider a lighter session or active recovery.';
+    chips = ['Active recovery only', 'Sleep is the workout', 'No doubles'];
   }
   setText('readinessHeadline', headline);
   document.getElementById('readinessWhy').textContent = why;
+  const dicons = {
+    red: '<svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L14.7 3.86a2 2 0 0 0-3.4 0z"/></svg>',
+    amber: '<svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
+    green: '<svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>'
+  };
+  const iconEl = document.getElementById('directiveIcon');
+  if (iconEl) iconEl.innerHTML = dicons[dstate];
+  const chipsEl = document.getElementById('directiveChips');
+  if (chipsEl) chipsEl.innerHTML = chips.map(c => '<span class="chip">' + c + '</span>').join('');
 }
 
 function renderPerformance() {
@@ -1519,9 +1565,9 @@ function renderNervousSystem() {
   const stateEl = document.getElementById('nsState');
   if (lowStreak >= 3) {
     stateEl.textContent = 'Crash risk'; stateEl.className = 'ns-state crash';
-    document.getElementById('nsWhy').textContent = '3+ consecutive low-recovery days — your documented crash threshold. Protect sleep tonight, skip anything optional.';
+    document.getElementById('nsWhy').textContent = '3+ consecutive low-recovery days. This is your documented crash threshold, protect sleep tonight and skip anything optional.';
   } else if (hrvDelta < -8 || lowStreak === 2) {
-    stateEl.textContent = 'Loading — protect tonight'; stateEl.className = 'ns-state loading';
+    stateEl.textContent = 'Loading, protect tonight'; stateEl.className = 'ns-state loading';
     document.getElementById('nsWhy').textContent = 'HRV running below baseline. Not yet a crash pattern, but worth protecting the evening routine.';
   } else {
     stateEl.textContent = 'Regulated'; stateEl.className = 'ns-state regulated';
@@ -1591,7 +1637,36 @@ document.querySelectorAll('.subtab').forEach(st => {
 });
 
 /* ---- boot ---- */
+const LIFT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbx1DnPyoKzyc-n9WS_j0YtsCq75HbjQTzlFMG9WUKTP8870v8TKDItCuTZaiy1aq2APtw/exec';
+function initLiftLogger() {
+  document.querySelectorAll('.ex-item').forEach(item => {
+    const titleEl = item.querySelector('.ex-title');
+    if (!titleEl) return;
+    const ex = titleEl.textContent.trim();
+    const wrap = document.createElement('div'); wrap.className = 'ex-log';
+    const inp = document.createElement('input'); inp.className = 'lift-input'; inp.placeholder = 'e.g. 32kg x 8 @ RPE 8';
+    const btn = document.createElement('button'); btn.className = 'lift-save'; btn.textContent = 'Log';
+    const last = document.createElement('span'); last.className = 'lift-last';
+    const saved = localStorage.getItem('lift:' + ex);
+    if (saved) { try { const sv = JSON.parse(saved); last.textContent = 'Last: ' + sv.entry + ' · ' + sv.date; } catch(e){} }
+    btn.addEventListener('click', () => {
+      const entry = inp.value.trim();
+      if (!entry) return;
+      const date = new Date().toLocaleDateString('en-GB', {day:'numeric', month:'short'});
+      const payload = encodeURIComponent(JSON.stringify({exercise: ex, entry: entry}));
+      fetch(LIFT_ENDPOINT + '?type=lift&d=' + payload, {mode: 'no-cors'}).catch(()=>{});
+      localStorage.setItem('lift:' + ex, JSON.stringify({entry: entry, date: date}));
+      last.textContent = 'Last: ' + entry + ' · ' + date;
+      btn.textContent = '✓'; setTimeout(() => { btn.textContent = 'Log'; }, 1200);
+      inp.value = '';
+    });
+    wrap.append(inp, btn, last);
+    item.appendChild(wrap);
+  });
+}
+
 renderStaticConfig();
+initLiftLogger();
 refreshAll();
 setInterval(refreshAll, CONFIG.refreshMs);
 </script>
