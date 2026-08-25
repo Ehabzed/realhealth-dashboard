@@ -1707,7 +1707,7 @@ function initLiftLogger() {
       if (!entry) return;
       const date = new Date().toLocaleDateString('en-GB', {day:'numeric', month:'short'});
       const payload = encodeURIComponent(JSON.stringify({exercise: ex, entry: entry}));
-      fetch(LIFT_ENDPOINT + '?type=lift&d=' + payload, {mode: 'no-cors'}).catch(()=>{});
+      fetch(LIFT_ENDPOINT + '?type=lift&d=' + payload + '&token=' + encodeURIComponent(CONFIG.token), {mode: 'no-cors'}).catch(()=>{});
       localStorage.setItem('lift:' + ex, JSON.stringify({entry: entry, date: date}));
       last.textContent = 'Last: ' + entry + ' · ' + date;
       btn.textContent = '✓'; setTimeout(() => { btn.textContent = 'Log'; }, 1200);
