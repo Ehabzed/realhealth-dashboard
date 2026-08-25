@@ -1075,6 +1075,16 @@
    ===================================== */
 const CONFIG = {
   name: 'Ehab',
+  // NEW: reads now go through the token-gated Apps Script endpoint instead of
+  // the public gviz CSV links below. Paste your real token here once you've
+  // set it via setAccessToken() in Code.gs (see handoff notes). Same URL as
+  // LIFT_ENDPOINT further down — one Apps Script deployment does both jobs.
+  dataEndpoint: 'https://script.google.com/macros/s/AKfycbx1DnPyoKzyc-n9WS_j0YtsCq75HbjQTzlFMG9WUKTP8870v8TKDItCuTZaiy1aq2APtw/exec',
+  token: '606d8867-d023-4240-982c-54dc7cc9d9c74e311261-be04-4ea8-8158-2b520f4cb627',
+  // DEPRECATED — kept only as a manual rollback path (see handoff notes).
+  // Do not delete until the token-gated fetch above is confirmed working AND
+  // the Sheet has been made private. Once the Sheet is private these will
+  // 403 anyway, at which point this whole block can be deleted.
   urls: {
     recovery: 'https://docs.google.com/spreadsheets/d/1WKj4hxG9GeLZq0LPn6wIWJFifmNvmwH9n2qpbLoDRqk/gviz/tq?tqx=out:csv&gid=1342778894',
     sleep: 'https://docs.google.com/spreadsheets/d/1WKj4hxG9GeLZq0LPn6wIWJFifmNvmwH9n2qpbLoDRqk/gviz/tq?tqx=out:csv&gid=579100533',
@@ -1210,6 +1220,47 @@ async function fetchCSV(url) {
   }
 }
 
+/* ---- NEW: token-gated data fetch, replaces the 7 direct gviz CSV fetches ----
+   Uses a JSONP-style <script> tag load instead of fetch() on purpose: Apps
+   Script Web App CORS behaviour on cross-origin fetch() is inconsistent (this
+   is exactly why log.html had to fall back to mode:'no-cors' for writes), so
+   a <script src=...> load sidesteps that uncertainty entirely — browsers
+   never apply CORS to script tags. Resolves to null on any failure (bad
+   token, network error, timeout) so refreshAll()'s existing snapshot-fallback
+   logic below is completely unchanged. */
+let _rhDataCounter = 0;
+function fetchAllData() {
+  return new Promise((resolve) => {
+    const cbName = '__rhData' + (_rhDataCounter++);
+    const script = document.createElement('script');
+    let settled = false;
+    const cleanup = () => {
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+    };
+    window[cbName] = (data) => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      resolve(data && !data.error ? data : null);
+    };
+    script.onerror = () => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      resolve(null);
+    };
+    script.src = CONFIG.dataEndpoint + '?type=data&token=' + encodeURIComponent(CONFIG.token) + '&callback=' + cbName;
+    document.body.appendChild(script);
+    setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      resolve(null);
+    }, 10000);
+  });
+}
+
 /* ---- helpers ---- */
 function setText(id, text) {
   const el = document.getElementById(id);
@@ -1269,12 +1320,14 @@ function renderSpark(id, values, color) {
 
 /* ---- main render ---- */
 async function refreshAll() {
-  const [rec, sleep, work, cyc, food, checkin, steps] = await Promise.all([
-    fetchCSV(CONFIG.urls.recovery), fetchCSV(CONFIG.urls.sleep),
-    fetchCSV(CONFIG.urls.workouts), fetchCSV(CONFIG.urls.cycles),
-    fetchCSV(CONFIG.urls.food), fetchCSV(CONFIG.urls.checkin),
-    fetchCSV(CONFIG.urls.steps)
-  ]);
+  const bundle = await fetchAllData();
+  const rec     = bundle ? parseCSV(bundle.recovery)  : null;
+  const sleep   = bundle ? parseCSV(bundle.sleep)     : null;
+  const work    = bundle ? parseCSV(bundle.workouts)  : null;
+  const cyc     = bundle ? parseCSV(bundle.cycles)    : null;
+  const food    = bundle ? parseCSV(bundle.food)      : null;
+  const checkin = bundle ? parseCSV(bundle.checkin)   : null;
+  const steps   = bundle ? parseCSV(bundle.steps)     : null;
   cache.recovery = sortByDateDesc(rec || (cache.recovery.length ? cache.recovery : parseCSV(SNAPSHOT.recovery)));
   cache.sleep    = sortByDateDesc(sleep || (cache.sleep.length ? cache.sleep : parseCSV(SNAPSHOT.sleep)));
   cache.workouts = sortByDateDesc(work || (cache.workouts.length ? cache.workouts : parseCSV(SNAPSHOT.workouts)));
