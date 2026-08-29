@@ -294,7 +294,7 @@
     <div class="vital-tile" id="tile-hrv"><div class="v-label"><span>HRV</span></div><div class="v-val" id="val-hrv">—</div><div class="v-sub" id="sub-hrv">loading</div><svg class="spark" id="spark-hrv"></svg></div>
     <div class="vital-tile" id="tile-rhr"><div class="v-label"><span>RHR</span></div><div class="v-val" id="val-rhr">—</div><div class="v-sub" id="sub-rhr">loading</div><svg class="spark" id="spark-rhr"></svg></div>
     <div class="vital-tile" id="tile-sleep"><div class="v-label"><span>Sleep</span></div><div class="v-val" id="val-sleep">—</div><div class="v-sub" id="sub-sleep">loading</div></div>
-    <div class="vital-tile" id="tile-weight"><div class="v-label"><span>Weight</span></div><div class="v-val" id="val-weight">65<span class="u">kg</span></div><div class="v-sub">stable</div></div>
+    <div class="vital-tile" id="tile-weight"><div class="v-label"><span>Weight</span></div><div class="v-val" id="val-weight">—<span class="u">kg</span></div><div class="v-sub">no data yet</div></div>
     <div class="vital-tile" id="tile-steps"><div class="v-label"><span>Steps</span><span data-src="steps" class="live-tag" style="margin:0;padding:1px 5px;font-size:8px">LIVE</span></div><div class="v-val" id="val-steps">—</div><div class="v-sub" id="sub-steps">loading</div><svg class="spark" id="spark-steps"></svg></div>
   </div>
 
@@ -327,8 +327,8 @@
 
     <div class="col-6">
       <div class="card">
-        <h2>Weekly Changes <span class="reviewed-tag">Reviewed 24 Aug</span></h2>
-        <div class="delta-list">
+        <h2>Weekly Changes <span class="reviewed-tag" id="curReviewed1">edit per client</span></h2>
+        <div class="delta-list" id="curWeeklyChanges">
           <div class="delta-item"><span class="arrow flat">•</span><span class="k">[Change 1 — edit per client]</span><span class="v">[detail]</span></div>
           <div class="delta-item"><span class="arrow up">▲</span><span class="k">[Change 2]</span><span class="v">[detail]</span></div>
           <div class="delta-item"><span class="arrow flat">•</span><span class="k">[Change 3]</span><span class="v">[detail]</span></div>
@@ -340,12 +340,14 @@
 
     <div class="col-6">
       <div class="card">
-        <h2>Top Priorities <span class="reviewed-tag">Reviewed 24 Aug</span></h2>
+        <h2>Top Priorities <span class="reviewed-tag" id="curReviewed2">edit per client</span></h2>
+        <div id="curTopPriorities">
         <div class="todo-item"><div class="todo-priority p-high">1</div><div class="todo-body"><div class="t-main">[Priority 1 — edit per client]</div><div class="t-sub">[why it matters]</div></div></div>
         <div class="todo-item"><div class="todo-priority p-high">2</div><div class="todo-body"><div class="t-main">[Priority 2]</div><div class="t-sub">[why it matters]</div></div></div>
         <div class="todo-item"><div class="todo-priority p-med">3</div><div class="todo-body"><div class="t-main">[Priority 3]</div><div class="t-sub">[why it matters]</div></div></div>
         <div class="todo-item"><div class="todo-priority p-med">4</div><div class="todo-body"><div class="t-main">[Priority 4]</div><div class="t-sub">[why it matters]</div></div></div>
         <div class="todo-item"><div class="todo-priority p-med">5</div><div class="todo-body"><div class="t-main">[Priority 5]</div><div class="t-sub">[why it matters]</div></div></div>
+        </div>
       </div>
     </div>
 
@@ -414,11 +416,11 @@
       <div class="card">
         <h2>Today <span data-src="food" class="live-tag">● LIVE</span></h2>
         <div id="macroBars">
-          <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Calories</span><span class="mv" id="mb-kcal-txt">0 / 2,550</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-kcal" style="width:0%;background:var(--gold)"></div></div></div>
-          <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Protein</span><span class="mv" id="mb-p-txt">0 / 145g</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-p" style="width:0%;background:var(--gold)"></div></div></div>
+          <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Calories</span><span class="mv" id="mb-kcal-txt">— / —</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-kcal" style="width:0%;background:var(--gold)"></div></div></div>
+          <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Protein</span><span class="mv" id="mb-p-txt">— / —</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-p" style="width:0%;background:var(--gold)"></div></div></div>
           <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Carbs</span><span class="mv" id="mb-c-txt">0g</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-c" style="width:0%;background:var(--gold)"></div></div></div>
-          <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Fat</span><span class="mv" id="mb-f-txt">0 / 80g</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-f" style="width:0%;background:var(--gold)"></div></div></div>
-          <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Water</span><span class="mv" id="mb-water-txt">0 / 3,000ml</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-water" style="width:0%;background:var(--gold)"></div></div></div>
+          <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Fat</span><span class="mv" id="mb-f-txt">— / —</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-f" style="width:0%;background:var(--gold)"></div></div></div>
+          <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Water</span><span class="mv" id="mb-water-txt">— / —</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-water" style="width:0%;background:var(--gold)"></div></div></div>
         </div>
         <div class="note" id="mealTimingNote" style="margin-top:16px">
           <b>Meal timing today</b>
@@ -460,12 +462,14 @@
     <div class="col-6">
       <div class="card">
         <h2>Targets</h2>
-        <div class="row"><span class="k">Calories (rest)</span><span class="v">~2,300 kcal</span></div>
-        <div class="row"><span class="k">Calories (training)</span><span class="v">~2,550 kcal</span></div>
-        <div class="row"><span class="k">Calories (hard day)</span><span class="v">~2,700 kcal</span></div>
-        <div class="row"><span class="k">Protein</span><span class="v good">145g / day</span></div>
-        <div class="row"><span class="k">Fat cap</span><span class="v">≤80g</span></div>
-        <div class="row"><span class="k">Water</span><span class="v good">3,000ml (3L)</span></div>
+        <div id="curTargets">
+        <div class="row"><span class="k">Calories (rest)</span><span class="v">[set per client]</span></div>
+        <div class="row"><span class="k">Calories (training)</span><span class="v">[set per client]</span></div>
+        <div class="row"><span class="k">Calories (hard day)</span><span class="v">[set per client]</span></div>
+        <div class="row"><span class="k">Protein</span><span class="v">[set per client]</span></div>
+        <div class="row"><span class="k">Fat cap</span><span class="v">[set per client]</span></div>
+        <div class="row"><span class="k">Water</span><span class="v">[set per client]</span></div>
+        </div>
       </div>
     </div>
 
@@ -483,25 +487,25 @@
 
     <div class="col-12">
       <div class="card">
-        <h2>Meal Rotation <span class="reviewed-tag">Diversity plan, updated 24 Aug</span></h2>
-        <div class="stack-block"><div class="stack-time">8:00 AM · Breakfast, rotate</div>
-          <div class="stack-item"><div class="si-name">[Supplement 1 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 2 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
+        <h2>Meal Rotation <span class="reviewed-tag">edit per client</span></h2>
+        <div id="curMeals">
+        <div class="stack-block"><div class="stack-time">Breakfast</div>
+          <div class="stack-item"><div class="si-name">Option A — [edit per client]</div></div>
+          <div class="stack-item"><div class="si-name">Option B — [edit per client]</div></div>
         </div>
-        <div class="stack-block"><div class="stack-time">12:00 PM · Lunch, rotate</div>
-          <div class="stack-item"><div class="si-name">[Supplement 3 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 4 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 5 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
+        <div class="stack-block"><div class="stack-time">Lunch</div>
+          <div class="stack-item"><div class="si-name">Option A — [edit per client]</div></div>
+          <div class="stack-item"><div class="si-name">Option B — [edit per client]</div></div>
         </div>
-        <div class="stack-block"><div class="stack-time">5:00 PM · Post-Training Meal</div>
-          <div class="stack-item"><div class="si-name">[Supplement 6 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
+        <div class="stack-block"><div class="stack-time">Post-Training Meal</div>
+          <div class="stack-item"><div class="si-name">Option A — [edit per client]</div></div>
+          <div class="stack-item"><div class="si-name">Option B — [edit per client]</div></div>
         </div>
-        <div class="stack-block"><div class="stack-time">8:00 PM · Dinner, rotate</div>
-          <div class="stack-item"><div class="si-name">[Supplement 7 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 8 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 9 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
+        <div class="stack-block"><div class="stack-time">Dinner</div>
+          <div class="stack-item"><div class="si-name">Option A — [edit per client]</div></div>
+          <div class="stack-item"><div class="si-name">Option B — [edit per client]</div></div>
         </div>
-        <div class="note note-gold">Salmon minimum 3x per week is the single biggest lever here. Everything else is secondary to that one rule.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -510,9 +514,9 @@
 <div class="panel" data-panel="training">
   <div class="subtabbar" role="tablist">
     <button class="subtab active" data-subtab="tr-overview">Overview</button>
-    <button class="subtab" data-subtab="tr-d1">Day 1 · Push</button>
-    <button class="subtab" data-subtab="tr-d2">Day 2 · Pull</button>
-    <button class="subtab" data-subtab="tr-d3">Day 3 · Hybrid</button>
+    <button class="subtab" data-subtab="tr-d1" id="curTab1">Session 1</button>
+    <button class="subtab" data-subtab="tr-d2" id="curTab2">Session 2</button>
+    <button class="subtab" data-subtab="tr-d3" id="curTab3">Session 3</button>
     <button class="subtab" data-subtab="tr-log">Session Log</button>
   </div>
 
@@ -520,8 +524,8 @@
     <div class="grid">
       <div class="col-12">
         <div class="card">
-          <h2>Weekly Structure <span class="tag">3 gym + 2 striking</span></h2>
-          <div class="training-week">
+          <h2>Weekly Structure <span class="tag" id="curWeekBadge">edit per client</span></h2>
+          <div class="training-week" id="curWeekGrid">
             <div class="day-tile trained"><div class="d-label">Mon</div><div class="d-act">Training</div></div>
             <div class="day-tile trained"><div class="d-label">Tue</div><div class="d-act">Training</div></div>
             <div class="day-tile rest"><div class="d-label">Wed</div><div class="d-act">Rest</div></div>
@@ -536,34 +540,25 @@
       <div class="col-6">
         <div class="card">
           <h2>Physique Priorities</h2>
-          <div class="row"><span class="k">1. Lateral delts</span><span class="v warn">biggest visual lever</span></div>
-          <div class="row"><span class="k">2. Rear delts + upper back</span><span class="v">3D shoulder look</span></div>
-          <div class="row"><span class="k">3. Upper chest</span><span class="v">incline focus</span></div>
-          <div class="row"><span class="k">4. Neck</span><span class="v">bridges 3–4×/wk + plate</span></div>
-          <div class="row"><span class="k">5. Arms + abs</span><span class="v">accessory work</span></div>
-          <div class="row"><span class="k">6. Legs</span><span class="v">maintenance only</span></div>
+          <div id="curPhysique">
+          <div class="row"><span class="k">1. [Priority — edit per client]</span><span class="v">[note]</span></div>
+          <div class="row"><span class="k">2. [Priority]</span><span class="v">[note]</span></div>
+          <div class="row"><span class="k">3. [Priority]</span><span class="v">[note]</span></div>
+          </div>
         </div>
       </div>
 
       <div class="col-6">
         <div class="card">
           <h2>Programme Structure</h2>
-          <div class="note">
-            <b>Each gym day has 2 sections.</b> Friends section (shared compounds) + solo stay-back (10–15 min, priority work). The stay-back is where physique priorities live, short enough to always do it.<br><br>
-            <b>Maingain rule.</b> Weight creeping up fast or waist wider, pull back 100–150 kcal. Weight dropping, add 100 kcal from carbs.
-          </div>
+          <div class="note" id="curProgramme">[Programme structure notes — edit per client: session format, how the week is split, any standing adjustment rules.]</div>
         </div>
       </div>
 
       <div class="col-12">
         <div class="card">
           <h2>Recovery Rules</h2>
-          <div class="note">
-            <b>Cap strain ≤12</b> on any day recovery &lt;60%.<br>
-            <b>Don’t stack</b> hard training day after low-recovery night, Tuesday crashes trace to weekend push.<br>
-            <b>Sprints (1×/wk)</b> planned post-bloodwork window.<br>
-            <b>Sleep consistency</b> beats sleep duration for your recovery numbers.
-          </div>
+          <div class="note" id="curRecovery">[Recovery rules — edit per client: how training adjusts around recovery/sleep data.]</div>
         </div>
       </div>
     </div>
@@ -572,68 +567,9 @@
   <div class="subpanel" data-subpanel="tr-d1">
     <div class="grid">
       <div class="col-12">
-        <div class="card">
-          <h2>Day 1 · Push <span class="tag">chest · shoulders · tris · legs (maint)</span></h2>
-          <div class="day-summary">Big presses with the boys, then <b>solo stay-back</b> for lateral delts, tris, and neck.</div>
-
-          <div class="day-section-label">With friends</div>
-          <div class="ex-group-header shared">Shared Compounds</div>
-          <div class="ex-list shared">
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title"><span class="priority-star"></span>Incline Dumbbell Press</div>
-                <div class="ex-notes">Upper chest priority. Full stretch, stop 1–2 reps short.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">3 × 6–8</div><div class="ex-rpe">RPE 8–9 · 2–3 min</div></div>
-            </div>
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title">Flat DB Press or Machine Press</div>
-                <div class="ex-notes">Chest volume. Controlled tempo.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">3 × 8–10</div><div class="ex-rpe">RPE 8 · 2 min</div></div>
-            </div>
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title">Overhead Press (DB or Machine)</div>
-                <div class="ex-notes">Front delt + upper chest. Control the negative.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">3 × 8–10</div><div class="ex-rpe">RPE 8 · 2 min</div></div>
-            </div>
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title">Hack Squat or Leg Press</div>
-                <div class="ex-notes">Maintenance only. Never to failure.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">2 × 8–10</div><div class="ex-rpe">RPE 7 · 2 min</div></div>
-            </div>
-          </div>
-
-          <div class="day-section-label" style="margin-top:20px">Stay-back · solo</div>
-          <div class="ex-group-header solo">Priority Work</div>
-          <div class="ex-list solo">
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title"><span class="priority-star"></span>Cable Lateral Raise</div>
-                <div class="ex-notes">Side delts. Strict form, no swing, control top and bottom.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">4 × 12–20</div><div class="ex-rpe">RPE 8–9 · 60s</div></div>
-            </div>
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title">Rope Pushdown or Overhead Extension</div>
-                <div class="ex-notes">Tricep fullness. Elbows fixed. Full range.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">3 × 10–15</div><div class="ex-rpe">RPE 8 · 60–90s</div></div>
-            </div>
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title">Neck Flexion + Extension</div>
-                <div class="ex-notes">Light plate or band. Smooth reps only, no forcing.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">2 × 15–20</div><div class="ex-rpe">RPE 6–7 · 60s</div></div>
-            </div>
-          </div>
+        <div class="card" id="curSession1">
+          <h2 id="curSession1Title">Session 1 <span class="tag">edit per client</span></h2>
+          <div class="note">[Exercises for this session are set per client in their Curated sheet — nothing is loaded yet.]</div>
         </div>
       </div>
     </div>
@@ -642,75 +578,9 @@
   <div class="subpanel" data-subpanel="tr-d2">
     <div class="grid">
       <div class="col-12">
-        <div class="card">
-          <h2>Day 2 · Pull <span class="tag">back · rear delts · biceps · abs</span></h2>
-          <div class="day-summary">Heavy pulls with the boys, then <b>solo stay-back</b> for rear delts and abs.</div>
-
-          <div class="day-section-label">With friends</div>
-          <div class="ex-group-header shared">Shared Compounds</div>
-          <div class="ex-list shared">
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title"><span class="priority-star"></span>Weighted Pull-up or Lat Pulldown</div>
-                <div class="ex-notes">Lat width. Full stretch, pull elbows down. Control negative.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">3 × 6–10</div><div class="ex-rpe">RPE 8–9 · 2–3 min</div></div>
-            </div>
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title">Chest-Supported Row</div>
-                <div class="ex-notes">Upper back thickness. Pause at top. Chest stays on pad.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">3 × 8–10</div><div class="ex-rpe">RPE 8 · 2 min</div></div>
-            </div>
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title">One-Arm Cable Row</div>
-                <div class="ex-notes">Pull with your elbow. Full stretch each rep.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">3 × 8–12</div><div class="ex-rpe">RPE 8 · 90s</div></div>
-            </div>
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title">EZ-Bar Curl or Cable Curl</div>
-                <div class="ex-notes">Strict reps. Control the eccentric. No swinging.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">3 × 8–12</div><div class="ex-rpe">RPE 8–9 · 60–90s</div></div>
-            </div>
-          </div>
-
-          <div class="day-section-label" style="margin-top:20px">Stay-back · solo</div>
-          <div class="ex-group-header solo">Priority Work</div>
-          <div class="ex-list solo">
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title"><span class="priority-star"></span>Rear Delt Cable Fly or Reverse Pec Deck</div>
-                <div class="ex-notes">Pause at peak every rep. High reps, strict form.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">4 × 15–20</div><div class="ex-rpe">RPE 8–9 · 60s</div></div>
-            </div>
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title">Hanging Leg Raise</div>
-                <div class="ex-notes">Tilt pelvis at top. No swinging.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">3 × 10–15</div><div class="ex-rpe">RPE 8 · 60s</div></div>
-            </div>
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title">Cable Crunch</div>
-                <div class="ex-notes">Heavy and controlled. Round into it. Progress the load.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">3 × 10–15</div><div class="ex-rpe">RPE 8–9 · 60s</div></div>
-            </div>
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title">Lateral Neck Work</div>
-                <div class="ex-notes">Light plate or band to each side. Smooth reps only.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">2 × 15–20</div><div class="ex-rpe">RPE 6–7 · 60s</div></div>
-            </div>
-          </div>
+        <div class="card" id="curSession2">
+          <h2 id="curSession2Title">Session 2 <span class="tag">edit per client</span></h2>
+          <div class="note">[Exercises for this session are set per client in their Curated sheet — nothing is loaded yet.]</div>
         </div>
       </div>
     </div>
@@ -719,68 +589,9 @@
   <div class="subpanel" data-subpanel="tr-d3">
     <div class="grid">
       <div class="col-12">
-        <div class="card">
-          <h2>Day 3 · Hybrid <span class="tag">shoulders · arms · posterior · abs · neck</span></h2>
-          <div class="day-summary">Posterior chain + arms with the boys, then <b>solo stay-back</b> hitting shoulders + neck again for the week.</div>
-
-          <div class="day-section-label">With friends</div>
-          <div class="ex-group-header shared">Shared Compounds</div>
-          <div class="ex-list shared">
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title">Romanian Deadlift</div>
-                <div class="ex-notes">Hinge, don’t squat. Neutral spine. Never grind a rep.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">3 × 6–8</div><div class="ex-rpe">RPE 7–8 · 2–3 min</div></div>
-            </div>
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title">Hammer Curl</div>
-                <div class="ex-notes">Brachialis thickness. Strict reps.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">3 × 10–12</div><div class="ex-rpe">RPE 8 · 60–90s</div></div>
-            </div>
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title">Dips or Close-Grip Press</div>
-                <div class="ex-notes">Tricep thickness. Controlled. Slight forward lean.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">3 × 8–12</div><div class="ex-rpe">RPE 8 · 90s</div></div>
-            </div>
-          </div>
-
-          <div class="day-section-label" style="margin-top:20px">Stay-back · solo</div>
-          <div class="ex-group-header solo">Priority Work</div>
-          <div class="ex-list solo">
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title"><span class="priority-star"></span>Cable Lateral Raise</div>
-                <div class="ex-notes">Second session this week. Strict. Feel the delt working.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">4 × 12–20</div><div class="ex-rpe">RPE 8–9 · 60s</div></div>
-            </div>
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title"><span class="priority-star"></span>Rear Delt Fly or Face Pull</div>
-                <div class="ex-notes">Second session this week. Squeeze each rep. High reps.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">3 × 15–20</div><div class="ex-rpe">RPE 8 · 60s</div></div>
-            </div>
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title">Neck, All 3 Planes</div>
-                <div class="ex-notes">Flexion, extension, lateral each side. Light and smooth.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">2 × 15–20</div><div class="ex-rpe">RPE 6–7 · 60s</div></div>
-            </div>
-            <div class="ex-item">
-              <div class="ex-name-block">
-                <div class="ex-title">Cable Crunch or Hanging Knee Raise</div>
-                <div class="ex-notes">Brief abs finish. Quality reps only.</div>
-              </div>
-              <div class="ex-sets-block"><div class="ex-sets">2 × 10–15</div><div class="ex-rpe">RPE 8 · 60s</div></div>
-            </div>
-          </div>
+        <div class="card" id="curSession3">
+          <h2 id="curSession3Title">Session 3 <span class="tag">edit per client</span></h2>
+          <div class="note">[Exercises for this session are set per client in their Curated sheet — nothing is loaded yet.]</div>
         </div>
       </div>
     </div>
@@ -803,50 +614,39 @@
     <div class="col-8">
       <div class="card">
         <h2>Daily Protocol <span class="tag">by time of day</span></h2>
+        <div id="curStack">
 
         <div class="stack-block">
           <div class="stack-time">On Waking · Fasted</div>
           <div class="stack-item"><div class="si-name">[Supplement — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 10 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
         </div>
 
         <div class="stack-block">
           <div class="stack-time">Breakfast</div>
-          <div class="stack-item"><div class="si-name">[Supplement 11 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 12 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 13 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 14 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 15 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 16 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
+          <div class="stack-item"><div class="si-name">[Supplement — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
+          <div class="stack-item"><div class="si-name">[Supplement — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
         </div>
 
         <div class="stack-block">
           <div class="stack-time">Pre-Training</div>
-          <div class="stack-item"><div class="si-name">[Supplement 17 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 18 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 19 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
+          <div class="stack-item"><div class="si-name">[Supplement — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
         </div>
 
         <div class="stack-block">
           <div class="stack-time">Lunch · With Food</div>
-          <div class="stack-item"><div class="si-name">[Supplement 20 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 21 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
+          <div class="stack-item"><div class="si-name">[Supplement — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
         </div>
 
         <div class="stack-block">
           <div class="stack-time">Dinner · With Food</div>
-          <div class="stack-item"><div class="si-name">[Supplement 22 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 23 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 24 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 25 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 26 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
+          <div class="stack-item"><div class="si-name">[Supplement — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
+          <div class="stack-item"><div class="si-name">[Supplement — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
         </div>
 
         <div class="stack-block">
-          <div class="stack-time">Pre-Bed · Fasted 2–3h</div>
-          <div class="stack-item"><div class="si-name peptide">CJC-1295 / Ipamorelin<span class="subq-tag">SUBQ</span></div><div class="si-desc">10u · 5 nights/wk (weekends off) · GH pulse for recovery</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 27 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
-          <div class="stack-item"><div class="si-name">[Supplement 28 — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
+          <div class="stack-time">Pre-Bed</div>
+          <div class="stack-item"><div class="si-name">[Supplement — edit per client]</div><div class="si-desc">[dose / timing]</div></div>
+        </div>
         </div>
       </div>
     </div>
@@ -854,27 +654,25 @@
     <div class="col-4">
       <div class="card">
         <h2>Standing Rules</h2>
-        <div class="row"><span class="k">Creatine</span><span class="v bad">Excluded</span></div>
-        <div class="row"><span class="k">Zinc</span><span class="v warn">Alt days only</span></div>
-        <div class="row"><span class="k">[Timing rule 1]</span><span class="v warn">[note]</span></div>
-        <div class="row"><span class="k">[Timing rule 2]</span><span class="v">[note]</span></div>
-        <div class="row"><span class="k">CJC/Ipa fasted window</span><span class="v">2–3h</span></div>
+        <div id="curRules">
+        <div class="row"><span class="k">[Standing rule 1]</span><span class="v">[note]</span></div>
+        <div class="row"><span class="k">[Standing rule 2]</span><span class="v">[note]</span></div>
+        <div class="row"><span class="k">[Standing rule 3]</span><span class="v">[note]</span></div>
+        </div>
       </div>
 
       <div class="card" style="margin-top:16px">
         <h2>Restock Tracker</h2>
-        <div class="row"><span class="k">[Supply status 1]</span><span class="v warn">[note]</span></div>
-        <div class="row"><span class="k">NAC</span><span class="v good">~6wk left</span></div>
-        <div class="row"><span class="k">[Supply status 2]</span><span class="v good">[note]</span></div>
-        <div class="row"><span class="k">[Supply status 3]</span><span class="v bad">[note]</span></div>
-        <div class="row"><span class="k">CJC-1295/Ipamorelin</span><span class="v bad">days left, reorder placed</span></div>
-        <div class="row"><span class="k">Raw milk + raw honey</span><span class="v good">arriving this week</span></div>
-        <div class="row"><span class="k">Mag glycinate</span><span class="v bad">OUT, reorder</span></div>
+        <div id="curRestock">
+        <div class="row"><span class="k">[Restock item 1]</span><span class="v">[note]</span></div>
+        <div class="row"><span class="k">[Restock item 2]</span><span class="v">[note]</span></div>
+        <div class="row"><span class="k">[Restock item 3]</span><span class="v">[note]</span></div>
+        </div>
       </div>
 
       <div class="card" style="margin-top:16px">
         <h2>Expected Effects</h2>
-        <div class="note">Most items work upstream, you won&rsquo;t feel them acutely. Watch for: better sleep depth (CJC/Ipa), less bloating (gut protocol), steadier energy (methylation stack), reduced tendon soreness (collagen + peptide combo).</div>
+        <div class="note" id="curEffects">[Expected effects narrative — edit per client.]</div>
       </div>
     </div>
   </div>
@@ -886,6 +684,7 @@
     <div class="col-12">
       <div class="card">
         <h2>Ranked Priorities <span class="tag">active</span></h2>
+        <div id="curTodo">
 
         <div class="todo-item">
           <div class="todo-priority p-high">HIGH</div>
@@ -934,17 +733,18 @@
             <div class="t-sub">[detail]</div>
           </div>
         </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 <!-- ============ BLOODWORK ============ -->
 <div class="panel" data-panel="bloods">
-  <div class="grid">
+  <div class="grid" id="curBloodworkGrid">
     <div class="col-12">
       <div class="card card-gold">
-        <h2>Overall Trajectory <span class="tag">Aug 4 2026 · Medilab</span></h2>
-        <div style="font-size:14px; line-height:1.6; color:var(--ink)">[Bloodwork summary narrative — edit per client after their first panel comes back.]</div>
+        <h2>Overall Trajectory <span class="tag" id="curBwTag">edit per client</span></h2>
+        <div style="font-size:14px; line-height:1.6; color:var(--ink)" id="curBwSummary">[Bloodwork summary narrative — edit per client after their first panel comes back.]</div>
       </div>
     </div>
 
@@ -1054,10 +854,10 @@
 
     <div class="col-12">
       <div class="card">
-        <h2>Next Blood Draw <span class="tag">target ~Oct–Nov 2026</span></h2>
+        <h2>Next Blood Draw <span class="tag">edit per client</span></h2>
         <div class="note note-gold">
-          <b>Order:</b> [panel — edit per client, e.g. lipids, thyroid, inflammation markers, fasting glucose/insulin].<br>
-          <b>Prep:</b> [fasting/rest-day instructions — edit per client].
+          <span id="curBwOrderPrep"><b>Order:</b> [panel — edit per client].<br>
+          <b>Prep:</b> [fasting/rest-day instructions — edit per client].</span>
         </div>
       </div>
     </div>
@@ -1277,6 +1077,7 @@ async function refreshAll() {
   const food    = bundle ? parseCSV(bundle.food)      : null;
   const checkin = bundle ? parseCSV(bundle.checkin)   : null;
   const steps   = bundle ? parseCSV(bundle.steps)     : null;
+  const curated = bundle && bundle.curated ? parseCSV(bundle.curated) : null;
   cache.recovery = sortByDateDesc(rec || (cache.recovery.length ? cache.recovery : parseCSV(SNAPSHOT.recovery)));
   cache.sleep    = sortByDateDesc(sleep || (cache.sleep.length ? cache.sleep : parseCSV(SNAPSHOT.sleep)));
   cache.workouts = sortByDateDesc(work || (cache.workouts.length ? cache.workouts : parseCSV(SNAPSHOT.workouts)));
@@ -1294,6 +1095,8 @@ async function refreshAll() {
   usingSnapshot = !rec;
   renderLiveBadges();
 
+  if (curated) applyCurated(curated);
+  renderWeightTile();
   renderVitals();
   renderSteps();
   renderReadiness();
@@ -1315,6 +1118,187 @@ function renderLiveBadges() {
     el.classList.toggle('cached', !live);
     el.title = live ? 'Fetched live this refresh' : 'Live fetch failed \u2014 showing last known data';
   });
+}
+
+
+/* ================================================================
+   CURATED CONTENT RENDERER
+   Every coaching-authored section (targets, meals, stack, training,
+   bloodwork, priorities, to-dos) renders from the client's own
+   "Curated" sheet tab, fetched alongside the WHOOP data. Nothing
+   client-specific lives in this file. If a section has no rows in
+   the sheet, its [edit per client] placeholder stays visible - a
+   missing sheet never crashes the page or shows someone else's data.
+
+   Sheet schema - one row per item, 7 columns:
+   Section | Group | Order | Title | Detail | Tag | Extra
+   ================================================================ */
+function esc(s) {
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function bySection(rows) {
+  const out = {};
+  (rows || []).forEach(function (r) {
+    const s = String(r['Section'] || '').trim();
+    if (!s) return;
+    (out[s] = out[s] || []).push(r);
+  });
+  Object.keys(out).forEach(function (k) {
+    out[k].sort(function (a, b) { return (parseFloat(a['Order']) || 0) - (parseFloat(b['Order']) || 0); });
+  });
+  return out;
+}
+function setHTML(id, html) {
+  const el = document.getElementById(id);
+  if (el && html) el.innerHTML = html;
+}
+function setText(id, txt) {
+  const el = document.getElementById(id);
+  if (el && txt) el.textContent = txt;
+}
+
+function applyCurated(rows) {
+  if (!rows || !rows.length) return; // no curated tab yet: placeholders stay
+  const S = bySection(rows);
+
+  // ---- targets: override CONFIG so macro bars + Targets panel agree ----
+  (S['target'] || []).forEach(function (r) {
+    const k = String(r['Title'] || '').trim();
+    const v = parseFloat(r['Detail']);
+    if (!isNaN(v) && ['kcal','protein','fat','water'].indexOf(k) !== -1) CONFIG.targets[k] = v;
+  });
+  if (S['target']) {
+    const label = { kcal_rest:'Calories (rest)', kcal_training:'Calories (training)', kcal_hard:'Calories (hard day)', kcal:'Calories', protein:'Protein', fat:'Fat cap', water:'Water' };
+    const shown = S['target'].filter(function (r) { return label[String(r['Title']).trim()]; });
+    if (shown.length) setHTML('curTargets', shown.map(function (r) {
+      return '<div class="row"><span class="k">' + esc(label[String(r['Title']).trim()]) + '</span><span class="v">' + esc(r['Detail']) + esc(r['Tag'] ? ' ' + r['Tag'] : '') + '</span></div>';
+    }).join(''));
+  }
+
+  // ---- weekly changes ----
+  if (S['weekly_change']) setHTML('curWeeklyChanges', S['weekly_change'].map(function (r) {
+    const t = String(r['Tag'] || 'flat').toLowerCase();
+    const arrow = t === 'up' ? '\u25b2' : (t === 'down' ? '\u25bc' : '\u2022');
+    return '<div class="delta-item"><span class="arrow ' + esc(t) + '">' + arrow + '</span><span class="k">' + esc(r['Title']) + '</span><span class="v">' + esc(r['Detail']) + '</span></div>';
+  }).join(''));
+
+  // ---- top priorities (Today card) ----
+  if (S['top_priority']) setHTML('curTopPriorities', S['top_priority'].map(function (r, i) {
+    const lvl = String(r['Tag'] || (i < 2 ? 'high' : 'med')).toLowerCase();
+    return '<div class="todo-item"><div class="todo-priority p-' + esc(lvl) + '">' + (i + 1) + '</div><div class="todo-body"><div class="t-main">' + esc(r['Title']) + '</div><div class="t-sub">' + esc(r['Detail']) + '</div></div></div>';
+  }).join(''));
+
+  // ---- to-do tab ----
+  if (S['todo']) setHTML('curTodo', S['todo'].map(function (r) {
+    const tag = String(r['Tag'] || 'MED').toUpperCase();
+    const cls = tag === 'HIGH' ? 'p-high' : (tag === 'MED' ? 'p-med' : 'p-low');
+    return '<div class="todo-item"><div class="todo-priority ' + cls + '">' + esc(tag) + '</div><div class="todo-body"><div class="t-main">' + esc(r['Title']) + '</div><div class="t-sub">' + esc(r['Detail']) + '</div></div></div>';
+  }).join(''));
+
+  // ---- meals + stack share one shape: blocks of grouped items ----
+  function blocks(list, withDesc) {
+    const order = []; const groups = {};
+    list.forEach(function (r) {
+      const g = String(r['Group'] || '').trim() || 'Other';
+      if (!groups[g]) { groups[g] = []; order.push(g); }
+      groups[g].push(r);
+    });
+    return order.map(function (g) {
+      return '<div class="stack-block"><div class="stack-time">' + esc(g) + '</div>' + groups[g].map(function (r) {
+        return '<div class="stack-item"><div class="si-name">' + esc(r['Title']) + '</div>' + (withDesc && r['Detail'] ? '<div class="si-desc">' + esc(r['Detail']) + '</div>' : '') + '</div>';
+      }).join('') + '</div>';
+    }).join('');
+  }
+  if (S['meal'])  setHTML('curMeals', blocks(S['meal'], false));
+  if (S['stack']) setHTML('curStack', blocks(S['stack'], true));
+
+  // ---- standing rules / restock ----
+  function kvRows(list) {
+    return list.map(function (r) {
+      const cls = { good: ' good', warn: ' warn', bad: ' bad' }[String(r['Tag'] || '').toLowerCase()] || '';
+      return '<div class="row"><span class="k">' + esc(r['Title']) + '</span><span class="v' + cls + '">' + esc(r['Detail']) + '</span></div>';
+    }).join('');
+  }
+  if (S['standing_rule']) setHTML('curRules', kvRows(S['standing_rule']));
+  if (S['restock'])       setHTML('curRestock', kvRows(S['restock']));
+  if (S['expected_effects'] && S['expected_effects'][0]) setText('curEffects', S['expected_effects'][0]['Detail']);
+
+  // ---- training: week grid + badge ----
+  if (S['week_day']) setHTML('curWeekGrid', S['week_day'].map(function (r) {
+    const type = String(r['Tag'] || 'rest').toLowerCase() === 'trained' ? 'trained' : 'rest';
+    return '<div class="day-tile ' + type + '"><div class="d-label">' + esc(r['Title']) + '</div><div class="d-act">' + esc(r['Detail']) + '</div></div>';
+  }).join(''));
+  if (S['week_badge'] && S['week_badge'][0]) setText('curWeekBadge', S['week_badge'][0]['Detail']);
+
+  // ---- training: session names + exercises ----
+  (S['session'] || []).forEach(function (r) {
+    const n = parseInt(r['Order'], 10);
+    if (!n || n < 1 || n > 3) return;
+    setText('curTab' + n, r['Title']);
+    const card = document.getElementById('curSession' + n);
+    if (card) {
+      const exs = (S['exercise'] || []).filter(function (e) { return parseInt(e['Group'], 10) === n; });
+      card.innerHTML = '<h2>' + esc(r['Title']) + (r['Detail'] ? ' <span class="tag">' + esc(r['Detail']) + '</span>' : '') + '</h2>'
+        + (exs.length ? '<div class="ex-list">' + exs.map(function (e) {
+            let name = String(e['Title'] || '');
+            const star = name.charAt(0) === '*';
+            if (star) name = name.slice(1).trim();
+            return '<div class="ex-item"><div class="ex-name-block"><div class="ex-title">' + (star ? '<span class="priority-star"></span>' : '') + esc(name) + '</div>'
+              + (e['Detail'] ? '<div class="ex-notes">' + esc(e['Detail']) + '</div>' : '') + '</div>'
+              + '<div class="ex-sets-block"><div class="ex-sets">' + esc(e['Tag'] || '') + '</div><div class="ex-rpe">' + esc(e['Extra'] || '') + '</div></div></div>';
+          }).join('') + '</div>'
+          : '<div class="note">[No exercises set for this session yet.]</div>');
+    }
+  });
+  if (S['session'] && typeof initLiftLogger === 'function') initLiftLogger();
+
+  // ---- training: physique / programme / recovery ----
+  if (S['physique_priority']) setHTML('curPhysique', S['physique_priority'].map(function (r, i) {
+    return '<div class="row"><span class="k">' + (i + 1) + '. ' + esc(r['Title']) + '</span><span class="v">' + esc(r['Detail']) + '</span></div>';
+  }).join(''));
+  if (S['programme_notes'] && S['programme_notes'][0]) setText('curProgramme', S['programme_notes'][0]['Detail']);
+  if (S['recovery_rules'] && S['recovery_rules'][0]) setText('curRecovery', S['recovery_rules'][0]['Detail']);
+
+  // ---- bloodwork ----
+  if (S['bw_note']) S['bw_note'].forEach(function (r) {
+    const which = String(r['Title'] || '').toLowerCase();
+    if (which === 'summary') setText('curBwSummary', r['Detail']);
+    if (which === 'tag') setText('curBwTag', r['Detail']);
+    if (which === 'orderprep') setHTML('curBwOrderPrep', r['Detail']); // authored by coach, not client input
+  });
+  if (S['bw_marker']) {
+    const order = []; const groups = {};
+    S['bw_marker'].forEach(function (r) {
+      const g = String(r['Group'] || 'Markers').trim();
+      if (!groups[g]) { groups[g] = []; order.push(g); }
+      groups[g].push(r);
+    });
+    const grid = document.getElementById('curBloodworkGrid');
+    if (grid) {
+      const summaryCard = '<div class="col-12"><div class="card card-gold"><h2>Overall Trajectory <span class="tag" id="curBwTag2">' + esc((S['bw_note'] || []).filter(function(r){return String(r['Title']).toLowerCase()==='tag';}).map(function(r){return r['Detail'];})[0] || 'latest panel') + '</span></h2><div style="font-size:14px; line-height:1.6; color:var(--ink)">' + esc((S['bw_note'] || []).filter(function(r){return String(r['Title']).toLowerCase()==='summary';}).map(function(r){return r['Detail'];})[0] || '') + '</div></div></div>';
+      const markerCards = order.map(function (g) {
+        return '<div class="col-6"><div class="card"><h2>' + esc(g) + '</h2>' + groups[g].map(function (r) {
+          const vcls = { good: ' good', warn: ' warn', bad: ' bad' }[String((r['Extra'] || '').split('|')[1] || '').toLowerCase()] || '';
+          return '<div class="marker-row"><div class="m-name">' + esc(r['Title']) + '<div class="m-sub">' + esc(r['Detail']) + '</div></div><div class="m-val' + vcls + '">' + esc(r['Tag'] || '\u2014') + '</div><div class="m-trend">' + esc(String(r['Extra'] || '').split('|')[0]) + '</div></div>';
+        }).join('') + '</div></div>';
+      }).join('');
+      const drawCard = '<div class="col-12"><div class="card"><h2>Next Blood Draw <span class="tag">edit per client</span></h2><div class="note note-gold"><span id="curBwOrderPrep2">' + esc((S['bw_note'] || []).filter(function(r){return String(r['Title']).toLowerCase()==='orderprep';}).map(function(r){return r['Detail'];})[0] || '') + '</span></div></div></div>';
+      grid.innerHTML = summaryCard + markerCards + drawCard;
+    }
+  }
+}
+
+/* Weight tile: renders from live check-in data, never from a hardcoded value. */
+function renderWeightTile() {
+  const el = document.getElementById('val-weight');
+  if (!el) return;
+  const rows = cache.checkin || [];
+  const latest = rows.find(function (r) { return parseFloat(r['Weight_kg']); });
+  if (latest) {
+    el.innerHTML = esc(parseFloat(latest['Weight_kg']).toFixed(1)) + '<span class="u">kg</span>';
+    const sub = el.parentElement.querySelector('.v-sub');
+    if (sub) sub.textContent = latest['Date'] || '';
+  }
 }
 
 /* ---- static config render (runs once at boot) ---- */
@@ -1675,6 +1659,7 @@ document.querySelectorAll('.subtab').forEach(st => {
 const LIFT_ENDPOINT = CONFIG.dataEndpoint; // multi-tenant build: same shared endpoint as reads
 function initLiftLogger() {
   document.querySelectorAll('.ex-item').forEach(item => {
+    if (item.querySelector('.ex-log')) return; // idempotent: safe to re-run after dynamic render
     const titleEl = item.querySelector('.ex-title');
     if (!titleEl) return;
     const ex = titleEl.textContent.trim();
