@@ -92,6 +92,7 @@
   .card h2 .tag { font-family: var(--mono); font-size: 9px; color: var(--gold); background: rgba(245,193,59,0.12); text-transform: uppercase; letter-spacing: 0.1em; padding: 3px 8px; border-radius: 4px; margin-left: auto; font-weight: 500; border: 1px solid rgba(245,193,59,0.2); }
   .card h2 svg { width: 14px; height: 14px; opacity: 0.7; }
 
+  .live-tag.cached { color: var(--gold) !important; background: rgba(232,178,58,0.14) !important; }
   .live-tag { font-family: var(--mono); font-size: 9px; color: var(--green); background: rgba(79,209,165,0.12); text-transform: uppercase; letter-spacing: 0.1em; padding: 3px 8px; border-radius: 4px; margin-left: auto; font-weight: 600; border: 1px solid rgba(79,209,165,0.3); animation: pulseLive 2.5s ease-in-out infinite; }
   @keyframes pulseLive { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }
   .reviewed-tag { font-family: var(--mono); font-size: 9px; color: var(--ink-3); background: rgba(255,255,255,0.06); text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 8px; border-radius: 4px; margin-left: auto; font-weight: 500; border: 1px solid var(--line); }
@@ -288,12 +289,12 @@
 <!-- ============ THIS WEEK ============ -->
 <div class="panel active" data-panel="week">
   <div class="vitals-ribbon" id="vitalsRibbon">
-    <div class="vital-tile" id="tile-recovery"><div class="v-label"><span>Recovery</span><span class="live-tag" style="margin:0;padding:1px 5px;font-size:8px">LIVE</span></div><div class="v-val" id="val-recovery">—</div><div class="v-sub" id="sub-recovery">loading</div><svg class="spark" id="spark-recovery"></svg></div>
+    <div class="vital-tile" id="tile-recovery"><div class="v-label"><span>Recovery</span><span data-src="recovery" class="live-tag" style="margin:0;padding:1px 5px;font-size:8px">LIVE</span></div><div class="v-val" id="val-recovery">—</div><div class="v-sub" id="sub-recovery">loading</div><svg class="spark" id="spark-recovery"></svg></div>
     <div class="vital-tile" id="tile-hrv"><div class="v-label"><span>HRV</span></div><div class="v-val" id="val-hrv">—</div><div class="v-sub" id="sub-hrv">loading</div><svg class="spark" id="spark-hrv"></svg></div>
     <div class="vital-tile" id="tile-rhr"><div class="v-label"><span>RHR</span></div><div class="v-val" id="val-rhr">—</div><div class="v-sub" id="sub-rhr">loading</div><svg class="spark" id="spark-rhr"></svg></div>
     <div class="vital-tile" id="tile-sleep"><div class="v-label"><span>Sleep</span></div><div class="v-val" id="val-sleep">—</div><div class="v-sub" id="sub-sleep">loading</div></div>
     <div class="vital-tile" id="tile-weight"><div class="v-label"><span>Weight</span></div><div class="v-val" id="val-weight">65<span class="u">kg</span></div><div class="v-sub">stable</div></div>
-    <div class="vital-tile" id="tile-steps"><div class="v-label"><span>Steps</span><span class="live-tag" style="margin:0;padding:1px 5px;font-size:8px">LIVE</span></div><div class="v-val" id="val-steps">—</div><div class="v-sub" id="sub-steps">loading</div><svg class="spark" id="spark-steps"></svg></div>
+    <div class="vital-tile" id="tile-steps"><div class="v-label"><span>Steps</span><span data-src="steps" class="live-tag" style="margin:0;padding:1px 5px;font-size:8px">LIVE</span></div><div class="v-val" id="val-steps">—</div><div class="v-sub" id="sub-steps">loading</div><svg class="spark" id="spark-steps"></svg></div>
   </div>
 
   <div class="grid">
@@ -310,7 +311,7 @@
     </div>
     <div class="col-6">
       <div class="card">
-        <h2>Readiness <span class="live-tag">● LIVE</span></h2>
+        <h2>Readiness <span data-src="recovery" class="live-tag">● LIVE</span></h2>
         <div class="readiness-wrap">
           <div class="readiness-ring" id="readinessRing">
             <div class="readiness-inner"><div class="n" id="readinessNum">—</div><div class="l">%</div></div>
@@ -349,7 +350,7 @@
 
     <div class="col-12">
       <div class="card">
-        <h2>Nervous System <span class="live-tag">● LIVE</span></h2>
+        <h2>Nervous System <span data-src="recovery" class="live-tag">● LIVE</span></h2>
         <div class="grid">
           <div class="col-4">
             <div class="ns-state" id="nsState">Loading…</div>
@@ -375,7 +376,7 @@
   <div class="grid">
     <div class="col-12">
       <div class="card">
-        <h2>WHOOP · 14-Day Averages <span class="live-tag">● LIVE</span></h2>
+        <h2>WHOOP · 14-Day Averages <span data-src="recovery" class="live-tag">● LIVE</span></h2>
         <div class="perf-grid" id="perfGrid">
           <div class="perf-metric"><div class="pm-label">Recovery</div><div class="pm-val" id="perf-recovery">—</div><div class="pm-sub" id="perf-recovery-sub">loading</div><div class="bar"><span id="perf-recovery-bar" style="width:0%;background:var(--gold)"></span></div></div>
           <div class="perf-metric"><div class="pm-label">HRV</div><div class="pm-val" id="perf-hrv">—</div><div class="pm-sub" id="perf-hrv-sub">loading</div><div class="bar"><span id="perf-hrv-bar" style="width:0%;background:var(--gold)"></span></div></div>
@@ -388,7 +389,7 @@
     </div>
     <div class="col-6">
       <div class="card">
-        <h2>Day Ratings <span class="live-tag">● LIVE</span></h2>
+        <h2>Day Ratings <span data-src="recovery" class="live-tag">● LIVE</span></h2>
         <div class="row"><span class="k">Green (recovered, ≥67%)</span><span class="v good" id="dr-green">—</span></div>
         <div class="row"><span class="k">Yellow (moderate)</span><span class="v warn" id="dr-yellow">—</span></div>
         <div class="row"><span class="k">Red (crash, &lt;34%)</span><span class="v bad" id="dr-red">—</span></div>
@@ -398,7 +399,7 @@
     </div>
     <div class="col-6">
       <div class="card">
-        <h2>What the Data Says <span class="live-tag">● LIVE</span></h2>
+        <h2>What the Data Says <span data-src="recovery" class="live-tag">● LIVE</span></h2>
         <div class="note" id="perfInsight">Loading insight…</div>
       </div>
     </div>
@@ -410,7 +411,7 @@
   <div class="grid">
     <div class="col-6">
       <div class="card">
-        <h2>Today <span class="live-tag">● LIVE</span></h2>
+        <h2>Today <span data-src="food" class="live-tag">● LIVE</span></h2>
         <div id="macroBars">
           <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Calories</span><span class="mv" id="mb-kcal-txt">0 / 2,550</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-kcal" style="width:0%;background:var(--gold)"></div></div></div>
           <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Protein</span><span class="mv" id="mb-p-txt">0 / 145g</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-p" style="width:0%;background:var(--gold)"></div></div></div>
@@ -428,7 +429,7 @@
 
     <div class="col-6">
       <div class="card">
-        <h2>Micronutrients <span class="live-tag">● LIVE</span></h2>
+        <h2>Micronutrients <span data-src="food" class="live-tag">● LIVE</span></h2>
         <div class="row" style="border:none;padding-bottom:4px"><span class="k" style="font-size:11px;color:var(--ink-3);font-family:var(--mono);text-transform:uppercase">Today</span></div>
         <div class="micro-grid" id="microToday"></div>
         <div class="row" style="border:none;padding-bottom:4px"><span class="k" style="font-size:11px;color:var(--ink-3);font-family:var(--mono);text-transform:uppercase">7-Day Pattern</span></div>
@@ -439,7 +440,7 @@
 
     <div class="col-6">
       <div class="card">
-        <h2>Weight Trend <span class="live-tag">● LIVE</span></h2>
+        <h2>Weight Trend <span data-src="checkin" class="live-tag">● LIVE</span></h2>
         <div class="row"><span class="k">Latest logged</span><span class="v" id="wt-latest">—</span></div>
         <div class="row"><span class="k">7-day rolling average</span><span class="v" id="wt-avg">—</span></div>
         <div class="row"><span class="k">Trend</span><span class="v" id="wt-trend">—</span></div>
@@ -788,7 +789,7 @@
     <div class="grid">
       <div class="col-12">
         <div class="card">
-          <h2>Recent Sessions <span class="live-tag">● LIVE</span></h2>
+          <h2>Recent Sessions <span data-src="workouts" class="live-tag">● LIVE</span></h2>
           <div id="sessionsLog"><div class="note">Loading sessions...</div></div>
         </div>
       </div>
@@ -1182,6 +1183,12 @@ steps: `Date,Time,Steps
 
 let lastValues = {};
 let usingSnapshot = false;
+/* Per-source liveness. The old single `usingSnapshot` flag was keyed only to
+   Recovery — if Food or Steps failed while Recovery succeeded, the page
+   reported itself fully live while quietly serving stale data for the failed
+   source, with no visible signal anywhere. Each source now tracks its own
+   state and its badge reflects it. */
+const sourceLive = { recovery:false, sleep:false, workouts:false, cycles:false, food:false, checkin:false, steps:false };
 let cache = { recovery:[], sleep:[], workouts:[], cycles:[], food:[], checkin:[], steps:[] };
 
 /* ---- CSV parsing (handles quoted fields, e.g. gviz output and meal names with commas) ---- */
@@ -1335,7 +1342,15 @@ async function refreshAll() {
   cache.food     = food || (cache.food.length ? cache.food : parseCSV(SNAPSHOT.food)); // filter()-based, not [0]-based — order doesn't matter here
   cache.checkin  = sortByDateDesc(checkin || (cache.checkin.length ? cache.checkin : parseCSV(SNAPSHOT.checkin)));
   cache.steps    = sortByDateDesc(steps || (cache.steps.length ? cache.steps : parseCSV(SNAPSHOT.steps)));
-  usingSnapshot = !rec; // any live fetch succeeding means we're live
+  sourceLive.recovery = !!rec;
+  sourceLive.sleep    = !!sleep;
+  sourceLive.workouts = !!work;
+  sourceLive.cycles   = !!cyc;
+  sourceLive.food     = !!food;
+  sourceLive.checkin  = !!checkin;
+  sourceLive.steps    = !!steps;
+  usingSnapshot = !rec;
+  renderLiveBadges();
 
   renderVitals();
   renderSteps();
@@ -1345,6 +1360,19 @@ async function refreshAll() {
   renderNutrition();
   renderNervousSystem();
   renderSyncStamp();
+}
+
+/* Repaints every badge to match the real state of the source it reflects.
+   A source that fell back to cached/snapshot data shows an amber CACHED badge
+   instead of a green LIVE one, so stale data is never presented as current. */
+function renderLiveBadges() {
+  document.querySelectorAll('.live-tag[data-src]').forEach(function (el) {
+    const live = sourceLive[el.getAttribute('data-src')];
+    const dot = el.textContent.trim().charAt(0) === '\u25cf';
+    el.textContent = live ? (dot ? '\u25cf LIVE' : 'LIVE') : (dot ? '\u25cf CACHED' : 'CACHED');
+    el.classList.toggle('cached', !live);
+    el.title = live ? 'Fetched live this refresh' : 'Live fetch failed \u2014 showing last known data';
+  });
 }
 
 /* ---- static config render (runs once at boot) ---- */
@@ -1648,8 +1676,15 @@ function renderSyncStamp() {
   const now = new Date();
   const timeStr = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
   const staleHours = CONFIG.staleAfterHours || 48;
-  if (usingSnapshot) {
-    stamp.textContent = 'Snapshot 19 Aug \u00b7 live sync pending hosting';
+  const dead = Object.keys(sourceLive).filter(function (k) { return !sourceLive[k]; });
+  if (dead.length === Object.keys(sourceLive).length) {
+    stamp.textContent = 'Offline \u00b7 showing last known data';
+    stamp.classList.add('stale');
+    return;
+  }
+  if (dead.length) {
+    // Partial failure used to be invisible. Name the failed sources explicitly.
+    stamp.textContent = 'Partial sync \u00b7 cached: ' + dead.join(', ') + ' \u00b7 checked ' + timeStr;
     stamp.classList.add('stale');
     return;
   }
