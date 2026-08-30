@@ -878,14 +878,14 @@
 /* ==================================================================
    MULTI-CLIENT BUILD — this file is shared by every client. Nothing
    client-specific is hardcoded here; it's all read from the URL:
-     ?c=CLIENTID&t=THEIRTOKEN
+     ?cid=CLIENTID&t=THEIRTOKEN
    If those are missing or wrong, the page shows a clear "not connected"
    state rather than silently falling back to demo/snapshot data — a
    blank/misconfigured link should never look like a working dashboard.
    ================================================================== */
 function readRuntimeConfig() {
   const params = new URLSearchParams(window.location.search);
-  const clientId = params.get('c');
+  const clientId = params.get('cid');
   const token = params.get('t');
   return {
     clientId: clientId || null,
@@ -999,7 +999,7 @@ function fetchAllData() {
       cleanup();
       resolve(null);
     };
-    script.src = CONFIG.dataEndpoint + '?type=data&c=' + encodeURIComponent(CONFIG.clientId) + '&token=' + encodeURIComponent(CONFIG.token) + '&callback=' + cbName;
+    script.src = CONFIG.dataEndpoint + '?type=data&cid=' + encodeURIComponent(CONFIG.clientId) + '&token=' + encodeURIComponent(CONFIG.token) + '&callback=' + cbName;
     document.body.appendChild(script);
     setTimeout(() => {
       if (settled) return;
@@ -1674,7 +1674,7 @@ function initLiftLogger() {
       if (!entry) return;
       const date = new Date().toLocaleDateString('en-GB', {day:'numeric', month:'short'});
       const payload = encodeURIComponent(JSON.stringify({exercise: ex, entry: entry}));
-      if (RUNTIME.valid) { fetch(LIFT_ENDPOINT + '?type=lift&d=' + payload + '&c=' + encodeURIComponent(CONFIG.clientId) + '&token=' + encodeURIComponent(CONFIG.token), {mode: 'no-cors'}).catch(()=>{}); }
+      if (RUNTIME.valid) { fetch(LIFT_ENDPOINT + '?type=lift&d=' + payload + '&cid=' + encodeURIComponent(CONFIG.clientId) + '&token=' + encodeURIComponent(CONFIG.token), {mode: 'no-cors'}).catch(()=>{}); }
       localStorage.setItem('lift:' + ex, JSON.stringify({entry: entry, date: date}));
       last.textContent = 'Last: ' + entry + ' · ' + date;
       btn.textContent = '✓'; setTimeout(() => { btn.textContent = 'Log'; }, 1200);
