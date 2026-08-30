@@ -1152,7 +1152,7 @@ function setHTML(id, html) {
   const el = document.getElementById(id);
   if (el && html) el.innerHTML = html;
 }
-function setText(id, txt) {
+function curSetText(id, txt) {
   const el = document.getElementById(id);
   if (el && txt) el.textContent = txt;
 }
@@ -1221,20 +1221,20 @@ function applyCurated(rows) {
   }
   if (S['standing_rule']) setHTML('curRules', kvRows(S['standing_rule']));
   if (S['restock'])       setHTML('curRestock', kvRows(S['restock']));
-  if (S['expected_effects'] && S['expected_effects'][0]) setText('curEffects', S['expected_effects'][0]['Detail']);
+  if (S['expected_effects'] && S['expected_effects'][0]) curSetText('curEffects', S['expected_effects'][0]['Detail']);
 
   // ---- training: week grid + badge ----
   if (S['week_day']) setHTML('curWeekGrid', S['week_day'].map(function (r) {
     const type = String(r['Tag'] || 'rest').toLowerCase() === 'trained' ? 'trained' : 'rest';
     return '<div class="day-tile ' + type + '"><div class="d-label">' + esc(r['Title']) + '</div><div class="d-act">' + esc(r['Detail']) + '</div></div>';
   }).join(''));
-  if (S['week_badge'] && S['week_badge'][0]) setText('curWeekBadge', S['week_badge'][0]['Detail']);
+  if (S['week_badge'] && S['week_badge'][0]) curSetText('curWeekBadge', S['week_badge'][0]['Detail']);
 
   // ---- training: session names + exercises ----
   (S['session'] || []).forEach(function (r) {
     const n = parseInt(r['Order'], 10);
     if (!n || n < 1 || n > 3) return;
-    setText('curTab' + n, r['Title']);
+    curSetText('curTab' + n, r['Title']);
     const card = document.getElementById('curSession' + n);
     if (card) {
       const exs = (S['exercise'] || []).filter(function (e) { return parseInt(e['Group'], 10) === n; });
@@ -1256,14 +1256,14 @@ function applyCurated(rows) {
   if (S['physique_priority']) setHTML('curPhysique', S['physique_priority'].map(function (r, i) {
     return '<div class="row"><span class="k">' + (i + 1) + '. ' + esc(r['Title']) + '</span><span class="v">' + esc(r['Detail']) + '</span></div>';
   }).join(''));
-  if (S['programme_notes'] && S['programme_notes'][0]) setText('curProgramme', S['programme_notes'][0]['Detail']);
-  if (S['recovery_rules'] && S['recovery_rules'][0]) setText('curRecovery', S['recovery_rules'][0]['Detail']);
+  if (S['programme_notes'] && S['programme_notes'][0]) curSetText('curProgramme', S['programme_notes'][0]['Detail']);
+  if (S['recovery_rules'] && S['recovery_rules'][0]) curSetText('curRecovery', S['recovery_rules'][0]['Detail']);
 
   // ---- bloodwork ----
   if (S['bw_note']) S['bw_note'].forEach(function (r) {
     const which = String(r['Title'] || '').toLowerCase();
-    if (which === 'summary') setText('curBwSummary', r['Detail']);
-    if (which === 'tag') setText('curBwTag', r['Detail']);
+    if (which === 'summary') curSetText('curBwSummary', r['Detail']);
+    if (which === 'tag') curSetText('curBwTag', r['Detail']);
     if (which === 'orderprep') setHTML('curBwOrderPrep', r['Detail']); // authored by coach, not client input
   });
   if (S['bw_marker']) {
