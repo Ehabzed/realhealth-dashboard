@@ -1415,7 +1415,12 @@ function renderReadiness() {
 
 function renderPerformance() {
   const rec = cache.recovery.slice(0,14), sleep = cache.sleep.slice(0,14), cyc = cache.cycles.slice(0,14);
-  if (!rec.length) return;
+  // Same class of bug as renderNervousSystem: recovery/HRV/RHR tiles and the
+  // Day Ratings + insight text genuinely need recovery data, but sleep and
+  // cycle metrics below are already independently guarded by their own
+  // if-checks — the old top-level early return blocked them too, even when
+  // sleep or cycle data existed on its own with recovery empty.
+  if (rec.length) {
   const recVals = rec.map(r=>parseFloat(r['Recovery %']));
   const hrvVals = rec.map(r=>parseFloat(r['HRV (ms)']));
   const rhrVals = rec.map(r=>parseFloat(r['RHR (bpm)']));
@@ -1424,6 +1429,7 @@ function renderPerformance() {
   setText('perf-recovery', Math.round(recAvg) + '%'); setText('perf-recovery-sub', 'vs ' + CONFIG.baseline.recovery + '% baseline'); setWidth('perf-recovery-bar', recAvg);
   setText('perf-hrv', Math.round(hrvAvg) + 'ms'); setText('perf-hrv-sub', 'vs ' + CONFIG.baseline.hrv + 'ms baseline'); setWidth('perf-hrv-bar', (hrvAvg/120)*100);
   setText('perf-rhr', Math.round(rhrAvg) + 'bpm'); setText('perf-rhr-sub', 'vs ' + CONFIG.baseline.rhr + ' baseline'); setWidth('perf-rhr-bar', 100-(rhrAvg/80)*100);
+  }
 
   if (sleep.length) {
     const perfVals = sleep.map(s=>parseFloat(s['Performance %']));
@@ -1438,6 +1444,8 @@ function renderPerformance() {
     setText('perf-strain', strainAvg.toFixed(1)); setText('perf-strain-sub', 'per day'); setWidth('perf-strain-bar', (strainAvg/21)*100);
   }
 
+  if (rec.length) {
+  const recVals = rec.map(r=>parseFloat(r['Recovery %']));
   const green = recVals.filter(v=>v>=67).length, red = recVals.filter(v=>v<34).length, yellow = recVals.length-green-red;
   setText('dr-green', green + ' days'); setText('dr-yellow', yellow + ' days'); setText('dr-red', red + ' days');
   const worstIdx = recVals.indexOf(Math.min(...recVals)), bestIdx = recVals.indexOf(Math.max(...recVals));
@@ -1449,6 +1457,9 @@ function renderPerformance() {
     ? 'Recovery is tracking at or above your ' + CONFIG.baseline.recovery + '% baseline over the last 7 days. Current window supports normal training load.'
     : 'Recovery has averaged ' + Math.round(recentAvg) + '% over the last 7 days, below your ' + CONFIG.baseline.recovery + '% baseline. Rule for the window: don’t stack a hard session the day after a poor-recovery night, even if the score bounces back to green.';
   setText('perfInsight', insight);
+  } else {
+    setText('perfInsight', 'Connect WHOOP to see recovery-based insights here.');
+  }
 }
 
 function renderSessions() {
@@ -1555,7 +1566,14 @@ function renderNutrition() {
 
 function renderNervousSystem() {
   const rec = cache.recovery, sleep = cache.sleep, checkin = cache.checkin;
-  if (!rec.length) return;
+  // Recovery-derived content (HRV delta, crash-streak state) is genuinely
+  // gated on recovery data. But the check-in list further down is NOT — a
+  // client can log check-ins before ever connecting WHOOP. The old early
+  // return here blocked BOTH behind one guard; this is exactly the bug the
+  // practice run found on Test Client A (real check-in data, zero recovery
+  // data, list stuck on "No check-ins logged yet."). Wrapping only the
+  // recovery-dependent block fixes it without changing anything else.
+  if (rec.length) {
   const hrvVals = rec.slice(0,7).map(r=>parseFloat(r['HRV (ms)']));
   const hrvAvg7 = avg(hrvVals);
   const hrvDelta = hrvAvg7 - CONFIG.baseline.hrv;
@@ -1579,6 +1597,12 @@ function renderNervousSystem() {
   } else {
     stateEl.textContent = 'Regulated'; stateEl.className = 'ns-state regulated';
     document.getElementById('nsWhy').textContent = 'HRV and recovery are holding near baseline. No red flags in the nervous-system pattern right now.';
+  }
+  } else {
+    const stateEl = document.getElementById('nsState');
+    if (stateEl) { stateEl.textContent = 'No recovery data yet'; stateEl.className = 'ns-state loading'; }
+    const whyEl = document.getElementById('nsWhy');
+    if (whyEl) whyEl.textContent = 'Connect WHOOP to see nervous-system state here.';
   }
 
   const checkinList = document.getElementById('checkinList');
