@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RealHealth · Logging</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1D3AC7;
+    background-image: radial-gradient(circle at 15% 0%, rgba(29,143,219,0.35) 0%, transparent 45%);
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .card { text-align: center; max-width: 340px; }
+  .spinner {
+    width: 40px; height: 40px; margin: 0 auto 20px;
+    border: 3px solid rgba(255,255,255,0.2); border-top-color: #F5C13B;
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .icon {
+    width: 52px; height: 52px; margin: 0 auto 20px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  }
+  .icon.ok   { background: rgba(79,209,165,0.15); }
+  .icon.bad  { background: rgba(232,90,90,0.18); }
+  .icon svg { width: 26px; height: 26px; }
+  .title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .sub { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.5; }
+  .retry {
+    margin-top: 18px; display: inline-block; cursor: pointer;
+    background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.3);
+    color: #fff; font-size: 14px; font-weight: 600;
+    padding: 10px 22px; border-radius: 8px;
+  }
+  .retry:active { background: rgba(255,255,255,0.22); }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div id="loading">
+      <div class="spinner"></div>
+      <div class="title">Logging…</div>
+      <div class="sub">Sending to your dashboard</div>
+    </div>
+
+    <div id="done" class="hidden">
+      <div class="icon ok">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4FD1A5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="title" id="doneTitle">Logged</div>
+      <div class="sub">Confirmed saved to your dashboard. You can close this.</div>
+    </div>
+
+    <div id="failed" class="hidden">
+      <div class="icon bad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#E85A5A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+      <div class="title">Not saved</div>
+      <div class="sub" id="failSub">Couldn't reach the server.</div>
+      <div class="retry" id="retryBtn">Try again</div>
+    </div>
+  </div>
+
+<script>
+  /* ================================================================
+     WHY THIS USES JSONP AND NOT fetch()
+     The previous version used fetch(..., {mode:'no-cors'}). In no-cors
+     mode the browser refuses to expose the response to JavaScript at
+     all — the promise resolves as soon as the request is *sent*, not
+     when it is *saved*. That meant this page showed a green "Logged"
+     tick even when the server returned 404, 503, or rejected the write
+     outright. Meals genuinely vanished with a success screen showing.
+
+     A JSONP <script> load can actually read the server's answer, and
+     it's the same mechanism the dashboard already uses successfully to
+     read data — proven working, rather than a second unproven path.
+     Success is now shown ONLY when Apps Script confirms the row was
+     written.
+     ================================================================ */
+  // MULTI-TENANT RELAY: identical logic to the personal log.html, pointed
+  // at the shared multi-tenant backend instead. Every incoming param (cid,
+  // token, type, meal, d, etc) is forwarded through untouched via the
+  // qs = new URLSearchParams(params) line below — nothing else in this
+  // file needed to change for this to work correctly for any client.
+  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbwYj8M1LTRVatoSHRjtUubX-pb-NyJLFe_0Nbty-ZT1TudqSHGOZUHFS0JVpAXJ6lO0/exec';
+  const params = new URLSearchParams(window.location.search);
+  const type = params.get('type') || '';
+  const meal = params.get('meal');
+  const count = params.get('count');
+
+  function friendlyMessage() {
+    if (type === 'food') return meal ? 'Meal logged: ' + decodeURIComponent(meal.replace(/\+/g, ' ')) : 'Meal logged';
+    if (type === 'checkin') return 'Check-in logged';
+    if (type === 'steps') return 'Steps logged' + (count ? ': ' + count : '');
+    if (type === 'lift') return 'Lift logged';
+    return 'Logged';
+  }
+
+  function reasonText(reason) {
+    if (reason === 'timeout')      return 'The server didn\u2019t respond in time. Nothing was saved \u2014 tap to try again.';
+    if (reason === 'network')      return 'Couldn\u2019t reach the server. Check your connection and try again.';
+    if (reason === 'unauthorized') return 'The server rejected this request (bad or missing token). Nothing was saved.';
+    return 'The server didn\u2019t confirm the save. Nothing was written \u2014 tap to try again.';
+  }
+
+  // Resolves only on a real, readable answer from the server.
+  function send() {
+    return new Promise(function (resolve) {
+      const cb = '__rhLog' + Math.floor(Math.random() * 1e9);
+      const s = document.createElement('script');
+      let settled = false;
+      const cleanup = function () {
+        delete window[cb];
+        if (s.parentNode) s.parentNode.removeChild(s);
+      };
+      window[cb] = function (res) {
+        if (settled) return; settled = true; cleanup();
+        resolve(res && res.ok ? { ok: true, msg: res.msg }
+                              : { ok: false, reason: (res && res.error) || 'rejected' });
+      };
+      s.onerror = function () {
+        if (settled) return; settled = true; cleanup();
+        resolve({ ok: false, reason: 'network' });
+      };
+      const qs = new URLSearchParams(params);
+      qs.set('callback', cb);
+      s.src = ENDPOINT + '?' + qs.toString();
+      document.body.appendChild(s);
+      setTimeout(function () {
+        if (settled) return; settled = true; cleanup();
+        resolve({ ok: false, reason: 'timeout' });
+      }, 12000);
+    });
+  }
+
+  function show(id) {
+    ['loading', 'done', 'failed'].forEach(function (k) {
+      document.getElementById(k).classList.toggle('hidden', k !== id);
+    });
+  }
+
+  async function run() {
+    show('loading');
+    // NO automatic retry. A retry here previously caused real duplicate
+    // writes: the script-tag failure signal turned out to be unreliable —
+    // it fired even on requests that had already succeeded server-side.
+    // Retrying on an untrustworthy failure signal risks writing the same
+    // meal twice, which is worse than an honest "not saved" the user can
+    // act on. Only an explicit tap on "Try again" sends a second request.
+    const res = await send();
+    if (res.ok) {
+      document.getElementById('doneTitle').textContent = res.msg || friendlyMessage();
+      show('done');
+    } else {
+      document.getElementById('failSub').textContent = reasonText(res.reason);
+      show('failed');
+    }
+  }
+
+  document.getElementById('retryBtn').addEventListener('click', run);
+  run();
+</script>
+</body>
+</html>
