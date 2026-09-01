@@ -4,10 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RealHealth · Command Center</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon16x16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/appletouchicon.png">
-  <link rel="manifest" href="assets/icons/manifest.json">
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1270,9 +1266,16 @@ function applyCurated(rows) {
     if (which === 'tag') curSetText('curBwTag', r['Detail']);
     if (which === 'orderprep') setHTML('curBwOrderPrep', r['Detail']); // authored by coach, not client input
   });
-  if (S['bw_marker']) {
+  // Rebuild the whole grid whenever there's a summary OR marker data \u2014
+  // not only when markers exist. A client with no bloodwork yet (a real,
+  // common state, not an edge case) has a summary explaining that and no
+  // markers at all; without this, the static bracket-placeholder marker
+  // cards stayed visible underneath a real summary, which reads as broken
+  // rather than intentionally empty. Confirmed by testing an actual
+  // no-bloodwork-yet client.
+  if (S['bw_note'] || S['bw_marker']) {
     const order = []; const groups = {};
-    S['bw_marker'].forEach(function (r) {
+    (S['bw_marker'] || []).forEach(function (r) {
       const g = String(r['Group'] || 'Markers').trim();
       if (!groups[g]) { groups[g] = []; order.push(g); }
       groups[g].push(r);
