@@ -78,12 +78,9 @@
   .flash { animation: flashUpdate 1.4s ease; border-radius: 4px; }
 
   .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
-  /* Paired cards stretch to match the tallest in the row. Space stays INSIDE the border, never outside it. */
   .grid > [class^="col-"] { display: flex; flex-direction: column; }
   .grid > [class^="col-"] > .card { flex: 1; display: flex; flex-direction: column; }
   .grid > [class^="col-"] > .focus-card { flex: 1; display: flex; flex-direction: column; }
-  /* Last element of a stretched card pins to the bottom so the card reads as deliberately full.
-     Only when the note FOLLOWS other content; a card that is just heading + note stays top-anchored. */
   .card > :not(h2) ~ .note:last-child { margin-top: auto; }
   .focus-card > .focus-why { margin-top: auto; padding-top: 12px; }
   .card { background: var(--card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--line); border-radius: 16px; padding: 20px; transition: background 0.2s; }
@@ -221,7 +218,6 @@
   .day-section-label { font-family: var(--mono); font-size: 11px; color: var(--blue-light); text-transform: uppercase; letter-spacing: 0.14em; font-weight: 700; margin-bottom: 8px; margin-top: 4px; }
   .day-summary { font-size: 12px; color: var(--ink-2); margin-bottom: 16px; } .day-summary b { color: var(--ink); font-weight: 500; }
 
-  /* NUTRITION LIVE ADDITIONS */
   .macro-bar-row { margin-bottom: 14px; } .macro-bar-row:last-child { margin-bottom: 0; }
   .macro-bar-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
   .macro-bar-label .mn { color: var(--ink-2); font-weight: 500; } .macro-bar-label .mv { font-family: var(--mono); color: var(--ink); }
@@ -241,7 +237,6 @@
 
   .flag-pill { display: inline-block; font-size: 11.5px; padding: 5px 10px; border-radius: 999px; background: rgba(255,107,107,0.12); border: 1px solid rgba(255,107,107,0.3); color: #ffb3b3; margin: 3px 4px 3px 0; }
 
-  /* NERVOUS SYSTEM */
   .ns-state { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
   .ns-state.regulated { color: var(--green); } .ns-state.loading { color: var(--gold); } .ns-state.crash { color: var(--red); }
   .checkin-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line-soft); font-size: 12.5px; }
@@ -330,8 +325,8 @@
 
     <div class="col-6">
       <div class="card">
-        <h2>Weekly Changes <span class="reviewed-tag">Reviewed 24 Aug</span></h2>
-        <div class="delta-list">
+        <h2>Weekly Changes <span class="reviewed-tag" id="curReviewed1">Reviewed 24 Aug</span></h2>
+        <div class="delta-list" id="curWeeklyChanges">
           <div class="delta-item"><span class="arrow flat">•</span><span class="k">Gut kill-off phase</span><span class="v">22 days left</span></div>
           <div class="delta-item"><span class="arrow up">▲</span><span class="k">Die-off symptoms easing</span><span class="v">tracking with best recovery stretch</span></div>
           <div class="delta-item"><span class="arrow flat">•</span><span class="k">Berberine</span><span class="v">holding 2/day, occasional 1</span></div>
@@ -343,12 +338,14 @@
 
     <div class="col-6">
       <div class="card">
-        <h2>Top Priorities <span class="reviewed-tag">Reviewed 24 Aug</span></h2>
+        <h2>Top Priorities <span class="reviewed-tag" id="curReviewed2">Reviewed 24 Aug</span></h2>
+        <div id="curTopPriorities">
         <div class="todo-item"><div class="todo-priority p-high">1</div><div class="todo-body"><div class="t-main">Back off training intensity 1-2 days</div><div class="t-sub">recovery/HRV moved before you felt it, don't wait for the crash</div></div></div>
         <div class="todo-item"><div class="todo-priority p-high">2</div><div class="todo-body"><div class="t-main">Confirm KLOW shipment</div><div class="t-sub">you'll run dry on CJC/Ipamorelin before it lands if it slips</div></div></div>
         <div class="todo-item"><div class="todo-priority p-med">3</div><div class="todo-body"><div class="t-main">Book TSH retest</div><div class="t-sub">target early Sept · 6.38 → confirm before treatment · pause iodine · calm/rested state</div></div></div>
         <div class="todo-item"><div class="todo-priority p-med">4</div><div class="todo-body"><div class="t-main">Kill-off phase transition plan</div><div class="t-sub">ends Sept 15, 22 days out, start thinking through next phase</div></div></div>
         <div class="todo-item"><div class="todo-priority p-med">5</div><div class="todo-body"><div class="t-main">Reorder magnesium glycinate</div><div class="t-sub">out of stock · pair with threonate for full pre-bed support</div></div></div>
+        </div>
       </div>
     </div>
 
@@ -463,12 +460,14 @@
     <div class="col-6">
       <div class="card">
         <h2>Targets</h2>
+        <div id="curTargets">
         <div class="row"><span class="k">Calories (rest)</span><span class="v">~2,300 kcal</span></div>
         <div class="row"><span class="k">Calories (training)</span><span class="v">~2,550 kcal</span></div>
         <div class="row"><span class="k">Calories (hard day)</span><span class="v">~2,700 kcal</span></div>
         <div class="row"><span class="k">Protein</span><span class="v good">145g / day</span></div>
         <div class="row"><span class="k">Fat cap</span><span class="v">≤80g</span></div>
         <div class="row"><span class="k">Water</span><span class="v good">3,000ml (3L)</span></div>
+        </div>
       </div>
     </div>
 
@@ -487,6 +486,7 @@
     <div class="col-12">
       <div class="card">
         <h2>Meal Rotation <span class="reviewed-tag">Diversity plan, updated 24 Aug</span></h2>
+        <div id="curMeals">
         <div class="stack-block"><div class="stack-time">8:00 AM · Breakfast, rotate</div>
           <div class="stack-item"><div class="si-name">A · Greek yoghurt bowl</div><div class="si-desc">Greek yoghurt 200g + mixed fruit 250g + collagen + 2 Brazil nuts (3-4x/wk) · ~470 kcal · 20g P · calcium, folate, vit C, selenium</div></div>
           <div class="stack-item"><div class="si-name">B · Fruit + raw milk</div><div class="si-desc">Mixed fruit 250g + raw milk + collagen, pinch of salt on training mornings · ~420 kcal · 15g P · lighter pre-training option</div></div>
@@ -505,6 +505,7 @@
           <div class="stack-item"><div class="si-name">C · Grilled chicken + greens</div><div class="si-desc">Search: gà nướng rau xào · chicken + rice + sautéed dark greens · ~550 kcal · 50g P · folate, magnesium, vit A</div></div>
         </div>
         <div class="note note-gold">Salmon minimum 3x per week is the single biggest lever here. Everything else is secondary to that one rule.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -523,8 +524,8 @@
     <div class="grid">
       <div class="col-12">
         <div class="card">
-          <h2>Weekly Structure <span class="tag">3 gym + 2 striking</span></h2>
-          <div class="training-week">
+          <h2>Weekly Structure <span class="tag" id="curWeekBadge">3 gym + 2 striking</span></h2>
+          <div class="training-week" id="curWeekGrid">
             <div class="day-tile trained"><div class="d-label">Mon</div><div class="d-act">Gym<br>Day 1</div></div>
             <div class="day-tile trained"><div class="d-label">Tue</div><div class="d-act">Kickboxing</div></div>
             <div class="day-tile rest"><div class="d-label">Wed</div><div class="d-act">Rest</div></div>
@@ -539,19 +540,21 @@
       <div class="col-6">
         <div class="card">
           <h2>Physique Priorities</h2>
+          <div id="curPhysique">
           <div class="row"><span class="k">1. Lateral delts</span><span class="v warn">biggest visual lever</span></div>
           <div class="row"><span class="k">2. Rear delts + upper back</span><span class="v">3D shoulder look</span></div>
           <div class="row"><span class="k">3. Upper chest</span><span class="v">incline focus</span></div>
           <div class="row"><span class="k">4. Neck</span><span class="v">bridges 3–4×/wk + plate</span></div>
           <div class="row"><span class="k">5. Arms + abs</span><span class="v">accessory work</span></div>
           <div class="row"><span class="k">6. Legs</span><span class="v">maintenance only</span></div>
+          </div>
         </div>
       </div>
 
       <div class="col-6">
         <div class="card">
           <h2>Programme Structure</h2>
-          <div class="note">
+          <div class="note" id="curProgramme">
             <b>Each gym day has 2 sections.</b> Friends section (shared compounds) + solo stay-back (10–15 min, priority work). The stay-back is where physique priorities live, short enough to always do it.<br><br>
             <b>Maingain rule.</b> Weight creeping up fast or waist wider, pull back 100–150 kcal. Weight dropping, add 100 kcal from carbs.
           </div>
@@ -561,7 +564,7 @@
       <div class="col-12">
         <div class="card">
           <h2>Recovery Rules</h2>
-          <div class="note">
+          <div class="note" id="curRecovery">
             <b>Cap strain ≤12</b> on any day recovery &lt;60%.<br>
             <b>Don’t stack</b> hard training day after low-recovery night, Tuesday crashes trace to weekend push.<br>
             <b>Sprints (1×/wk)</b> planned post-bloodwork window.<br>
@@ -806,6 +809,7 @@
     <div class="col-8">
       <div class="card">
         <h2>Daily Protocol <span class="tag">by time of day</span></h2>
+        <div id="curStack">
 
         <div class="stack-block">
           <div class="stack-time">On Waking · Fasted</div>
@@ -851,21 +855,25 @@
           <div class="stack-item"><div class="si-name">Magnesium Threonate</div><div class="si-desc">brain magnesium · sleep + cognition (glycinate out of stock, reorder)</div></div>
           <div class="stack-item"><div class="si-name">Myo-inositol</div><div class="si-desc">2nd dose · sleep quality</div></div>
         </div>
+        </div>
       </div>
     </div>
 
     <div class="col-4">
       <div class="card">
         <h2>Standing Rules</h2>
+        <div id="curRules">
         <div class="row"><span class="k">Creatine</span><span class="v bad">Excluded</span></div>
         <div class="row"><span class="k">Zinc</span><span class="v warn">Alt days only</span></div>
         <div class="row"><span class="k">Berberine</span><span class="v warn">Always w/ food</span></div>
         <div class="row"><span class="k">S. boulardii ↔ Berberine</span><span class="v">2h+ apart</span></div>
         <div class="row"><span class="k">CJC/Ipa fasted window</span><span class="v">2–3h</span></div>
+        </div>
       </div>
 
       <div class="card" style="margin-top:16px">
         <h2>Restock Tracker</h2>
+        <div id="curRestock">
         <div class="row"><span class="k">Berberine</span><span class="v warn">~2wk left</span></div>
         <div class="row"><span class="k">NAC</span><span class="v good">~6wk left</span></div>
         <div class="row"><span class="k">Bioflora S. boulardii</span><span class="v good">~30 days</span></div>
@@ -873,11 +881,12 @@
         <div class="row"><span class="k">CJC-1295/Ipamorelin</span><span class="v bad">days left, reorder placed</span></div>
         <div class="row"><span class="k">Raw milk + raw honey</span><span class="v good">arriving this week</span></div>
         <div class="row"><span class="k">Mag glycinate</span><span class="v bad">OUT, reorder</span></div>
+        </div>
       </div>
 
       <div class="card" style="margin-top:16px">
         <h2>Expected Effects</h2>
-        <div class="note">Most items work upstream, you won&rsquo;t feel them acutely. Watch for: better sleep depth (CJC/Ipa), less bloating (gut protocol), steadier energy (methylation stack), reduced tendon soreness (collagen + peptide combo).</div>
+        <div class="note" id="curEffects">Most items work upstream, you won&rsquo;t feel them acutely. Watch for: better sleep depth (CJC/Ipa), less bloating (gut protocol), steadier energy (methylation stack), reduced tendon soreness (collagen + peptide combo).</div>
       </div>
     </div>
   </div>
@@ -889,6 +898,7 @@
     <div class="col-12">
       <div class="card">
         <h2>Ranked Priorities <span class="tag">active</span></h2>
+        <div id="curTodo">
 
         <div class="todo-item">
           <div class="todo-priority p-high">HIGH</div>
@@ -937,13 +947,14 @@
             <div class="t-sub">confirms Candida + Bacteroides normalisation from protocol</div>
           </div>
         </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 <!-- ============ BLOODWORK ============ -->
 <div class="panel" data-panel="bloods">
-  <div class="grid">
+  <div class="grid" id="curBloodworkGrid">
     <div class="col-12">
       <div class="card card-gold">
         <h2>Overall Trajectory <span class="tag">Aug 4 2026 · Medilab</span></h2>
@@ -1074,22 +1085,10 @@
 </div>
 
 <script>
-/* ============ CONFIG ============
-   To duplicate this dashboard for a client, change ONLY this block.
-   Everything below reads from here — no personal values live anywhere else.
-   ===================================== */
 const CONFIG = {
   name: 'Ehab',
-  // NEW: reads now go through the token-gated Apps Script endpoint instead of
-  // the public gviz CSV links below. Paste your real token here once you've
-  // set it via setAccessToken() in Code.gs (see handoff notes). Same URL as
-  // LIFT_ENDPOINT further down — one Apps Script deployment does both jobs.
   dataEndpoint: 'https://script.google.com/macros/s/AKfycbx1DnPyoKzyc-n9WS_j0YtsCq75HbjQTzlFMG9WUKTP8870v8TKDItCuTZaiy1aq2APtw/exec',
   token: 'adadedb5-4ca7-4739-bb03-03e66ae892866e50e502-6647-4491-adac-a586aa8a4f36',
-  // DEPRECATED — kept only as a manual rollback path (see handoff notes).
-  // Do not delete until the token-gated fetch above is confirmed working AND
-  // the Sheet has been made private. Once the Sheet is private these will
-  // 403 anyway, at which point this whole block can be deleted.
   urls: {
     recovery: 'https://docs.google.com/spreadsheets/d/1WKj4hxG9GeLZq0LPn6wIWJFifmNvmwH9n2qpbLoDRqk/gviz/tq?tqx=out:csv&gid=1342778894',
     sleep: 'https://docs.google.com/spreadsheets/d/1WKj4hxG9GeLZq0LPn6wIWJFifmNvmwH9n2qpbLoDRqk/gviz/tq?tqx=out:csv&gid=579100533',
@@ -1110,18 +1109,10 @@ const CONFIG = {
     'Excess dairy on berberine days'
   ],
   avoidNote: 'Standing reminder tied to your Candida/Bacteroides overgrowth and Oxalobacter-below-detection result. Not a hard ban. Minimise, don\u2019t obsess.',
-  // Pipeline-health thresholds. "Stale" means the pipeline is probably dead;
-  // "no data today" is NOT stale (a rest day off the strap shouldn't alarm anyone).
   staleAfterHours: 48,
   refreshMs: 30000
 };
 
-
-/* ---- SNAPSHOT FALLBACK ----
-   Published artifacts run in a sandbox that blocks fetch(). When a fetch fails,
-   the dashboard falls back to this snapshot so it still shows real numbers.
-   Hosted outside Claude, the live fetch works and this is ignored.
-   Snapshot taken 19 Aug 2026. Refresh via Cowork weekly until hosted. */
 const SNAPSHOT = {
 recovery: `Date,Recovery %,HRV (ms),RHR (bpm),SpO2,Skin Temp C
 2026-08-19,86,86.069016,50,97.25,33.97867
@@ -1187,15 +1178,9 @@ steps: `Date,Time,Steps
 
 let lastValues = {};
 let usingSnapshot = false;
-/* Per-source liveness. The old single `usingSnapshot` flag was keyed only to
-   Recovery — if Food or Steps failed while Recovery succeeded, the page
-   reported itself fully live while quietly serving stale data for the failed
-   source, with no visible signal anywhere. Each source now tracks its own
-   state and its badge reflects it. */
 const sourceLive = { recovery:false, sleep:false, workouts:false, cycles:false, food:false, checkin:false, steps:false };
 let cache = { recovery:[], sleep:[], workouts:[], cycles:[], food:[], checkin:[], steps:[] };
 
-/* ---- CSV parsing (handles quoted fields, e.g. gviz output and meal names with commas) ---- */
 function parseCSVLine(line) {
   const out = []; let cur = ''; let inQ = false;
   for (let i = 0; i < line.length; i++) {
@@ -1227,18 +1212,10 @@ async function fetchCSV(url) {
     if (!res.ok) throw new Error('bad response');
     return parseCSV(await res.text());
   } catch (err) {
-    return null; // graceful failure: caller keeps last known data
+    return null;
   }
 }
 
-/* ---- NEW: token-gated data fetch, replaces the 7 direct gviz CSV fetches ----
-   Uses a JSONP-style <script> tag load instead of fetch() on purpose: Apps
-   Script Web App CORS behaviour on cross-origin fetch() is inconsistent (this
-   is exactly why log.html had to fall back to mode:'no-cors' for writes), so
-   a <script src=...> load sidesteps that uncertainty entirely — browsers
-   never apply CORS to script tags. Resolves to null on any failure (bad
-   token, network error, timeout) so refreshAll()'s existing snapshot-fallback
-   logic below is completely unchanged. */
 let _rhDataCounter = 0;
 function fetchAllData() {
   return new Promise((resolve) => {
@@ -1272,7 +1249,6 @@ function fetchAllData() {
   });
 }
 
-/* ---- helpers ---- */
 function setText(id, text) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -1293,14 +1269,6 @@ function daysAgo(dateStr) {
   return Math.floor((now - d) / 86400000);
 }
 function avg(arr) { return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0; }
-/* Sheets get rows appended in whatever order they arrive — a bulk historical
-   import in one order, then each new day tacked onto the end going forward.
-   Row position is NOT reliable as a recency signal. Every render function in
-   this file assumes array[0] is "most recent" (today's vitals, 7-day/3-day
-   windows, sparklines, weight trend, the sync-stamp date) — so instead of
-   patching each of those call sites, every cached array is sorted newest-first
-   by its actual Date field once here, right after it arrives. That keeps the
-   rest of the file's [0]/.slice(0,N) assumptions correct without touching them. */
 function sortByDateDesc(rows, dateField) {
   dateField = dateField || 'Date';
   return rows.slice().sort((a, b) => {
@@ -1329,7 +1297,6 @@ function renderSpark(id, values, color) {
   svg.innerHTML = '<path d="' + path + '" fill="none" stroke="' + color + '" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>';
 }
 
-/* ---- main render ---- */
 async function refreshAll() {
   const bundle = await fetchAllData();
   const rec     = bundle ? parseCSV(bundle.recovery)  : null;
@@ -1339,11 +1306,12 @@ async function refreshAll() {
   const food    = bundle ? parseCSV(bundle.food)      : null;
   const checkin = bundle ? parseCSV(bundle.checkin)   : null;
   const steps   = bundle ? parseCSV(bundle.steps)     : null;
+  const curated = bundle && bundle.curated ? parseCSV(bundle.curated) : null;
   cache.recovery = sortByDateDesc(rec || (cache.recovery.length ? cache.recovery : parseCSV(SNAPSHOT.recovery)));
   cache.sleep    = sortByDateDesc(sleep || (cache.sleep.length ? cache.sleep : parseCSV(SNAPSHOT.sleep)));
   cache.workouts = sortByDateDesc(work || (cache.workouts.length ? cache.workouts : parseCSV(SNAPSHOT.workouts)));
   cache.cycles   = sortByDateDesc(cyc || (cache.cycles.length ? cache.cycles : parseCSV(SNAPSHOT.cycles)));
-  cache.food     = food || (cache.food.length ? cache.food : parseCSV(SNAPSHOT.food)); // filter()-based, not [0]-based — order doesn't matter here
+  cache.food     = food || (cache.food.length ? cache.food : parseCSV(SNAPSHOT.food));
   cache.checkin  = sortByDateDesc(checkin || (cache.checkin.length ? cache.checkin : parseCSV(SNAPSHOT.checkin)));
   cache.steps    = sortByDateDesc(steps || (cache.steps.length ? cache.steps : parseCSV(SNAPSHOT.steps)));
   sourceLive.recovery = !!rec;
@@ -1356,6 +1324,8 @@ async function refreshAll() {
   usingSnapshot = !rec;
   renderLiveBadges();
 
+  if (curated) applyCurated(curated);
+
   renderVitals();
   renderSteps();
   renderReadiness();
@@ -1366,9 +1336,6 @@ async function refreshAll() {
   renderSyncStamp();
 }
 
-/* Repaints every badge to match the real state of the source it reflects.
-   A source that fell back to cached/snapshot data shows an amber CACHED badge
-   instead of a green LIVE one, so stale data is never presented as current. */
 function renderLiveBadges() {
   document.querySelectorAll('.live-tag[data-src]').forEach(function (el) {
     const live = sourceLive[el.getAttribute('data-src')];
@@ -1379,7 +1346,139 @@ function renderLiveBadges() {
   });
 }
 
-/* ---- static config render (runs once at boot) ---- */
+/* ================================================================
+   CURATED CONTENT RENDERER — same proven logic as the client system,
+   scoped to the sections that map cleanly onto it. Training's Day 1/2/3
+   exercise lists are NOT covered yet (see handoff notes: shared vs
+   solo-stayback structure needs its own schema, deliberately not
+   forced into this pass). Everything else — weekly changes, top
+   priorities, targets, meals, full stack, standing rules, restock,
+   training overview, to-do, bloodwork — reads from here.
+   ================================================================ */
+function esc(s) {
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function bySection(rows) {
+  const out = {};
+  (rows || []).forEach(function (r) {
+    const s = String(r['Section'] || '').trim();
+    if (!s) return;
+    (out[s] = out[s] || []).push(r);
+  });
+  Object.keys(out).forEach(function (k) {
+    out[k].sort(function (a, b) { return (parseFloat(a['Order']) || 0) - (parseFloat(b['Order']) || 0); });
+  });
+  return out;
+}
+function setHTML(id, html) {
+  const el = document.getElementById(id);
+  if (el && html) el.innerHTML = html;
+}
+function curSetText(id, txt) {
+  const el = document.getElementById(id);
+  if (el && txt) el.textContent = txt;
+}
+
+function applyCurated(rows) {
+  if (!rows || !rows.length) return;
+  const S = bySection(rows);
+
+  (S['target'] || []).forEach(function (r) {
+    const k = String(r['Title'] || '').trim();
+    const v = parseFloat(r['Detail']);
+    if (!isNaN(v) && ['kcal','protein','fat','water'].indexOf(k) !== -1) CONFIG.targets[k] = v;
+  });
+  if (S['target']) {
+    const label = { kcal_rest:'Calories (rest)', kcal_training:'Calories (training)', kcal_hard:'Calories (hard day)', kcal:'Calories', protein:'Protein', fat:'Fat cap', water:'Water' };
+    const shown = S['target'].filter(function (r) { return label[String(r['Title']).trim()]; });
+    if (shown.length) setHTML('curTargets', shown.map(function (r) {
+      return '<div class="row"><span class="k">' + esc(label[String(r['Title']).trim()]) + '</span><span class="v">' + esc(r['Detail']) + esc(r['Tag'] ? ' ' + r['Tag'] : '') + '</span></div>';
+    }).join(''));
+  }
+
+  if (S['weekly_change']) setHTML('curWeeklyChanges', S['weekly_change'].map(function (r) {
+    const t = String(r['Tag'] || 'flat').toLowerCase();
+    const arrow = t === 'up' ? '\u25b2' : (t === 'down' ? '\u25bc' : '\u2022');
+    return '<div class="delta-item"><span class="arrow ' + esc(t) + '">' + arrow + '</span><span class="k">' + esc(r['Title']) + '</span><span class="v">' + esc(r['Detail']) + '</span></div>';
+  }).join(''));
+
+  if (S['top_priority']) setHTML('curTopPriorities', S['top_priority'].map(function (r, i) {
+    const lvl = String(r['Tag'] || (i < 2 ? 'high' : 'med')).toLowerCase();
+    return '<div class="todo-item"><div class="todo-priority p-' + esc(lvl) + '">' + (i + 1) + '</div><div class="todo-body"><div class="t-main">' + esc(r['Title']) + '</div><div class="t-sub">' + esc(r['Detail']) + '</div></div></div>';
+  }).join(''));
+
+  if (S['todo']) setHTML('curTodo', S['todo'].map(function (r) {
+    const tag = String(r['Tag'] || 'MED').toUpperCase();
+    const cls = tag === 'HIGH' ? 'p-high' : (tag === 'MED' ? 'p-med' : 'p-low');
+    return '<div class="todo-item"><div class="todo-priority ' + cls + '">' + esc(tag) + '</div><div class="todo-body"><div class="t-main">' + esc(r['Title']) + '</div><div class="t-sub">' + esc(r['Detail']) + '</div></div></div>';
+  }).join(''));
+
+  function blocks(list, withDesc) {
+    const order = []; const groups = {};
+    list.forEach(function (r) {
+      const g = String(r['Group'] || '').trim() || 'Other';
+      if (!groups[g]) { groups[g] = []; order.push(g); }
+      groups[g].push(r);
+    });
+    return order.map(function (g) {
+      return '<div class="stack-block"><div class="stack-time">' + esc(g) + '</div>' + groups[g].map(function (r) {
+        return '<div class="stack-item"><div class="si-name">' + esc(r['Title']) + '</div>' + (withDesc && r['Detail'] ? '<div class="si-desc">' + esc(r['Detail']) + '</div>' : '') + '</div>';
+      }).join('') + '</div>';
+    }).join('');
+  }
+  if (S['meal'])  setHTML('curMeals', blocks(S['meal'], false));
+  if (S['stack']) setHTML('curStack', blocks(S['stack'], true));
+
+  function kvRows(list) {
+    return list.map(function (r) {
+      const cls = { good: ' good', warn: ' warn', bad: ' bad' }[String(r['Tag'] || '').toLowerCase()] || '';
+      return '<div class="row"><span class="k">' + esc(r['Title']) + '</span><span class="v' + cls + '">' + esc(r['Detail']) + '</span></div>';
+    }).join('');
+  }
+  if (S['standing_rule']) setHTML('curRules', kvRows(S['standing_rule']));
+  if (S['restock'])       setHTML('curRestock', kvRows(S['restock']));
+  if (S['expected_effects'] && S['expected_effects'][0]) curSetText('curEffects', S['expected_effects'][0]['Detail']);
+
+  if (S['week_day']) setHTML('curWeekGrid', S['week_day'].map(function (r) {
+    const type = String(r['Tag'] || 'rest').toLowerCase() === 'trained' ? 'trained' : 'rest';
+    return '<div class="day-tile ' + type + '"><div class="d-label">' + esc(r['Title']) + '</div><div class="d-act">' + esc(r['Detail']) + '</div></div>';
+  }).join(''));
+  if (S['week_badge'] && S['week_badge'][0]) curSetText('curWeekBadge', S['week_badge'][0]['Detail']);
+
+  if (S['physique_priority']) setHTML('curPhysique', S['physique_priority'].map(function (r, i) {
+    return '<div class="row"><span class="k">' + (i + 1) + '. ' + esc(r['Title']) + '</span><span class="v">' + esc(r['Detail']) + '</span></div>';
+  }).join(''));
+  if (S['programme_notes'] && S['programme_notes'][0]) curSetText('curProgramme', S['programme_notes'][0]['Detail']);
+  if (S['recovery_rules'] && S['recovery_rules'][0]) curSetText('curRecovery', S['recovery_rules'][0]['Detail']);
+
+  if (S['bw_note']) S['bw_note'].forEach(function (r) {
+    const which = String(r['Title'] || '').toLowerCase();
+    if (which === 'summary') curSetText('curBwSummary', r['Detail']);
+    if (which === 'tag') curSetText('curBwTag', r['Detail']);
+    if (which === 'orderprep') setHTML('curBwOrderPrep', r['Detail']);
+  });
+  if (S['bw_marker']) {
+    const order = []; const groups = {};
+    S['bw_marker'].forEach(function (r) {
+      const g = String(r['Group'] || 'Markers').trim();
+      if (!groups[g]) { groups[g] = []; order.push(g); }
+      groups[g].push(r);
+    });
+    const grid = document.getElementById('curBloodworkGrid');
+    if (grid) {
+      const summaryCard = '<div class="col-12"><div class="card card-gold"><h2>Overall Trajectory <span class="tag" id="curBwTag2">' + esc((S['bw_note'] || []).filter(function(r){return String(r['Title']).toLowerCase()==='tag';}).map(function(r){return r['Detail'];})[0] || 'latest panel') + '</span></h2><div style="font-size:14px; line-height:1.6; color:var(--ink)">' + esc((S['bw_note'] || []).filter(function(r){return String(r['Title']).toLowerCase()==='summary';}).map(function(r){return r['Detail'];})[0] || '') + '</div></div></div>';
+      const markerCards = order.map(function (g) {
+        return '<div class="col-6"><div class="card"><h2>' + esc(g) + '</h2>' + groups[g].map(function (r) {
+          const vcls = { good: ' good', warn: ' warn', bad: ' bad' }[String((r['Extra'] || '').split('|')[1] || '').toLowerCase()] || '';
+          return '<div class="marker-row"><div class="m-name">' + esc(r['Title']) + '<div class="m-sub">' + esc(r['Detail']) + '</div></div><div class="m-val' + vcls + '">' + esc(r['Tag'] || '\u2014') + '</div><div class="m-trend">' + esc(String(r['Extra'] || '').split('|')[0]) + '</div></div>';
+        }).join('') + '</div></div>';
+      }).join('');
+      const drawCard = '<div class="col-12"><div class="card"><h2>Next Blood Draw <span class="tag">edit per client</span></h2><div class="note note-gold"><span id="curBwOrderPrep2">' + esc((S['bw_note'] || []).filter(function(r){return String(r['Title']).toLowerCase()==='orderprep';}).map(function(r){return r['Detail'];})[0] || '') + '</span></div></div></div>';
+      grid.innerHTML = summaryCard + markerCards + drawCard;
+    }
+  }
+}
+
 function renderStaticConfig() {
   const n = document.getElementById('userName'); if (n) n.textContent = CONFIG.name;
   const pills = document.getElementById('avoidPills');
@@ -1392,7 +1491,7 @@ function renderSteps() {
   if (!steps.length) return;
   const today = new Date().toISOString().split('T')[0];
   const todayRow = steps.find(s => s['Date'] === today);
-  const latest = todayRow || steps[0]; // cache.steps is sorted newest-first, so [0] is the most recent day on file
+  const latest = todayRow || steps[0];
   const count = latest ? parseInt(latest['Steps']) : null;
   if (count === null || isNaN(count)) return;
   setText('val-steps', count.toLocaleString());
@@ -1402,7 +1501,6 @@ function renderSteps() {
   if (tile) tile.className = 'vital-tile ' + (pct >= 1 ? 'tile-green' : pct >= 0.6 ? 'tile-amber' : 'tile-red');
   const whenLabel = todayRow ? 'today' : ('last: ' + (latest['Date'] || ''));
   setText('sub-steps', Math.round(pct * 100) + '% of ' + (goal/1000) + 'k \u00b7 ' + whenLabel);
-  // sparkline wants newest-first, same convention as every other spark call — renderSpark reverses internally for left-to-right chronological drawing
   const recent = steps.slice(0,14).map(s => parseInt(s['Steps'])).filter(v => !isNaN(v));
   renderSpark('spark-steps', recent, '#7EC5E8');
 }
@@ -1525,7 +1623,7 @@ function renderPerformance() {
   const recentAvg = avg(recVals.slice(0,7));
   const insight = recentAvg >= CONFIG.baseline.recovery
     ? 'Recovery is tracking at or above your ' + CONFIG.baseline.recovery + '% baseline over the last 7 days. Current window supports normal training load.'
-    : 'Recovery has averaged ' + Math.round(recentAvg) + '% over the last 7 days, below your ' + CONFIG.baseline.recovery + '% baseline. Rule for the window: don’t stack a hard session the day after a poor-recovery night, even if the score bounces back to green.';
+    : 'Recovery has averaged ' + Math.round(recentAvg) + '% over the last 7 days, below your ' + CONFIG.baseline.recovery + '% baseline. Rule for the window: don\u2019t stack a hard session the day after a poor-recovery night, even if the score bounces back to green.';
   setText('perfInsight', insight);
 }
 
@@ -1563,7 +1661,6 @@ function renderNutrition() {
   document.getElementById('mb-f').style.background = f > CONFIG.targets.fat ? 'var(--red)' : 'var(--gold)';
   setText('mb-water-txt', Math.round(water) + ' / ' + CONFIG.targets.water + 'ml'); setWidth('mb-water', (water/CONFIG.targets.water)*100);
 
-  // Meal timing strip
   const strip = document.getElementById('timingStrip');
   if (strip) {
     let dotsHtml = '';
@@ -1581,8 +1678,6 @@ function renderNutrition() {
     strip.innerHTML = dotsHtml || '<div class="note" style="margin:0;padding:8px">No meals logged today yet.</div>';
   }
 
-  // Micronutrients today
-  // Vit A intentionally excluded from display: fat-soluble, liver-stored for months, daily food tracking is noise not signal. Still accepted by the pipeline, just not shown.
   const micros = ['VitC','VitD','B12','Folate','Iron','Calcium','Magnesium','Potassium','Zinc','Omega3'];
   const microToday = document.getElementById('microToday');
   if (microToday) {
@@ -1592,7 +1687,6 @@ function renderNutrition() {
       return '<div class="micro-cell ' + status + '"><div class="mc-label">' + m + '</div><div class="mc-dot"></div></div>';
     }).join('');
   }
-  // 7-day pattern
   const micro7d = document.getElementById('micro7d');
   if (micro7d) {
     const last7Rows = food.filter(r => { const d = daysAgo(r['Date']); return d>=0 && d<7; });
@@ -1612,7 +1706,6 @@ function renderNutrition() {
     }
   }
 
-  // Weight trend
   if (checkin.length) {
     const withWeight = checkin.filter(c => c['Weight_kg'] && !isNaN(parseFloat(c['Weight_kg'])));
     if (withWeight.length) {
@@ -1687,17 +1780,14 @@ function renderSyncStamp() {
     return;
   }
   if (dead.length) {
-    // Partial failure used to be invisible. Name the failed sources explicitly.
     stamp.textContent = 'Partial sync \u00b7 cached: ' + dead.join(', ') + ' \u00b7 checked ' + timeStr;
     stamp.classList.add('stale');
     return;
   }
   if (daysBack * 24 >= staleHours) {
-    // Genuinely stale: multiple days with nothing landing. Probably a broken pipeline.
     stamp.textContent = 'Last WHOOP data ' + latestDate + ' \u00b7 check sync';
     stamp.classList.add('stale');
   } else if (daysBack >= 1) {
-    // No data today yet, but recent. Normal for a rest day off the strap or before WHOOP scores the morning. Quiet, not alarming.
     stamp.textContent = 'Last WHOOP data ' + latestDate + ' \u00b7 checked ' + timeStr;
     stamp.classList.remove('stale');
   } else {
@@ -1706,7 +1796,6 @@ function renderSyncStamp() {
   }
 }
 
-/* ---- tab / subtab switching ---- */
 const tabs = document.querySelectorAll('.tab');
 const panels = document.querySelectorAll('.panel');
 tabs.forEach(t => {
@@ -1728,10 +1817,10 @@ document.querySelectorAll('.subtab').forEach(st => {
   });
 });
 
-/* ---- boot ---- */
-const LIFT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbx1DnPyoKzyc-n9WS_j0YtsCq75HbjQTzlFMG9WUKTP8870v8TKDItCuTZaiy1aq2APtw/exec';
+const LIFT_ENDPOINT = CONFIG.dataEndpoint;
 function initLiftLogger() {
   document.querySelectorAll('.ex-item').forEach(item => {
+    if (item.querySelector('.ex-log')) return;
     const titleEl = item.querySelector('.ex-title');
     if (!titleEl) return;
     const ex = titleEl.textContent.trim();
