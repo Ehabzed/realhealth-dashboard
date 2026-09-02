@@ -514,9 +514,9 @@
 <div class="panel" data-panel="training">
   <div class="subtabbar" role="tablist">
     <button class="subtab active" data-subtab="tr-overview">Overview</button>
-    <button class="subtab" data-subtab="tr-d1">Day 1 · Push</button>
-    <button class="subtab" data-subtab="tr-d2">Day 2 · Pull</button>
-    <button class="subtab" data-subtab="tr-d3">Day 3 · Hybrid</button>
+    <button class="subtab" data-subtab="tr-d1" id="curTrTab1">Day 1 · Push</button>
+    <button class="subtab" data-subtab="tr-d2" id="curTrTab2">Day 2 · Pull</button>
+    <button class="subtab" data-subtab="tr-d3" id="curTrTab3">Day 3 · Hybrid</button>
     <button class="subtab" data-subtab="tr-log">Session Log</button>
   </div>
 
@@ -578,7 +578,7 @@
   <div class="subpanel" data-subpanel="tr-d1">
     <div class="grid">
       <div class="col-12">
-        <div class="card">
+        <div class="card" id="curSession1">
           <h2>Day 1 · Push <span class="tag">chest · shoulders · tris · legs (maint)</span></h2>
           <div class="day-summary">Big presses with the boys, then <b>solo stay-back</b> for lateral delts, tris, and neck.</div>
 
@@ -648,7 +648,7 @@
   <div class="subpanel" data-subpanel="tr-d2">
     <div class="grid">
       <div class="col-12">
-        <div class="card">
+        <div class="card" id="curSession2">
           <h2>Day 2 · Pull <span class="tag">back · rear delts · biceps · abs</span></h2>
           <div class="day-summary">Heavy pulls with the boys, then <b>solo stay-back</b> for rear delts and abs.</div>
 
@@ -725,7 +725,7 @@
   <div class="subpanel" data-subpanel="tr-d3">
     <div class="grid">
       <div class="col-12">
-        <div class="card">
+        <div class="card" id="curSession3">
           <h2>Day 3 · Hybrid <span class="tag">shoulders · arms · posterior · abs · neck</span></h2>
           <div class="day-summary">Posterior chain + arms with the boys, then <b>solo stay-back</b> hitting shoulders + neck again for the week.</div>
 
@@ -1450,6 +1450,53 @@ function applyCurated(rows) {
   }).join(''));
   if (S['programme_notes'] && S['programme_notes'][0]) curSetText('curProgramme', S['programme_notes'][0]['Detail']);
   if (S['recovery_rules'] && S['recovery_rules'][0]) curSetText('curRecovery', S['recovery_rules'][0]['Detail']);
+
+  // ---- training: day sessions with shared/solo exercise split ----
+  // Group encodes both which day (1/2/3) and which sub-block (shared/solo),
+  // e.g. "1-shared" or "1-solo" — no new sheet columns needed, just a
+  // convention on the existing Group field. This is what makes the
+  // day-by-day training tab spreadsheet-editable, same as everything else.
+  if (S['session']) {
+    S['session'].forEach(function (r) {
+      const n = parseInt(r['Order'], 10);
+      if (!n || n < 1 || n > 3) return;
+      curSetText('curTrTab' + n, r['Title']);
+      const card = document.getElementById('curSession' + n);
+      if (!card) return;
+
+      const summaryRow = (S['day_summary'] || []).find(function (d) { return parseInt(d['Order'], 10) === n; });
+      const shared = (S['exercise'] || []).filter(function (e) { return String(e['Group']) === (n + '-shared'); });
+      const solo   = (S['exercise'] || []).filter(function (e) { return String(e['Group']) === (n + '-solo'); });
+
+      function exItem(e) {
+        let name = String(e['Title'] || '');
+        const star = name.charAt(0) === '*';
+        if (star) name = name.slice(1).trim();
+        return '<div class="ex-item"><div class="ex-name-block"><div class="ex-title">'
+          + (star ? '<span class="priority-star"></span>' : '') + esc(name) + '</div>'
+          + (e['Detail'] ? '<div class="ex-notes">' + esc(e['Detail']) + '</div>' : '') + '</div>'
+          + '<div class="ex-sets-block"><div class="ex-sets">' + esc(e['Tag'] || '') + '</div><div class="ex-rpe">' + esc(e['Extra'] || '') + '</div></div></div>';
+      }
+
+      let html = '<h2>' + esc(r['Title']) + (r['Detail'] ? ' <span class="tag">' + esc(r['Detail']) + '</span>' : '') + '</h2>';
+      if (summaryRow) html += '<div class="day-summary">' + esc(summaryRow['Detail']) + '</div>';
+      if (shared.length) {
+        html += '<div class="day-section-label">With friends</div>'
+          + '<div class="ex-group-header shared">Shared Compounds</div>'
+          + '<div class="ex-list shared">' + shared.map(exItem).join('') + '</div>';
+      }
+      if (solo.length) {
+        html += '<div class="day-section-label" style="margin-top:20px">Stay-back \u00b7 solo</div>'
+          + '<div class="ex-group-header solo">Priority Work</div>'
+          + '<div class="ex-list solo">' + solo.map(exItem).join('') + '</div>';
+      }
+      card.innerHTML = html;
+    });
+    // Newly-built exercise rows need their lift-log inputs attached.
+    // initLiftLogger() is idempotent (skips items that already have one),
+    // so re-running it here is always safe.
+    if (typeof initLiftLogger === 'function') initLiftLogger();
+  }
 
   if (S['bw_note']) S['bw_note'].forEach(function (r) {
     const which = String(r['Title'] || '').toLowerCase();
