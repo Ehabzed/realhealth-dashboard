@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RealHealth · Protocols</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--blue-deep:#1D3AC7;--blue-deep-2:#172FA3;--blue-mid:#1D8FDB;--blue-light:#7EC5E8;--gold:#F5C13B;--gold-soft:#E8B02D;--cream:#FCF8E8;--ink:#fff;--ink-2:rgba(255,255,255,.72);--ink-3:rgba(255,255,255,.48);--line:rgba(255,255,255,.10);--line-soft:rgba(255,255,255,.06);--card:rgba(255,255,255,.05);--card-hover:rgba(255,255,255,.08);--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono','SF Mono',Menlo,monospace;--green:#4FD1A5;--amber:#F5C13B;--red:#FF6B6B}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:linear-gradient(160deg,var(--blue-deep-2) 0%,#0E1A5C 55%,#0A1240 100%);color:var(--ink);min-height:100vh;padding:20px 16px 80px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:680px;margin:0 auto}
+header{margin-bottom:22px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+h1{font-size:26px;font-weight:700;letter-spacing:-.02em;margin-top:6px}
+.promise{color:var(--ink-2);font-size:15px;margin-top:8px;line-height:1.5}
+.tabs{display:flex;gap:6px;margin:20px 0 22px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{background:none;border:0;color:var(--ink-3);font-family:var(--sans);font-size:14px;font-weight:600;padding:10px 13px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.tab.on{color:var(--ink);border-bottom-color:var(--gold)}
+.tab.lock{color:rgba(255,255,255,.28);cursor:default}
+.tab.lock:after{content:" 🔒";font-size:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:14px}
+.card h2{font-size:19px;font-weight:700;margin-bottom:10px;letter-spacing:-.01em}
+.card h3{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-3);margin-bottom:12px;font-weight:600}
+.card p{color:var(--ink-2);line-height:1.62;font-size:15px;margin-bottom:12px}
+.card p:last-child{margin-bottom:0}
+.q{margin-bottom:26px}
+.q .qt{font-size:17px;font-weight:600;margin-bottom:13px}
+.opt{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:8px;color:var(--ink);font-family:var(--sans);font-size:15px;cursor:pointer;transition:.12s}
+.opt:hover{background:var(--card-hover);border-color:rgba(255,255,255,.22)}
+.opt.sel{border-color:var(--gold);background:rgba(245,193,59,.10)}
+.prog{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-bottom:18px;letter-spacing:.06em}
+.verdict{background:linear-gradient(150deg,rgba(245,193,59,.15),rgba(245,193,59,.04));border:1px solid rgba(245,193,59,.35);border-radius:16px;padding:24px;margin-bottom:16px}
+.verdict .eyebrow{color:var(--gold)}
+.verdict h2{font-size:22px;line-height:1.28;margin:8px 0 12px}
+.wk{border-left:2px solid var(--gold);padding-left:16px;margin-bottom:20px}
+.wk .lab{font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.step{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line-soft)}
+.step:last-child{border-bottom:0}
+.step input{margin-top:4px;width:17px;height:17px;accent-color:var(--gold);flex-shrink:0;cursor:pointer}
+.step label{color:var(--ink-2);line-height:1.55;font-size:14.5px;cursor:pointer}
+.step input:checked+label{color:var(--ink-3);text-decoration:line-through}
+.flag{background:rgba(255,107,107,.09);border:1px solid rgba(255,107,107,.3);border-radius:12px;padding:15px 17px;margin-bottom:10px}
+.flag .lab{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:7px}
+.flag p{font-size:14.5px;margin:0}
+.buy{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line-soft);font-size:14.5px}
+.buy:last-child{border-bottom:0}
+.buy .n{font-weight:600;white-space:nowrap}
+.buy .d{color:var(--ink-3);text-align:right;font-size:13.5px;line-height:1.45}
+.note{background:rgba(255,255,255,.03);border-left:2px solid var(--ink-3);padding:13px 16px;border-radius:0 10px 10px 0;color:var(--ink-3);font-size:14px;line-height:1.55}
+.cta{background:linear-gradient(150deg,rgba(29,143,219,.20),rgba(29,58,199,.10));border:1px solid rgba(126,197,232,.35);border-radius:16px;padding:26px;text-align:center}
+.cta .line{font-size:17px;font-weight:600;line-height:1.45;margin-bottom:10px}
+.cta .sub{color:var(--ink-2);font-size:14.5px;margin-bottom:18px;line-height:1.55}
+.btn{display:inline-block;background:var(--gold);color:#0A1240;font-weight:700;font-size:15px;padding:13px 26px;border-radius:11px;text-decoration:none}
+.locked{background:var(--card);border:1px dashed var(--line);border-radius:14px;padding:18px;margin-bottom:10px;opacity:.62}
+.locked .t{font-weight:600;margin-bottom:4px}
+.locked .d{color:var(--ink-3);font-size:14px;line-height:1.5}
+.restart{background:none;border:1px solid var(--line);color:var(--ink-3);font-family:var(--sans);font-size:13px;padding:9px 16px;border-radius:9px;cursor:pointer;margin-top:8px}
+.hide{display:none}
+footer{margin-top:26px;text-align:center;color:var(--ink-3);font-size:11px;font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Protocol</div>
+    <h1 id="ptitle">Sleep</h1>
+    <div class="promise" id="ppromise"></div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab on">Sleep</button>
+    <button class="tab lock" title="Not unlocked">Gut</button>
+    <button class="tab lock" title="Not unlocked">Hormones</button>
+    <button class="tab lock" title="Not unlocked">Stress</button>
+  </div>
+
+  <div id="assess"></div>
+  <div id="result" class="hide"></div>
+
+  <footer>Real Health Systems</footer>
+</div>
+
+<script>
+const P = {
+  "id": "sleep",
+  "title": "Sleep",
+  "promise": "Find out which sleep problem you actually have, then fix that one.",
+  "intro": "Most sleep advice fails because it treats every sleep problem as the same problem. It isn't. Waking at 3am and struggling to fall asleep have almost nothing in common. Five questions, then you get the protocol for yours.",
+  "assessment": [
+    {
+      "q": "Which one sounds most like your nights?",
+      "key": "primary",
+      "options": [
+        {"label": "I lie there and can't switch off", "value": "racing"},
+        {"label": "I fall asleep fine but wake around 3am", "value": "threeam"},
+        {"label": "I sleep 7-8 hours and still wake up wrecked", "value": "unrefreshing"},
+        {"label": "Tired all day, then wide awake at night", "value": "inverted"},
+        {"label": "My bedtime is all over the place", "value": "erratic"}
+      ]
+    },
+    {
+      "q": "When do you have your last caffeine?",
+      "key": "caffeine",
+      "options": [
+        {"label": "Before 10am", "value": "early"},
+        {"label": "Between 10am and midday", "value": "midday"},
+        {"label": "Afternoon", "value": "afternoon"},
+        {"label": "I don't drink caffeine", "value": "none"}
+      ]
+    },
+    {
+      "q": "How long between your last meal and bed?",
+      "key": "lastmeal",
+      "options": [
+        {"label": "3 hours or more", "value": "3plus"},
+        {"label": "1 to 3 hours", "value": "1to3"},
+        {"label": "Under an hour, or I eat in bed", "value": "under1"}
+      ]
+    },
+    {
+      "q": "Alcohol in a normal week?",
+      "key": "alcohol",
+      "options": [
+        {"label": "None", "value": "none"},
+        {"label": "1 to 3 drinks", "value": "low"},
+        {"label": "4 or more", "value": "high"}
+      ]
+    },
+    {
+      "q": "Do you get outside within 30 minutes of waking?",
+      "key": "light",
+      "options": [
+        {"label": "Most days", "value": "yes"},
+        {"label": "Sometimes", "value": "sometimes"},
+        {"label": "Almost never", "value": "no"}
+      ]
+    }
+  ],
+  "diagnoses": {
+    "racing": {
+      "name": "This is a nervous system problem, not a sleep problem",
+      "read": "You can fall asleep. Your body knows how. What's happening is that your nervous system is still in work mode when your head hits the pillow, and it takes 40 minutes to come down. That's not insomnia. That's an unfinished day.",
+      "why": "Cortisol should be at its lowest at night. If you're going from laptop to bed, it isn't. The hour before sleep is the single rule people skip, and it's the one that matters most for this specific problem.",
+      "week1": [
+        "One hour before bed: no work, no email, no anything with a decision in it. This is the whole protocol. Everything else is optional.",
+        "Five minute brain dump on paper before you get in bed. Everything you're holding. It stops the loop because your head no longer has to keep the list.",
+        "4-7-8 breathing, four rounds, once you're lying down. In for 4, hold 7, out for 8."
+      ],
+      "week2": [
+        "Screens off or amber blockers on, two hours before bed.",
+        "Phone out of the bedroom. Not face down. Out.",
+        "Add magnesium glycinate 200-400mg in the evening."
+      ],
+      "week3": [
+        "L-theanine 200mg if the mind is still racing. It stacks well with magnesium and it doesn't sedate you.",
+        "Room to 16-19C. Cold rooms fall asleep faster."
+      ],
+      "track": ["Minutes to fall asleep", "Whether you did the 1-hour wind-down (yes/no)"],
+      "escalate": "If you have run the 1-hour rule properly for three weeks and you are still lying awake past 40 minutes, this stops being a habit problem. That is worth a proper look at your cortisol rhythm."
+    },
+    "threeam": {
+      "name": "This is almost always blood sugar or cortisol",
+      "read": "Waking at roughly the same time every night is not random and it is not stress in the vague sense. Your blood sugar drops overnight, your body releases cortisol and adrenaline to correct it, and that wakes you up. If you wake with a pounding heart, that's the tell.",
+      "why": "This is the most fixable sleep problem there is, and the fix is counterintuitive. Most people try to eat less at night. That usually makes it worse.",
+      "week1": [
+        "Last meal three hours before bed. Not one, not four. Three.",
+        "Put complex carbs in your evening meal. Rice, potato, oats. This is the part people get wrong because they cut carbs at night and wake up at 3am for it.",
+        "No alcohol on a work night. It knocks you out and then wrecks the second half of your night, which is exactly the half you're losing."
+      ],
+      "week2": [
+        "If you're still waking: move the evening carb portion slightly later in the meal.",
+        "Magnesium glycinate 200-400mg evening.",
+        "Room pitch black. Any light at all raises the odds of the wake sticking."
+      ],
+      "week3": [
+        "Add glycine 3g before bed. It drops core temperature and deepens the second half of the night."
+      ],
+      "track": ["What time you wake, if you do", "Whether you hit the 3-hour meal gap"],
+      "escalate": "If you are waking at 3am with a pounding heart after three weeks of eating properly in the evening, that is a cortisol pattern worth measuring rather than guessing at. A morning cortisol test answers it."
+    },
+    "unrefreshing": {
+      "name": "Your hours are fine. Your sleep quality isn't.",
+      "read": "Time in bed and recovery are different things. You are getting the hours. You are not getting the deep sleep and REM inside them, which is where the actual recovery happens.",
+      "why": "Three things destroy sleep quality without touching duration, and almost everyone underestimates the first one.",
+      "week1": [
+        "Alcohol. Even one or two drinks measurably cuts deep sleep. If you drink most nights, this is your answer and nothing else on this list will outrun it.",
+        "Last meal three hours before bed. Digesting while sleeping costs you deep sleep.",
+        "Fixed wake time, seven days a week, including the weekend."
+      ],
+      "week2": [
+        "Room 16-19C and pitch black.",
+        "Mouth tape for three nights as a trial. If you wake with a dry mouth or your partner says you snore, this alone can change the whole picture.",
+        "Nasal strips if the tape is uncomfortable or your nose is blocked."
+      ],
+      "week3": [
+        "Magnesium glycinate 200-400mg evening.",
+        "If you have a wearable, start watching deep sleep and REM rather than total hours."
+      ],
+      "track": ["Deep sleep, if you track it", "Alcoholic drinks per week", "How you feel on waking, 1-10"],
+      "escalate": "If you have cut alcohol, fixed the meal timing and held a wake time for three weeks and still wake up exhausted, the likely candidates are thyroid, iron, or a breathing problem overnight. Those need testing, not more sleep hygiene."
+    },
+    "inverted": {
+      "name": "Your body clock is running backwards",
+      "read": "Cortisol is supposed to peak in the morning and bottom out at night. Yours is doing the opposite. That is why you are flat at 10am and alert at 11pm, and it is why willpower has not fixed it.",
+      "why": "The fix is light, and it is free, and it is the single highest leverage thing in this entire protocol. Most people skip it because it sounds too simple to matter.",
+      "week1": [
+        "Ten to fifteen minutes outside within 30 minutes of waking. No sunglasses. Overcast is fine, it is still many times brighter than indoors.",
+        "No caffeine after midday. If your sleep is badly broken, pull it back to 10am for two weeks.",
+        "Same wake time every day. Set the alarm, get the light, and let the bedtime follow."
+      ],
+      "week2": [
+        "Dim the house after sunset. Lamps, not overheads.",
+        "Amber blockers two hours before bed.",
+        "Last meal three hours before bed, which also anchors the clock."
+      ],
+      "week3": [
+        "Hold everything above. This one takes longer than the others because you are moving a rhythm, not a habit. Two to three weeks is normal."
+      ],
+      "track": ["Whether you got morning light (yes/no)", "Time of last caffeine", "Energy at 10am, 1-10"],
+      "escalate": "If you have had morning light every day and a hard midday caffeine cutoff for three weeks and the rhythm has not shifted at all, get a morning cortisol test. A genuinely inverted curve is measurable and it changes what you do next."
+    },
+    "erratic": {
+      "name": "You are trying to fix the wrong end of the day",
+      "read": "You cannot force a bedtime. Bedtime is a consequence, not a decision. Wake time is the decision, and it is the one that drags everything else into place.",
+      "why": "Anchoring the wrong end is why every previous attempt collapsed after four days.",
+      "week1": [
+        "Pick one wake time. Seven days a week. Weekends included, and yes that is the hard part.",
+        "Get outside within 30 minutes of it. The light is what actually moves the clock, the alarm just gets you up.",
+        "Do not try to change your bedtime at all this week. Leave it alone."
+      ],
+      "week2": [
+        "Bedtime will have started drifting earlier on its own. Now help it: move it 15 minutes earlier every three days, not all at once.",
+        "No caffeine after midday."
+      ],
+      "week3": [
+        "Keep going with the 15-minute steps until you land where you want.",
+        "Add magnesium glycinate 200-400mg evening once the timing is roughly stable."
+      ],
+      "track": ["Wake time, every day", "Bedtime, every day"],
+      "escalate": "If your schedule genuinely cannot hold a fixed wake time, shift work being the obvious case, the protocol changes completely and it is worth a proper conversation rather than a generic plan."
+    }
+  },
+  "modifiers": {
+    "caffeine_afternoon": "You are having caffeine in the afternoon. Caffeine has a 5-6 hour half life, so a 2pm coffee is still a quarter-dose at 2am. Move it before midday before you change anything else on this list. If you need it after midday to function, that is a broken energy system, not a caffeine habit, and it is worth fixing at the source.",
+    "lastmeal_under1": "You are eating within an hour of bed. Whatever else you do, move this to three hours. Digesting through the first sleep cycle costs you deep sleep and it is one of the biggest single levers here.",
+    "alcohol_high": "Four or more drinks a week is enough to be the main story here. Alcohol reliably cuts deep sleep even when it makes you fall asleep faster. Try two weeks without it on work nights before concluding anything else has failed.",
+    "light_no": "You almost never get morning light. This is free, takes ten minutes, and resets the cortisol rhythm that governs the whole day. Regardless of which problem you have, start here."
+  },
+  "buy": [
+    {"item": "Magnesium glycinate", "detail": "200-400mg, evening. Use threonate instead if the racing mind is more of a problem than the sleep itself."},
+    {"item": "L-theanine", "detail": "200mg. Calm without sedation. Stacks well with magnesium."},
+    {"item": "Glycine", "detail": "3g before bed. Drops core temperature, deepens the back half of the night."},
+    {"item": "Amber blue-light blockers", "detail": "Worn from two hours before bed."},
+    {"item": "Mouth tape", "detail": "Three night trial. Stop if it is uncomfortable."},
+    {"item": "Nasal strips", "detail": "If your nose blocks at night."},
+    {"item": "Blackout curtains or a sleep mask", "detail": "Pitch black matters more than people expect."}
+  ],
+  "notmelatonin": "Melatonin is deliberately not on this list. It is a hormone, not a supplement, and for a standard sleep problem it masks the thing you are trying to fix rather than fixing it. The exception is jet lag, where 0.3-0.5mg short term is reasonable.",
+  "cta": {
+    "line": "If you have run your protocol properly for three weeks and the numbers have not moved, you do not have a habit problem. You have something that needs measuring.",
+    "sub": "That is the conversation worth having. Book a strategy call and we will work out what to actually test.",
+    "button": "Book a strategy call"
+  }
+}
+;
+const KEY = 'rhs_protocol_sleep';
+let answers = {};
+try { answers = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e){ answers = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(answers)); } catch(e){} };
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+document.getElementById('ppromise').textContent = P.promise;
+
+function renderAssess(){
+  const done = P.assessment.every(q => answers[q.key]);
+  if (done) return renderResult();
+  const i = P.assessment.findIndex(q => !answers[q.key]);
+  const q = P.assessment[i];
+  document.getElementById('result').classList.add('hide');
+  const el = document.getElementById('assess');
+  el.classList.remove('hide');
+  el.innerHTML = `
+    <div class="card">
+      ${i===0 ? `<p>${esc(P.intro)}</p>` : ''}
+      <div class="prog">Question ${i+1} of ${P.assessment.length}</div>
+      <div class="q">
+        <div class="qt">${esc(q.q)}</div>
+        ${q.options.map(o=>`<button class="opt" data-k="${esc(q.key)}" data-v="${esc(o.value)}">${esc(o.label)}</button>`).join('')}
+      </div>
+      ${i>0 ? '<button class="restart" id="back">Back</button>' : ''}
+    </div>`;
+  el.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+    answers[b.dataset.k] = b.dataset.v; save(); renderAssess();
+  });
+  const back = document.getElementById('back');
+  if (back) back.onclick = () => { delete answers[P.assessment[i-1].key]; save(); renderAssess(); };
+}
+
+function renderResult(){
+  document.getElementById('assess').classList.add('hide');
+  const d = P.diagnoses[answers.primary];
+  const mods = [];
+  if (answers.caffeine === 'afternoon') mods.push(P.modifiers.caffeine_afternoon);
+  if (answers.lastmeal === 'under1') mods.push(P.modifiers.lastmeal_under1);
+  if (answers.alcohol === 'high') mods.push(P.modifiers.alcohol_high);
+  if (answers.light === 'no' && answers.primary !== 'inverted') mods.push(P.modifiers.light_no);
+
+  const steps = (arr, wk) => arr.map((s,ix)=>{
+    const id = `s_${wk}_${ix}`;
+    const on = answers[id] ? 'checked' : '';
+    return `<div class="step"><input type="checkbox" id="${id}" ${on}><label for="${id}">${esc(s)}</label></div>`;
+  }).join('');
+
+  const el = document.getElementById('result');
+  el.classList.remove('hide');
+  el.innerHTML = `
+    <div class="verdict">
+      <div class="eyebrow">Your result</div>
+      <h2>${esc(d.name)}</h2>
+      <p>${esc(d.read)}</p>
+      <p>${esc(d.why)}</p>
+    </div>
+
+    ${mods.length ? `<div class="card"><h3>Before anything else</h3>${mods.map(m=>`<div class="flag"><div class="lab">Fix this first</div><p>${esc(m)}</p></div>`).join('')}</div>` : ''}
+
+    <div class="card">
+      <h3>Your protocol</h3>
+      <div class="wk"><div class="lab">Week 1 · only this</div>${steps(d.week1,'w1')}</div>
+      <div class="wk"><div class="lab">Week 2 · add</div>${steps(d.week2,'w2')}</div>
+      <div class="wk"><div class="lab">Week 3 · add</div>${steps(d.week3,'w3')}</div>
+    </div>
+
+    <div class="card">
+      <h3>Track only these</h3>
+      ${d.track.map(t=>`<div class="buy"><span class="n">${esc(t)}</span></div>`).join('')}
+    </div>
+
+    <div class="card">
+      <h3>What to buy</h3>
+      ${P.buy.map(b=>`<div class="buy"><span class="n">${esc(b.item)}</span><span class="d">${esc(b.detail)}</span></div>`).join('')}
+      <div class="note" style="margin-top:14px">${esc(P.notmelatonin)}</div>
+    </div>
+
+    <div class="card">
+      <h3>When this isn't the answer</h3>
+      <p>${esc(d.escalate)}</p>
+    </div>
+
+    <div class="card">
+      <h3>Not unlocked</h3>
+      <div class="locked"><div class="t">Gut</div><div class="d">Bloating, irregularity, and the food reactions that are actually inflammation. Includes the testing decision tree.</div></div>
+      <div class="locked"><div class="t">Hormones</div><div class="d">Low drive, stalled body composition, and the markers your GP did not order.</div></div>
+      <div class="locked"><div class="t">Stress</div><div class="d">The cortisol curve, why you are wired at midnight, and how to bring the load down without stopping.</div></div>
+    </div>
+
+    <div class="cta">
+      <div class="line">${esc(P.cta.line)}</div>
+      <div class="sub">${esc(P.cta.sub)}</div>
+      <a class="btn" href="#">${esc(P.cta.button)}</a>
+    </div>
+
+    <div style="text-align:center"><button class="restart" id="redo">Retake the assessment</button></div>`;
+
+  el.querySelectorAll('.step input').forEach(cb => cb.onchange = () => {
+    answers[cb.id] = cb.checked; save();
+  });
+  document.getElementById('redo').onclick = () => {
+    P.assessment.forEach(q => delete answers[q.key]); save(); renderAssess();
+  };
+}
+
+renderAssess();
+</script>
+</body>
+</html>
