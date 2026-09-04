@@ -1,0 +1,162 @@
+{
+  "id": "stress",
+  "title": "Stress",
+  "promise": "Work out what your stress is actually doing to you physically, then lower the load without stopping.",
+  "intro": "Stress advice usually means do less, which is useless if doing less is not on the table. This is about lowering the physiological cost of the same life. Five questions, then the protocol for your pattern.",
+  "assessment": [
+    {"q":"Which is closest?","key":"primary","options":[
+      {"label":"Wired at night, flat in the morning","value":"inverted"},
+      {"label":"Fine until mid-afternoon, then I fall off a cliff","value":"crash"},
+      {"label":"Permanently tense. Jaw, shoulders, shallow breathing","value":"tense"},
+      {"label":"Not stressed exactly, but everything takes more effort than it should","value":"depleted"},
+      {"label":"Short fuse. Snapping at people I shouldn't","value":"reactive"}
+    ]},
+    {"q":"How many genuinely hard days in a row do you typically string together?","key":"consecutive","options":[
+      {"label":"One or two, then it eases","value":"low"},
+      {"label":"Three or four","value":"mid"},
+      {"label":"Five or more. It doesn't really stop","value":"high"}
+    ]},
+    {"q":"What does a rest day look like?","key":"rest","options":[
+      {"label":"Genuinely off. No work, no screens","value":"real"},
+      {"label":"Lighter, but I'm still on","value":"partial"},
+      {"label":"I don't really have them","value":"none"}
+    ]},
+    {"q":"Caffeine per day?","key":"caffeine","options":[
+      {"label":"One or none","value":"low"},
+      {"label":"Two or three","value":"mid"},
+      {"label":"Four or more","value":"high"}
+    ]},
+    {"q":"Do you train?","key":"training","options":[
+      {"label":"Yes, and it feels good","value":"good"},
+      {"label":"Yes, but I'm often wrecked after","value":"wrecked"},
+      {"label":"Not currently","value":"none"}
+    ]}
+  ],
+  "diagnoses": {
+    "inverted": {
+      "name": "Your cortisol curve has flipped",
+      "read": "Cortisol should be highest within an hour of waking and lowest at night. Yours is doing the reverse. That is why mornings feel like wading and 11pm feels like the clearest you've been all day.",
+      "why": "This is measurable, it is common in people who work late, and it does not respond to trying harder. It responds to light and timing.",
+      "week1": [
+        "Ten to fifteen minutes of outdoor light within 30 minutes of waking. No sunglasses. This is the single strongest lever and it is free.",
+        "Caffeine before midday only.",
+        "Fixed wake time, seven days a week."
+      ],
+      "week2": [
+        "Dim everything after sunset. Lamps not overheads, amber blockers two hours before bed.",
+        "Hardest work in the morning if you can move it. You are trying to give the day the shape your biology expects.",
+        "Last meal three hours before bed."
+      ],
+      "week3": [
+        "Hold it. Rhythm changes take two to three weeks, not days. This is the one where people quit at day nine.",
+        "Rhodiola 200-600mg in the morning if mornings are still heavy."
+      ],
+      "track": ["Morning light, yes/no","Energy at 9am, 1-10","Time you actually felt sharpest"],
+      "escalate": "Three weeks of daily morning light and a hard midday caffeine cutoff with no shift at all is worth measuring. A morning cortisol test tells you whether the curve is genuinely inverted or something else is driving it."
+    },
+    "crash": {
+      "name": "This is blood sugar wearing a stress costume",
+      "read": "A reliable afternoon collapse is rarely adrenal fatigue and almost always fuel. Skipped or light lunch, a big carbohydrate hit, or a long fasted gap through your hardest hours, and the crash follows two to three hours later like clockwork.",
+      "why": "It gets called stress because it feels like anxiety and fog. It is the cheapest problem on this list to fix and the most commonly misattributed.",
+      "week1": [
+        "Thirty grams of protein at breakfast. Not a coffee, not a pastry.",
+        "Never eat carbohydrate alone. Always with protein or fat.",
+        "Eat properly at lunch. The 3pm crash is usually decided at 12."
+      ],
+      "week2": [
+        "Ten minute walk after your largest meal.",
+        "Caffeine before midday only. Afternoon caffeine masks the crash and then costs you the night.",
+        "Note the crash time and what you ate three hours before it."
+      ],
+      "week3": [
+        "Move most carbohydrate to around training and the evening meal.",
+        "If crashes have gone, that was your answer and no further intervention is needed."
+      ],
+      "track": ["Crash time, or none","Protein at breakfast, yes/no","Caffeine after midday, yes/no"],
+      "escalate": "If you eat protein at every meal, never fast through the afternoon, and still crash daily for three weeks, that is worth looking at properly. Two weeks of continuous glucose data will show you exactly what is happening."
+    },
+    "tense": {
+      "name": "Your nervous system is stuck in the wrong gear",
+      "read": "Permanent tension in the jaw and shoulders, breathing high in the chest, never quite settling. This is sympathetic dominance, and the reason it persists is that nothing in a normal day tells your body the threat has passed.",
+      "why": "You cannot think your way out of this one, because it is not happening in your thinking. It responds to physical inputs, specifically breathing, temperature and time outdoors without input.",
+      "week1": [
+        "Five minutes of slow breathing daily, longer out than in. Four in, six to eight out. Set a timer, do it badly, do it anyway.",
+        "One walk a day with no phone, no podcast, no music. This feels absurd and it is one of the highest-return things here.",
+        "Physiological sigh when you notice the tension: two inhales through the nose, one long exhale. It works in about a minute."
+      ],
+      "week2": [
+        "Magnesium glycinate 200-400mg evening.",
+        "Get outside at lunch. Daylight and open space both shift the state.",
+        "Notice where you hold it. Jaw, shoulders, hands. Naming it interrupts it."
+      ],
+      "week3": [
+        "L-theanine 200mg when the tension spikes. Calm without sedation.",
+        "If you train, add something that requires attention. Martial arts, climbing, anything you cannot do while ruminating."
+      ],
+      "track": ["Tension, 0-10, evening","Breathing practice done, yes/no","Phone-free walk, yes/no"],
+      "escalate": "If three weeks of daily breathing work and phone-free walking has not shifted it at all, that is worth talking about properly. Persistent sympathetic dominance can have a physical driver, and it is also the point where this stops being a protocol question."
+    },
+    "depleted": {
+      "name": "You're not stressed, you're under-recovered",
+      "read": "Nothing feels dramatic, but everything costs more than it used to. This is accumulated load without enough recovery to clear it, and it builds slowly enough that you adjust to it rather than noticing it.",
+      "why": "Here is the thing most people get wrong: pure rest days are often less restorative than a genuinely active day. Sitting still while your head keeps working does not clear the load. Movement, daylight and actual disengagement do.",
+      "week1": [
+        "One properly disconnected block a week. Half a day minimum, no work, no screens, out of the house.",
+        "Protect sleep before anything else. This is a debt problem and sleep is the only real repayment.",
+        "Eat enough. Under-eating is a stressor and it is invisible if you are busy."
+      ],
+      "week2": [
+        "Daily walking, twenty minutes plus, outdoors. Low intensity clears where high intensity adds.",
+        "Cut one commitment. Genuinely cut it, not reschedule it.",
+        "Magnesium glycinate 200-400mg evening."
+      ],
+      "week3": [
+        "Add rhodiola 200-600mg in the morning. Cycle it, four to six weeks on then a break.",
+        "Reassess. Depletion lifts more slowly than it arrived, so judge this at four weeks not one."
+      ],
+      "track": ["Energy, 1-10, daily","Disconnected hours this week","Sleep hours"],
+      "escalate": "Depletion that does not lift after a month of real recovery is worth investigating rather than pushing through. Thyroid, iron, vitamin D and inflammation all present exactly like this and all are measurable."
+    },
+    "reactive": {
+      "name": "A short fuse is a capacity problem, not a character problem",
+      "read": "Snapping at people you care about is usually the first visible sign that the load has exceeded the capacity, and it shows up in relationships before it shows up in work, because that is where the guard drops.",
+      "why": "The useful thing to know: this responds faster than almost anything else on this list, because the underlying cause is usually sleep and blood sugar rather than anything deep.",
+      "week1": [
+        "Sleep. Irritability is one of the earliest and most reliable markers of sleep debt.",
+        "Do not go long without eating. Low blood sugar and a short fuse are the same event.",
+        "Notice the timing. If it clusters late afternoon or late evening, that is fuel and fatigue, not personality."
+      ],
+      "week2": [
+        "Five minutes of breathing daily, longer out than in.",
+        "One walk a day without a phone.",
+        "Caffeine before midday only. Afternoon caffeine sharpens the edge."
+      ],
+      "week3": [
+        "Magnesium glycinate 200-400mg evening.",
+        "L-theanine 200mg on days you know will be heavy."
+      ],
+      "track": ["Incidents this week","Sleep hours","Longest gap between meals"],
+      "escalate": "If sleep and food are genuinely sorted for three weeks and the fuse is still short, that is worth taking seriously rather than managing. It can be a hormone pattern, and it can be something a protocol is the wrong tool for."
+    }
+  },
+  "modifiers": {
+    "consecutive_high": "Five or more hard days in a row without a break is the finding that matters most here. In two years of continuous tracking on this exact question, three consecutive high-stress days is where recovery starts dropping sharply. You are living past that line every week, and nothing else on this page outruns it.",
+    "rest_none": "You do not have rest days. Worth knowing: in the data, high-strain days followed by real recovery produced better outcomes than pure rest days where the head never switched off. It is not about doing nothing. It is about genuinely disengaging, which is a different thing and harder.",
+    "caffeine_high": "Four or more coffees a day is doing two things at once: masking the fatigue signal so you cannot see the real load, and keeping evening cortisol elevated so the night does not repair it. Needing that much to function is a symptom, not a habit.",
+    "training_wrecked": "Training is leaving you wrecked rather than better. That is the clearest sign that training has become another stressor rather than a buffer. Cut the intensity, keep the frequency. This usually feels wrong and is usually right."
+  },
+  "buy": [
+    {"item":"Magnesium glycinate","detail":"200-400mg evening. Threonate instead if the racing mind dominates."},
+    {"item":"L-theanine","detail":"200mg. Calm without sedation. Works within an hour."},
+    {"item":"Rhodiola","detail":"200-600mg morning. For depletion and flat mornings. Cycle it."},
+    {"item":"Ashwagandha (KSM-66)","detail":"300-600mg. Lowers cortisol specifically. A stress supplement, not a sleep supplement."},
+    {"item":"Phosphatidylserine","detail":"Evening or after hard training. Blunts excess cortisol."},
+    {"item":"Holy basil","detail":"500mg daily. For the oxidative side of a chronic load."}
+  ],
+  "notmelatonin": "Every adaptogen on this list gets cycled. Four to six weeks on, then a break. Running them continuously blunts the response and, more importantly, lets you keep operating past a load you should have changed. They are a bridge, not a floor.",
+  "cta": {
+    "line": "Stress is the one that shows up in every other number before it shows up as a problem.",
+    "sub": "If you've run this for three weeks and the load hasn't moved, the useful next step is seeing it in your data rather than guessing at it.",
+    "button": "Book a strategy call"
+  }
+}

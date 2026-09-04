@@ -1,0 +1,167 @@
+{
+  "id": "hormones",
+  "title": "Hormones",
+  "promise": "Find out which hormone pattern actually fits your symptoms, and exactly what to ask your doctor to test.",
+  "intro": "Hormone symptoms overlap almost completely. Low drive, stubborn fat, flat mood and constant tiredness can each come from four different places, and the wrong guess costs you months. Five questions, then you get the pattern that fits and the panel that proves it.",
+  "assessment": [
+    {"q":"Which bothers you most?","key":"primary","options":[
+      {"label":"Drive is gone. Motivation, libido, edge","value":"lowt"},
+      {"label":"I'm cold, tired, and my hair and skin have changed","value":"thyroid"},
+      {"label":"Fat won't shift, especially around the middle","value":"cortisol"},
+      {"label":"Energy is fine some days and gone others, no pattern","value":"bloodsugar"},
+      {"label":"I feel flat and old, and I'm not old","value":"broad"}
+    ]},
+    {"q":"Have you had bloods in the last 12 months?","key":"bloods","options":[
+      {"label":"Yes, and I was told they were normal","value":"normal"},
+      {"label":"Yes, and something was flagged","value":"flagged"},
+      {"label":"No, not recently","value":"none"}
+    ]},
+    {"q":"How's your sleep, honestly?","key":"sleep","options":[
+      {"label":"Solid, 7 hours plus, most nights","value":"good"},
+      {"label":"Patchy. Some good weeks, some bad","value":"patchy"},
+      {"label":"Consistently poor, under 6 hours or broken","value":"poor"}
+    ]},
+    {"q":"Training right now?","key":"training","options":[
+      {"label":"Resistance training 2-4x a week","value":"lifting"},
+      {"label":"Mostly cardio, or a lot of it","value":"cardio"},
+      {"label":"Very little, or nothing structured","value":"none"}
+    ]},
+    {"q":"How much alcohol in a normal week?","key":"alcohol","options":[
+      {"label":"None","value":"none"},
+      {"label":"1 to 3 drinks","value":"low"},
+      {"label":"4 or more","value":"high"}
+    ]}
+  ],
+  "diagnoses": {
+    "lowt": {
+      "name": "Before you chase testosterone, rule out what's suppressing it",
+      "read": "Low drive is the symptom everyone jumps straight to testosterone for. But testosterone is downstream. Poor sleep, high stress, low body fat, heavy alcohol and under-eating all suppress it, and fixing those moves the number more reliably than anything you can buy.",
+      "why": "The other thing almost nobody checks: total testosterone can look fine while free testosterone is low, because SHBG is binding it up. If you were told your testosterone was normal and you still feel like this, that is the most likely reason.",
+      "week1": [
+        "Sleep first. Under seven hours reliably drops testosterone, and it is the fastest lever you have.",
+        "Alcohol down. It is directly suppressive and the effect is dose-dependent.",
+        "Eat enough. Chronic under-eating, especially low fat intake, tanks production. This catches out lean, disciplined people constantly."
+      ],
+      "week2": [
+        "Resistance training 2-4x a week if you aren't already. Compound lifts, not endless cardio.",
+        "Zinc 15-30mg daily and vitamin D if you haven't tested it. Both are genuinely involved and commonly low.",
+        "Get body fat into a sane range. Too high and too low both suppress."
+      ],
+      "week3": [
+        "Get the panel below. Four weeks of the above first means the numbers reflect your baseline, not a bad month.",
+        "Morning draw, before 10am, fasted. Testosterone varies enormously across the day and an afternoon draw will read artificially low."
+      ],
+      "panel": ["Total testosterone","Free testosterone","SHBG","LH and FSH","Estradiol (sensitive assay)","Prolactin","Vitamin D","Zinc","Ferritin","TSH, free T3, free T4"],
+      "track": ["Sleep hours","Morning drive, 1-10","Training sessions per week"],
+      "escalate": "This is the area where guessing is most expensive and most common. If free testosterone and SHBG have never been measured, you do not know what is happening, and no protocol will tell you. Get the panel."
+    },
+    "thyroid": {
+      "name": "Cold, tired, and told you're fine is the classic missed thyroid picture",
+      "read": "Feeling cold, exhausted, with changes to hair, skin and nails, is the pattern that most often gets waved through as normal. The reason is that most doctors test TSH alone, and TSH alone misses a lot.",
+      "why": "There are two separate problems here. First, free T3 is the active hormone and it is frequently not tested. Second, in-range and optimal are different numbers. A TSH of 3.8 sits inside almost every lab's reference range and is not where a high performer feels good.",
+      "week1": [
+        "Do not start iodine. It is the reflex move and it can make an undiagnosed thyroid problem worse. Test first.",
+        "Get sleep and stress under control, both suppress thyroid conversion.",
+        "Selenium 100-200mcg daily. It is required to convert T4 into the active T3 and it is commonly low."
+      ],
+      "week2": [
+        "Eat enough carbohydrate. Long low-carb dieting reliably lowers T3. This is one of the most common self-inflicted versions of this problem.",
+        "Check ferritin if you can. Low iron blunts thyroid function and looks identical from the outside."
+      ],
+      "week3": [
+        "Get the full panel below, not just TSH.",
+        "If you have had thyroid tested before, get the actual numbers, not the word normal. You want to see where in the range you sat."
+      ],
+      "panel": ["TSH","Free T4","Free T3","Reverse T3","Thyroid antibodies (TPO and TG)","Ferritin","Vitamin D","Selenium and zinc"],
+      "track": ["Morning body temperature","Energy on waking, 1-10","Cold hands and feet, yes/no"],
+      "escalate": "If your TSH is above 2.5 and you feel like this, that is worth a proper conversation even if a doctor called it normal. In range is a disease threshold. It was never a performance target."
+    },
+    "cortisol": {
+      "name": "Stubborn middle fat with normal effort is usually a cortisol pattern",
+      "read": "If you are training, eating reasonably, and the weight around your middle will not move, the problem is often not calories. Chronically elevated cortisol drives fat storage specifically to the abdomen, suppresses testosterone, and disrupts sleep, and the disrupted sleep then raises cortisol further.",
+      "why": "This is a loop, which is why effort alone does not break it. Adding more training usually makes it worse, and that is the exact move most people make next.",
+      "week1": [
+        "Stop adding training. If anything, cut the hardest session this week. More stress on a stress problem is the wrong direction.",
+        "Morning light within 30 minutes of waking. It is the strongest lever on the cortisol curve and it is free.",
+        "Caffeine before midday only. Afternoon caffeine keeps evening cortisol elevated."
+      ],
+      "week2": [
+        "Protect sleep aggressively. Fixed wake time, three hour meal gap, screens down.",
+        "Walk daily. Low intensity movement lowers cortisol where hard training raises it.",
+        "Magnesium glycinate 200-400mg evening."
+      ],
+      "week3": [
+        "Consider an adaptogen: rhodiola 200-600mg in the morning, or ashwagandha 300-600mg. Cycle them, do not run them indefinitely.",
+        "Phosphatidylserine in the evening if hard training is unavoidable in your week."
+      ],
+      "panel": ["Morning cortisol","Fasting insulin","Fasting glucose and HbA1c","Total and free testosterone","TSH, free T3, free T4","hs-CRP"],
+      "track": ["Waist measurement, weekly","Sleep hours","Whether you got morning light"],
+      "escalate": "If you have protected sleep, cut the afternoon caffeine and got morning light every day for three weeks and nothing has moved, a morning cortisol test is the honest next step. A genuinely inverted curve is measurable, and it changes the plan completely."
+    },
+    "bloodsugar": {
+      "name": "This is a fuel stability problem, and it looks like everything else",
+      "read": "Energy that is fine on some days and gone on others, with no obvious pattern, is usually blood sugar rather than a hormone in the classic sense. The crashes feel like anxiety, fog and sudden exhaustion, which is why they get attributed to stress or sleep.",
+      "why": "Insulin is a hormone, and it is the one most affected by what you did in the last four hours rather than the last four months. That makes it the fastest thing on this list to fix.",
+      "week1": [
+        "Protein at every meal, starting with breakfast. Thirty grams minimum at the first meal.",
+        "Never eat carbohydrate alone. Always with protein or fat, which flattens the curve.",
+        "No long fasted gaps through your hardest hours. Skipping lunch and crashing at 3pm is cause and effect."
+      ],
+      "week2": [
+        "Ten minute walk after your largest meal. It measurably blunts the glucose response.",
+        "Move most of your carbohydrate to around training and the evening meal.",
+        "Note when the crashes hit and what preceded them by two to three hours."
+      ],
+      "week3": [
+        "If the pattern is clear and the fixes are working, you have your answer without a test.",
+        "If crashes persist despite consistent meals, that is worth measuring properly."
+      ],
+      "panel": ["Fasting glucose","Fasting insulin","HbA1c","Triglycerides and HDL","hs-CRP","TSH, free T3, free T4"],
+      "track": ["Crash times","Protein at breakfast, yes/no","Hours between meals"],
+      "escalate": "If meals are consistent and protein is high and you still crash daily, a continuous glucose monitor for two weeks will show you exactly what is happening in a way no blood panel can. That is worth doing before adding anything else."
+    },
+    "broad": {
+      "name": "Flat and old at the wrong age is a measurement problem first",
+      "read": "When nothing is dramatically wrong but everything feels harder than it should, there is usually no single culprit. There are three or four things sitting slightly off, none individually alarming, compounding into how you feel.",
+      "why": "This is precisely the pattern that gets called normal, because every individual marker sits inside its range. In range is a disease threshold, not a performance target, and the gap between the two is where you live.",
+      "week1": [
+        "Sleep to seven hours minimum. Almost every marker below moves with it.",
+        "Alcohol down to two or fewer a week for a month. It suppresses testosterone, disrupts sleep and raises inflammation at once.",
+        "Resistance training 2-3x a week if you are not already."
+      ],
+      "week2": [
+        "Protein to 1.6-2.2g per kg of bodyweight. Under-eating protein is nearly universal in this group and it affects everything.",
+        "Morning light daily.",
+        "Vitamin D and omega-3 daily. Both commonly low, both cheap, both broadly involved."
+      ],
+      "week3": [
+        "Get the full panel. Four weeks of the above first, so the numbers show your real baseline.",
+        "Ask for the actual numbers, not the interpretation. You want to see where in each range you sit."
+      ],
+      "panel": ["Total and free testosterone, SHBG","TSH, free T4, free T3","Vitamin D","Ferritin and full iron studies","B12 and folate","Fasting glucose, insulin, HbA1c","hs-CRP and homocysteine","Full lipids including ApoB","Liver and kidney function"],
+      "track": ["Energy, 1-10, daily","Sleep hours","Training sessions per week"],
+      "escalate": "This is the exact profile that gets told everything's fine. Get the full panel and read it against optimal ranges rather than lab ranges. Several markers sitting at the wrong end of normal is a real finding, and it is invisible to the usual read."
+    }
+  },
+  "modifiers": {
+    "sleep_poor": "Your sleep is consistently poor. That single fact suppresses testosterone, raises cortisol, worsens insulin sensitivity and blunts thyroid conversion. Any hormone panel taken now measures a sleep-deprived version of you, not your baseline. Fix this for four weeks before you test anything.",
+    "alcohol_high": "Four or more drinks a week is enough to be the main story. Alcohol suppresses testosterone directly, wrecks the second half of your sleep, and raises inflammation. Cut it for a month before concluding anything else is wrong.",
+    "training_none": "No structured resistance training. Lifting is the single most reliable non-pharmaceutical lever on testosterone, insulin sensitivity and body composition. Two or three sessions a week changes more than most supplements.",
+    "bloods_normal": "You were told your bloods were normal. Worth knowing what that usually means: TSH without free T3, total testosterone without free testosterone or SHBG, and every result read against a reference range built to catch disease rather than to describe a high performer. Normal and optimal are different numbers."
+  },
+  "buy": [
+    {"item":"Vitamin D3 with K2","detail":"Dose after testing, not before. Commonly low and broadly involved."},
+    {"item":"Zinc","detail":"15-30mg daily. Involved in testosterone production, commonly low."},
+    {"item":"Selenium","detail":"100-200mcg daily. Needed to convert T4 into active T3."},
+    {"item":"Omega-3 (EPA-dominant)","detail":"2-3g EPA and DHA daily, with food."},
+    {"item":"Magnesium glycinate","detail":"200-400mg evening."},
+    {"item":"Rhodiola","detail":"200-600mg morning, for a cortisol pattern. Cycle it."},
+    {"item":"Ashwagandha (KSM-66)","detail":"300-600mg. A stress supplement, not a sleep supplement. Cycle it."}
+  ],
+  "notmelatonin": "There is no testosterone booster on this list, because they do not work. The products sold as such are combinations of zinc, magnesium and a herb, and if you are not deficient they do nothing. What actually moves the number is sleep, alcohol, body fat, training and eating enough. That is unglamorous and it is the truth.",
+  "cta": {
+    "line": "Hormones are the one area where you genuinely cannot fix what you have not measured.",
+    "sub": "The panel above is what to ask for. If you want help reading it against optimal ranges rather than lab ranges, that's the conversation.",
+    "button": "Book a strategy call"
+  }
+}

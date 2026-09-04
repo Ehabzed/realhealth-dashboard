@@ -1,0 +1,162 @@
+{
+  "id": "gut",
+  "title": "Gut",
+  "promise": "Work out whether your gut is inflamed, under-powered, or just badly fed. Then fix that one.",
+  "intro": "Almost everyone reaches for a probiotic first. For most people it is the wrong first move, because the three common gut problems need opposite things. Five questions, then you get the one for yours.",
+  "assessment": [
+    {"q":"What actually happens?","key":"primary","options":[
+      {"label":"I bloat, usually within an hour of eating","value":"bloat"},
+      {"label":"I'm irregular, or things move too slowly","value":"slow"},
+      {"label":"Loose or urgent, sometimes out of nowhere","value":"loose"},
+      {"label":"More and more foods seem to set me off","value":"reactive"},
+      {"label":"My gut seems fine but my skin, mood or energy aren't","value":"systemic"}
+    ]},
+    {"q":"How fast do you usually eat?","key":"speed","options":[
+      {"label":"Slowly, sitting down","value":"slow"},
+      {"label":"Normal pace, but often at a desk","value":"desk"},
+      {"label":"Fast. Often standing or between things","value":"fast"}
+    ]},
+    {"q":"How many different plants do you eat in a week? Count vegetables, fruit, nuts, seeds, herbs, grains.","key":"diversity","options":[
+      {"label":"More than 20","value":"high"},
+      {"label":"Around 10 to 20","value":"mid"},
+      {"label":"Fewer than 10","value":"low"}
+    ]},
+    {"q":"Antibiotics in the last two years?","key":"abx","options":[
+      {"label":"No","value":"no"},
+      {"label":"Once","value":"once"},
+      {"label":"More than once","value":"multiple"}
+    ]},
+    {"q":"Has a doctor ever tested your gut, beyond a standard blood panel?","key":"tested","options":[
+      {"label":"Yes, a proper stool or microbiome test","value":"yes"},
+      {"label":"Only bloods, and I was told they were normal","value":"bloodsonly"},
+      {"label":"Never","value":"never"}
+    ]}
+  ],
+  "diagnoses": {
+    "bloat": {
+      "name": "This is a digestion problem before it's a bacteria problem",
+      "read": "Bloating within an hour of eating is usually mechanical, not microbial. Food is arriving faster than your stomach is prepared for it, so it sits, ferments, and pushes out. A probiotic does nothing for this.",
+      "why": "Your stomach needs a signal to get ready. Eating fast, standing up, stressed, or straight off a call means that signal never arrives. This is the most fixable gut complaint there is and it costs nothing.",
+      "week1": [
+        "Sit down for every meal. No standing, no walking, no desk. This one change fixes more bloating than any supplement on the market.",
+        "Chew until the food has no texture left. Most people swallow at around half that.",
+        "Three minutes of slow breathing before you eat. Your gut only digests properly when your nervous system says it's safe to."
+      ],
+      "week2": [
+        "Stop drinking large amounts with meals. Sip, don't flood.",
+        "Space meals at least three hours apart. Constant grazing means the cleanup wave between meals never runs.",
+        "Note which meals bloat you and which don't. You are looking for a pattern, not a culprit."
+      ],
+      "week3": [
+        "If bloating is still there after two weeks of eating properly, try a digestive enzyme with your largest meal.",
+        "If it is worse with onion, garlic, wheat or beans specifically, that points somewhere different and is worth testing rather than guessing."
+      ],
+      "track": ["Bloating after meals, 0-10", "Whether you sat down and chewed properly"],
+      "escalate": "If you have eaten slowly, sitting, for three weeks and still bloat within an hour, that is worth a real look. Bloating that survives good mechanics usually has a cause you can measure rather than guess at."
+    },
+    "slow": {
+      "name": "Motility, not bacteria",
+      "read": "Things moving slowly is usually some combination of not enough fibre variety, not enough water, not enough movement, and a nervous system stuck in the wrong gear. It is rarely a missing probiotic.",
+      "why": "Your gut has its own rhythm and it takes its cue from the rest of your life. Sitting all day, dehydrated, stressed, eating the same six foods, is a recipe for it.",
+      "week1": [
+        "Three litres of water a day. Most slow guts are simply dry.",
+        "Ten minutes of walking after your largest meal. Movement is a motility signal.",
+        "Add two plant foods you don't currently eat. Not more of the same, different."
+      ],
+      "week2": [
+        "Get plant variety above 20 different plants a week. Herbs and spices count. This is the single strongest predictor of a healthy gut in the research.",
+        "Magnesium citrate in the evening if things are still slow. Citrate specifically, not glycinate, for this one.",
+        "Same wake time every day. Your gut clock follows your body clock."
+      ],
+      "week3": [
+        "Add a fermented food daily. Kefir, sauerkraut, kimchi, live yoghurt if you tolerate dairy.",
+        "Ground flaxseed, a tablespoon, if variety alone hasn't done it."
+      ],
+      "track": ["Frequency", "Water intake", "Number of different plants this week"],
+      "escalate": "If you are hydrated, moving, eating 20+ plants a week and still slow after three weeks, thyroid is the first thing worth ruling out. Slow gut and slow thyroid look identical from the outside."
+    },
+    "loose": {
+      "name": "Something is irritating the lining",
+      "read": "Loose or urgent stools that come and go usually mean the lining is inflamed and reactive. That can be a food, an infection, an overgrowth, or straight stress. The pattern of when it happens tells you more than the symptom does.",
+      "why": "This is the one where guessing costs you the most time. There are four common causes and they need different fixes, so the first job is narrowing it, not treating it.",
+      "week1": [
+        "Log what you eat and when symptoms hit, for seven days. Not to diagnose, to find the shape.",
+        "Cut alcohol completely for the two weeks. It is a gut irritant and it muddies every other signal.",
+        "Note whether symptoms track with stress rather than food. If they hit before meetings and not after meals, that is your answer and it is a nervous system problem."
+      ],
+      "week2": [
+        "L-glutamine 5g daily, on an empty stomach. It supports the lining while you work out the cause.",
+        "Remove the single most obvious repeat offender from your log. One food, not five.",
+        "Keep meals simple and repeatable. Complexity hides the pattern."
+      ],
+      "week3": [
+        "Reintroduce the removed food deliberately and watch. A real trigger shows up within 48 hours.",
+        "If nothing in the log correlates with anything, that points at an overgrowth or an infection rather than a food, and that needs testing."
+      ],
+      "track": ["Symptom days per week", "Whether it tracked food or stress"],
+      "escalate": "Blood, unexplained weight loss, night-time symptoms, or fever are not for a protocol. See a doctor. Short of that, if three weeks of logging shows no food pattern at all, a stool test is the honest next step rather than another elimination diet."
+    },
+    "reactive": {
+      "name": "This is usually one problem, not twenty",
+      "read": "When the list of foods you react to keeps growing, the problem is almost never the foods. A lining that is inflamed and permeable reacts to more and more things, so the food list grows while the actual cause sits untouched.",
+      "why": "This is why elimination diets keep shrinking and never resolve. You are removing symptoms one at a time from a list that regenerates.",
+      "week1": [
+        "Stop cutting foods. You have enough data and cutting further makes the picture worse, not clearer.",
+        "L-glutamine 5g daily on an empty stomach.",
+        "Alcohol out completely. It is directly permeability-increasing and it undoes the rest."
+      ],
+      "week2": [
+        "NSAIDs out unless you genuinely need them. Ibuprofen and its relatives damage the lining directly.",
+        "Add omega-3, 2-3g EPA and DHA daily, with food.",
+        "Get plant variety up. A narrow diet from a long elimination list is itself now part of the problem."
+      ],
+      "week3": [
+        "Reintroduce one previously removed food that you actually miss. Small amount, watch 48 hours.",
+        "If it goes fine, that tells you the reaction was never really to that food."
+      ],
+      "track": ["Number of foods you currently avoid", "Reactions per week"],
+      "escalate": "A growing reaction list is the clearest case in this whole set for testing rather than protocols. Knowing whether you have inflammation, an overgrowth, a parasite or a permeability problem completely changes what you do, and no amount of careful eating will tell you which."
+    },
+    "systemic": {
+      "name": "Your gut might be the cause, but it isn't the symptom",
+      "read": "Skin, mood, brain fog and energy problems with a quiet gut are common and confusing. Most of your serotonin is made in the gut, most of your immune system lives there, and inflammation from the gut travels.",
+      "why": "This is the version people miss for years, because they only investigate a gut that complains. A gut can be driving your symptoms without producing any of its own.",
+      "week1": [
+        "Plant variety above 20 a week. This is the highest-leverage single change for the bacteria that produce the compounds affecting mood and inflammation.",
+        "A fermented food daily.",
+        "Cut ultra-processed food where it's easy. Emulsifiers and sweeteners specifically affect the gut lining."
+      ],
+      "week2": [
+        "Omega-3, 2-3g EPA and DHA daily, with food.",
+        "Three hour gap between last meal and bed. Overnight is when the gut does its repair work.",
+        "Note whether skin, mood or focus track with what you ate 24 to 48 hours earlier rather than same-day."
+      ],
+      "week3": [
+        "Hold everything. This one has a longer lag than the others, four to six weeks before the downstream symptoms shift."
+      ],
+      "track": ["Plants per week", "The downstream symptom, 0-10, daily"],
+      "escalate": "If you improve the inputs for six weeks and the skin, mood or fog hasn't moved, this stops being a diet question. A microbiome test plus inflammatory markers will tell you in one go what another six months of guessing won't."
+    }
+  },
+  "modifiers": {
+    "speed_fast": "You eat fast, often standing. Whatever else is going on, this is working against you at every single meal. Digestion starts before food arrives and only happens properly when you are sitting and calm. Fix this before you spend money on anything.",
+    "diversity_low": "Fewer than 10 different plants a week is the strongest single predictor of a struggling gut. Not more vegetables. More different ones. Herbs, spices, nuts and seeds all count, which makes this easier than it sounds.",
+    "abx_multiple": "More than one course of antibiotics in two years matters here. Recovery of the population is uneven and some species do not come back on their own. Fermented foods and plant variety are how you rebuild, and it takes months, not weeks.",
+    "tested_bloodsonly": "Standard bloods do not assess your gut. They were not designed to. Being told they were normal tells you nothing about diversity, inflammation in the gut lining, or what is actually living there."
+  },
+  "buy": [
+    {"item":"L-glutamine","detail":"5g daily, empty stomach. Supports the lining."},
+    {"item":"Omega-3 (EPA-dominant)","detail":"2-3g EPA and DHA daily, with food."},
+    {"item":"Digestive enzyme","detail":"With your largest meal. Only if bloating survives good mechanics."},
+    {"item":"Magnesium citrate","detail":"Evening, for slow motility specifically. Citrate, not glycinate."},
+    {"item":"S. boulardii","detail":"A yeast, not a bacteria. Useful after antibiotics and alongside a kill phase."},
+    {"item":"Ground flaxseed","detail":"A tablespoon daily, for motility and fibre variety."},
+    {"item":"A fermented food","detail":"Kefir, sauerkraut, kimchi. Daily beats occasional."}
+  ],
+  "notmelatonin": "There is no general probiotic on this list on purpose. Off-the-shelf probiotics contain a handful of species you may already have, and they do not colonise. Fermented foods and plant variety build a population; a capsule mostly passes through. The exception is a targeted strain for a specific reason, which is a testing conversation.",
+  "cta": {
+    "line": "The gut is the area where guessing costs the most and testing pays back the fastest.",
+    "sub": "If three weeks of this hasn't moved it, you are not missing a supplement. You are missing information. That's the conversation worth having.",
+    "button": "Book a strategy call"
+  }
+}
