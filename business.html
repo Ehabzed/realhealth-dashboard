@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RealHealth · Business</title>
+<link rel="icon" href="assets/icons/favicon.png">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="/realhealth-dashboard/manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue-deep:#1D3AC7; --blue-deep-2:#172FA3; --blue-mid:#1D8FDB; --blue-light:#7EC5E8;
+  --gold:#F5C13B; --gold-soft:#E8B02D; --cream:#FCF8E8;
+  --ink:#FFFFFF; --ink-2:rgba(255,255,255,.72); --ink-3:rgba(255,255,255,.48);
+  --line:rgba(255,255,255,.10); --line-soft:rgba(255,255,255,.06);
+  --card:rgba(255,255,255,.05); --card-hover:rgba(255,255,255,.08);
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',Menlo,monospace;
+  --green:#4FD1A5; --amber:#F5C13B; --red:#FF6B6B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:linear-gradient(160deg,var(--blue-deep-2) 0%,#0E1A5C 55%,#0A1240 100%);color:var(--ink);min-height:100vh;padding:20px 16px 64px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:940px;margin:0 auto}
+header{margin-bottom:24px}
+h1{font-size:22px;font-weight:700;letter-spacing:-.02em}
+.sub{color:var(--ink-3);font-size:13px;margin-top:4px;font-family:var(--mono)}
+.tabs{display:flex;gap:6px;margin:20px 0 24px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{background:none;border:0;color:var(--ink-3);font-family:var(--sans);font-size:14px;font-weight:600;padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.tab.on{color:var(--ink);border-bottom-color:var(--gold)}
+.panel{display:none}.panel.on{display:block}
+.hero{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:16px;text-align:center}
+.hero .label{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-3);font-weight:600}
+.hero .val{font-family:var(--mono);font-size:56px;font-weight:600;line-height:1.05;margin:10px 0 4px}
+.hero .note{font-size:13px;color:var(--ink-2)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.tile .label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:600}
+.tile .val{font-family:var(--mono);font-size:26px;font-weight:600;margin:8px 0 2px}
+.tile .note{font-size:12px;color:var(--ink-3);line-height:1.4}
+.good{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:12px}
+.card h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);margin-bottom:12px;font-weight:600}
+.row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line-soft);font-size:14px}
+.row:last-child{border-bottom:0}
+.row .r{font-family:var(--mono);color:var(--ink-2);white-space:nowrap}
+.empty{color:var(--ink-3);font-size:13px;font-style:italic;padding:6px 0}
+a.link{color:var(--blue-light);text-decoration:none;font-weight:600}
+.msg{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;font-size:14px;color:var(--ink-2);line-height:1.6}
+.msg code{font-family:var(--mono);font-size:12px;background:rgba(0,0,0,.25);padding:2px 6px;border-radius:5px;color:var(--gold)}
+footer{margin-top:28px;text-align:center;color:var(--ink-3);font-size:11px;font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Business</h1>
+    <div class="sub" id="stamp">loading…</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab on" data-p="sales">Sales</button>
+    <button class="tab" data-p="content">Content</button>
+    <button class="tab" data-p="health">Health</button>
+  </div>
+
+  <div class="panel on" id="p-sales">
+    <div class="hero">
+      <div class="label">Calls booked this month</div>
+      <div class="val" id="calls">–</div>
+      <div class="note" id="calls-note">The number everything else serves.</div>
+    </div>
+    <div class="grid">
+      <div class="tile"><div class="label">Call asks made</div><div class="val" id="asks">–</div><div class="note">Leading indicator. The leak is asks, not volume.</div></div>
+      <div class="tile"><div class="label">Oldest unsent draft</div><div class="val" id="draftage">–</div><div class="note" id="draftcount">Drafts sitting in Awaiting Send.</div></div>
+      <div class="tile"><div class="label">Revenue this month</div><div class="val" id="revenue">–</div><div class="note">Target $15,000/mo.</div></div>
+      <div class="tile"><div class="label">Acceptance rate</div><div class="val" id="car">–</div><div class="note">Gate is 40%. Below it, cap stays 15–25/day.</div></div>
+    </div>
+    <div class="card"><h3>Pipeline</h3><div id="pipeline"><div class="empty">No rows yet.</div></div></div>
+  </div>
+
+  <div class="panel" id="p-content">
+    <div class="grid">
+      <div class="tile"><div class="label">Published this week</div><div class="val" id="published">–</div><div class="note">Target: 2 YouTube, 3 posts.</div></div>
+      <div class="tile"><div class="label">Ready to record</div><div class="val" id="ready">–</div><div class="note">The backlog number. It was 2 while 17 finished videos sat unrecorded.</div></div>
+      <div class="tile"><div class="label">Days since last publish</div><div class="val" id="sincepub">–</div><div class="note">&nbsp;</div></div>
+    </div>
+    <div class="card"><h3>Belief coverage · last 30 days</h3><div id="beliefs"><div class="empty">No rows yet.</div></div></div>
+    <div class="card"><h3>Pipeline</h3><div id="cpipeline"><div class="empty">No rows yet.</div></div></div>
+  </div>
+
+  <div class="panel" id="p-health">
+    <div class="msg">
+      Your health dashboard already exists and is the source of truth.
+      <p style="margin-top:12px"><a class="link" href="index.html">Open the health dashboard →</a></p>
+      <p style="margin-top:16px;color:var(--ink-3)">Only overdue items surface here, so nothing is duplicated.</p>
+    </div>
+    <div class="card" style="margin-top:12px"><h3>Overdue</h3><div id="overdue"><div class="empty">No rows yet.</div></div></div>
+  </div>
+
+  <footer>Reads the <span style="color:var(--gold)">Business</span> tab · edit the sheet, refresh the page</footer>
+</div>
+
+<script>
+const CONFIG = {
+  // Same Apps Script as the personal dashboard. Requires the handleBusiness()
+  // function and a `type=business` branch in doGet — see the vault note
+  // "Apps Script business Endpoint".
+  endpoint: 'https://script.google.com/macros/s/AKfycbx1DnPyoKzyc-n9WS_j0YtsCq75HbjQTzlFMG9WUKTP8870v8TKDItCuTZaiy1aq2APtw/exec',
+  token: 'PASTE_PERSONAL_TOKEN_HERE'
+};
+
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(x => x.classList.remove('on'));
+  t.classList.add('on');
+  document.getElementById('p-' + t.dataset.p).classList.add('on');
+}));
+
+const set = (id, v, cls) => {
+  const el = document.getElementById(id);
+  if (!el || v === undefined || v === null || v === '') return;
+  el.textContent = v;
+  if (cls) el.className = el.className.replace(/\b(good|warn|bad)\b/g, '') + ' ' + cls;
+};
+
+function rows(containerId, list) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (!list.length) { el.innerHTML = '<div class="empty">No rows yet.</div>'; return; }
+  el.innerHTML = list.map(r =>
+    `<div class="row"><span>${esc(r.title)}${r.detail ? ` <span style="color:var(--ink-3)">· ${esc(r.detail)}</span>` : ''}</span><span class="r ${r.tag || ''}">${esc(r.extra || '')}</span></div>`
+  ).join('');
+}
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// Business tab schema, same shape as Curated:
+// Section | Group | Order | Title | Detail | Tag | Extra
+// Sections: metric (Title is the key) · pipeline · cpipeline · belief · overdue
+const METRICS = {
+  calls:'calls', asks:'asks', revenue:'revenue', car:'car',
+  draft_age:'draftage', draft_count:'draftcount',
+  published:'published', ready_to_record:'ready', days_since_publish:'sincepub'
+};
+
+fetch(`${CONFIG.endpoint}?type=business&t=${encodeURIComponent(CONFIG.token)}`)
+  .then(r => r.json())
+  .then(data => {
+    const all = data.rows || [];
+    all.filter(r => r.section === 'metric').forEach(r => {
+      const id = METRICS[r.title];
+      if (id) set(id, r.detail, r.tag);
+    });
+    const bySection = s => all.filter(r => r.section === s)
+      .sort((a, b) => (+a.order || 0) - (+b.order || 0));
+    rows('pipeline', bySection('pipeline'));
+    rows('cpipeline', bySection('cpipeline'));
+    rows('beliefs', bySection('belief'));
+    rows('overdue', bySection('overdue'));
+    document.getElementById('stamp').textContent = data.updated ? `updated ${data.updated}` : 'live';
+  })
+  .catch(e => {
+    document.getElementById('stamp').textContent = 'could not load — check the token and that handleBusiness() is deployed';
+    console.error(e);
+  });
+</script>
+</body>
+</html>
