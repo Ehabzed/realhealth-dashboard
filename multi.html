@@ -260,6 +260,49 @@
     .training-week { grid-template-columns: repeat(3, 1fr); }
     .focus-card .focus-headline { font-size: 18px; }
   }
+  /* ============ PROTOCOLS (namespaced pr-) ============ */
+  .pr-head { margin-bottom: 18px; }
+  .pr-head .pr-promise { color: var(--ink-2); font-size: 14px; line-height: 1.55; margin-top: 6px; max-width: 62ch; }
+  .subtab.locked { color: rgba(255,255,255,0.30); cursor: default; }
+  .subtab.locked:hover { background: transparent; color: rgba(255,255,255,0.30); }
+  .subtab .lk { font-size: 9px; margin-left: 4px; opacity: .8; }
+  .pr-q { margin-bottom: 22px; }
+  .pr-qt { font-size: 16px; font-weight: 600; margin-bottom: 12px; line-height: 1.4; }
+  .pr-prog { font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: .06em; margin-bottom: 14px; }
+  .pr-opt { display: block; width: 100%; text-align: left; background: rgba(255,255,255,0.05); border: 1px solid var(--line); border-radius: 11px; padding: 13px 15px; margin-bottom: 7px; color: var(--ink); font-family: var(--sans); font-size: 14.5px; cursor: pointer; transition: .12s; }
+  .pr-opt:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.22); }
+  .pr-verdict { background: linear-gradient(150deg, rgba(245,193,59,0.15), rgba(245,193,59,0.04)); border: 1px solid rgba(245,193,59,0.35); border-radius: 14px; padding: 22px; margin-bottom: 14px; }
+  .pr-verdict .pr-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); }
+  .pr-verdict h2 { font-size: 20px; line-height: 1.3; margin: 7px 0 11px; font-weight: 700; }
+  .pr-verdict p { color: var(--ink-2); line-height: 1.6; font-size: 14.5px; margin-bottom: 10px; }
+  .pr-verdict p:last-child { margin-bottom: 0; }
+  .pr-wk { border-left: 2px solid var(--gold); padding-left: 14px; margin-bottom: 18px; }
+  .pr-wk:last-child { margin-bottom: 0; }
+  .pr-wk .pr-lab { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); margin-bottom: 9px; }
+  .pr-step { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--line-soft); }
+  .pr-step:last-child { border-bottom: 0; }
+  .pr-step input { margin-top: 3px; width: 16px; height: 16px; accent-color: var(--gold); flex-shrink: 0; cursor: pointer; }
+  .pr-step label { color: var(--ink-2); line-height: 1.55; font-size: 14px; cursor: pointer; }
+  .pr-step input:checked + label { color: var(--ink-3); text-decoration: line-through; }
+  .pr-flag { background: rgba(255,107,107,0.09); border: 1px solid rgba(255,107,107,0.30); border-radius: 11px; padding: 13px 15px; margin-bottom: 9px; }
+  .pr-flag:last-child { margin-bottom: 0; }
+  .pr-flag .pr-lab { font-family: var(--mono); font-size: 9px; letter-spacing: .11em; text-transform: uppercase; color: #FF6B6B; margin-bottom: 6px; }
+  .pr-flag p { font-size: 14px; margin: 0; color: var(--ink-2); line-height: 1.55; }
+  .pr-row { display: flex; justify-content: space-between; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--line-soft); font-size: 14px; }
+  .pr-row:last-child { border-bottom: 0; }
+  .pr-row .n { font-weight: 600; }
+  .pr-row .d { color: var(--ink-3); text-align: right; font-size: 13px; line-height: 1.45; }
+  .pr-note { background: rgba(255,255,255,0.03); border-left: 2px solid var(--ink-3); padding: 12px 14px; border-radius: 0 9px 9px 0; color: var(--ink-3); font-size: 13.5px; line-height: 1.55; margin-top: 12px; }
+  .pr-cta { background: linear-gradient(150deg, rgba(29,143,219,0.20), rgba(29,58,199,0.10)); border: 1px solid rgba(126,197,232,0.35); border-radius: 14px; padding: 24px; text-align: center; }
+  .pr-cta .line { font-size: 16px; font-weight: 600; line-height: 1.45; margin-bottom: 8px; }
+  .pr-cta .sub { color: var(--ink-2); font-size: 14px; margin-bottom: 16px; line-height: 1.55; }
+  .pr-btn { display: inline-block; background: var(--gold); color: #0A1240; font-weight: 700; font-size: 14.5px; padding: 12px 24px; border-radius: 10px; text-decoration: none; }
+  .pr-locked { background: rgba(255,255,255,0.04); border: 1px dashed var(--line); border-radius: 12px; padding: 16px; margin-bottom: 9px; opacity: .68; }
+  .pr-locked:last-child { margin-bottom: 0; }
+  .pr-locked .t { font-weight: 600; margin-bottom: 3px; font-size: 14.5px; }
+  .pr-locked .d { color: var(--ink-3); font-size: 13.5px; line-height: 1.5; }
+  .pr-restart { background: none; border: 1px solid var(--line); color: var(--ink-3); font-family: var(--sans); font-size: 12.5px; padding: 8px 15px; border-radius: 9px; cursor: pointer; }
+  .pr-loading { color: var(--ink-3); font-family: var(--mono); font-size: 12px; padding: 30px 0; text-align: center; }
 </style>
 </head>
 <body>
@@ -285,6 +328,7 @@
   <button class="tab" data-tab="stack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.5 20.5L3 13v-2.5l7.5-7.5H13l7.5 7.5V13L13 20.5z"/></svg>Stack</button>
   <button class="tab" data-tab="todo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>To-Do</button>
   <button class="tab" data-tab="bloods"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6M12 22v-6M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M2 12h6M22 12h-6M4.93 19.07l4.24-4.24M14.83 9.17l4.24-4.24"/></svg>Bloodwork</button>
+  <button class="tab" data-tab="protocols"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="13" y2="11"/></svg>Protocols</button>
 </div>
 
 <!-- ============ THIS WEEK ============ -->
@@ -864,6 +908,12 @@
   </div>
 </div>
 
+
+<!-- ============ PROTOCOLS ============ -->
+<div class="panel" data-panel="protocols">
+  <div class="subtabbar" id="prTabs" role="tablist"></div>
+  <div id="prBody"><div class="pr-loading">Loading protocols…</div></div>
+</div>
 
 <div class="foot">
   <span>RealHealth Systems · Personal Health OS · Not Medical Advice</span>
@@ -1720,6 +1770,252 @@ renderStaticConfig();
 initLiftLogger();
 refreshAll();
 setInterval(refreshAll, CONFIG.refreshMs);
+
+/* ============ PROTOCOLS ============
+   The $27 product, rendered inside the same dashboard the paying clients use.
+
+   ACCESS MODEL
+   Paying clients see all four. A $27 buyer sees the one they bought unlocked
+   and the other three locked, in the same place, so the upgrade is visible
+   rather than hidden. Access comes from the ?p= URL param for now:
+       ?p=all                -> everything (default for a valid client link)
+       ?p=sleep              -> sleep only
+       ?p=sleep,gut          -> two of them
+   When the Registry gets its Access column, serve the same string from the
+   data endpoint and set PR.access from that instead. Nothing else changes.
+
+   Answers are stored per topic in localStorage, so a client keeps their
+   result and their ticked steps between visits.
+   ==================================== */
+const PR_TOPICS = [
+  {id:'sleep',    label:'Sleep',     blurb:'Which sleep problem you actually have, and the protocol for that one.'},
+  {id:'gut',      label:'Gut',       blurb:'Bloating, irregularity, and the food reactions that are actually inflammation. Includes the testing decision tree.'},
+  {id:'hormones', label:'Hormones',  blurb:'Low drive, stalled body composition, and the markers your GP did not order.'},
+  {id:'stress',   label:'Stress',    blurb:'The cortisol curve, why you are wired at midnight, and how to bring the load down without stopping.'}
+];
+
+const PR = {
+  data: {},          // id -> loaded json
+  access: null,      // Set of unlocked ids
+  current: null,
+  answers: {},
+  loaded: false
+};
+
+function prReadAccess(){
+  var raw = (new URLSearchParams(location.search).get('p') || 'all').toLowerCase().trim();
+  if (raw === 'all' || raw === '') return new Set(PR_TOPICS.map(function(t){return t.id;}));
+  var ids = raw.split(',').map(function(x){return x.trim();}).filter(Boolean);
+  var valid = ids.filter(function(id){ return PR_TOPICS.some(function(t){return t.id===id;}); });
+  // An unrecognised value must never silently unlock everything.
+  return new Set(valid.length ? valid : ['sleep']);
+}
+
+function prKey(id){ return 'rhs_protocol_' + id; }
+
+function prLoadAnswers(id){
+  try { return JSON.parse(localStorage.getItem(prKey(id)) || '{}'); } catch(e){ return {}; }
+}
+function prSaveAnswers(id, obj){
+  try { localStorage.setItem(prKey(id), JSON.stringify(obj)); } catch(e){}
+}
+
+function prEsc(v){
+  return String(v == null ? '' : v).replace(/[&<>"]/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
+  });
+}
+
+function prRenderTabs(){
+  var el = document.getElementById('prTabs');
+  if (!el) return;
+  el.innerHTML = PR_TOPICS.map(function(t){
+    var open = PR.access.has(t.id);
+    var on = (t.id === PR.current) ? ' active' : '';
+    if (!open) return '<button class="subtab locked" data-pr="' + t.id + '" title="Not unlocked" disabled>' + prEsc(t.label) + '<span class="lk">&#128274;</span></button>';
+    return '<button class="subtab' + on + '" data-pr="' + t.id + '">' + prEsc(t.label) + '</button>';
+  }).join('');
+  el.querySelectorAll('.subtab:not(.locked)').forEach(function(b){
+    b.onclick = function(){ PR.current = b.dataset.pr; prRenderTabs(); prRender(); };
+  });
+}
+
+function prRender(){
+  var body = document.getElementById('prBody');
+  if (!body) return;
+  var P = PR.data[PR.current];
+  if (!P) { body.innerHTML = '<div class="pr-loading">This protocol could not be loaded.</div>'; return; }
+
+  PR.answers = prLoadAnswers(PR.current);
+  var done = P.assessment.every(function(q){ return PR.answers[q.key]; });
+  if (done) prRenderResult(P); else prRenderAssess(P);
+}
+
+function prRenderAssess(P){
+  var body = document.getElementById('prBody');
+  var i = P.assessment.findIndex(function(q){ return !PR.answers[q.key]; });
+  var q = P.assessment[i];
+
+  body.innerHTML =
+    '<div class="pr-head"><h1 style="font-size:20px;font-weight:700;letter-spacing:-.01em">' + prEsc(P.title) + '</h1>' +
+      '<div class="pr-promise">' + prEsc(P.promise) + '</div></div>' +
+    '<div class="grid"><div class="col-12"><div class="card">' +
+      (i === 0 ? '<p style="color:var(--ink-2);line-height:1.6;font-size:14.5px;margin-bottom:16px">' + prEsc(P.intro) + '</p>' : '') +
+      '<div class="pr-prog">Question ' + (i+1) + ' of ' + P.assessment.length + '</div>' +
+      '<div class="pr-q"><div class="pr-qt">' + prEsc(q.q) + '</div>' +
+        q.options.map(function(o){
+          return '<button class="pr-opt" data-k="' + prEsc(q.key) + '" data-v="' + prEsc(o.value) + '">' + prEsc(o.label) + '</button>';
+        }).join('') +
+      '</div>' +
+      (i > 0 ? '<button class="pr-restart" id="prBack">Back</button>' : '') +
+    '</div></div></div>';
+
+  body.querySelectorAll('.pr-opt').forEach(function(b){
+    b.onclick = function(){
+      PR.answers[b.dataset.k] = b.dataset.v;
+      prSaveAnswers(PR.current, PR.answers);
+      prRender();
+    };
+  });
+  var back = document.getElementById('prBack');
+  if (back) back.onclick = function(){
+    delete PR.answers[P.assessment[i-1].key];
+    prSaveAnswers(PR.current, PR.answers);
+    prRender();
+  };
+}
+
+function prRenderResult(P){
+  var body = document.getElementById('prBody');
+  var a = PR.answers;
+  var d = P.diagnoses[a.primary];
+  if (!d) { // an answer from an older version of this protocol
+    P.assessment.forEach(function(q){ delete a[q.key]; });
+    prSaveAnswers(PR.current, a);
+    return prRender();
+  }
+
+  // Modifier keys are <questionKey>_<answerValue>, so every protocol's
+  // modifiers resolve without this function knowing the topic. All four
+  // current protocols follow that shape.
+  var m = P.modifiers || {};
+  var mods = [];
+  Object.keys(m).forEach(function(k){
+    var i = k.indexOf('_');
+    if (i < 1) return;
+    var qk = k.slice(0, i), av = k.slice(i + 1);
+    if (a[qk] !== av) return;
+    // Telling someone whose whole problem is an inverted body clock to get
+    // morning light is the protocol, not a side note. Suppress the generic
+    // version so it is not said twice.
+    if (k === 'light_no' && a.primary === 'inverted') return;
+    if (mods.indexOf(m[k]) === -1) mods.push(m[k]);
+  });
+
+  function steps(arr, wk){
+    if (!arr || !arr.length) return '';
+    return arr.map(function(s, ix){
+      var id = 'pr_' + PR.current + '_' + wk + '_' + ix;
+      return '<div class="pr-step"><input type="checkbox" id="' + id + '"' + (a[id] ? ' checked' : '') + '>' +
+             '<label for="' + id + '">' + prEsc(s) + '</label></div>';
+    }).join('');
+  }
+
+  var lockedTopics = PR_TOPICS.filter(function(t){ return !PR.access.has(t.id); });
+
+  body.innerHTML =
+    '<div class="grid">' +
+      '<div class="col-12">' +
+        '<div class="pr-verdict">' +
+          '<div class="pr-eyebrow">Your result</div>' +
+          '<h2>' + prEsc(d.name) + '</h2>' +
+          '<p>' + prEsc(d.read) + '</p>' +
+          '<p>' + prEsc(d.why) + '</p>' +
+        '</div>' +
+      '</div>' +
+
+      (mods.length ?
+      '<div class="col-12"><div class="card"><h2>Before anything else</h2>' +
+        mods.map(function(x){ return '<div class="pr-flag"><div class="pr-lab">Fix this first</div><p>' + prEsc(x) + '</p></div>'; }).join('') +
+      '</div></div>' : '') +
+
+      '<div class="col-12"><div class="card card-gold"><h2>Your protocol</h2>' +
+        '<div class="pr-wk"><div class="pr-lab">Week 1 &middot; only this</div>' + steps(d.week1,'w1') + '</div>' +
+        '<div class="pr-wk"><div class="pr-lab">Week 2 &middot; add</div>' + steps(d.week2,'w2') + '</div>' +
+        (d.week3 && d.week3.length ? '<div class="pr-wk"><div class="pr-lab">Week 3 &middot; add</div>' + steps(d.week3,'w3') + '</div>' : '') +
+      '</div></div>' +
+
+      '<div class="col-6"><div class="card"><h2>Track only these</h2>' +
+        (d.track || []).map(function(t){ return '<div class="pr-row"><span class="n">' + prEsc(t) + '</span></div>'; }).join('') +
+      '</div></div>' +
+
+      '<div class="col-6"><div class="card"><h2>What to buy</h2>' +
+        (P.buy || []).map(function(b){ return '<div class="pr-row"><span class="n">' + prEsc(b.item) + '</span><span class="d">' + prEsc(b.detail) + '</span></div>'; }).join('') +
+        (P.notmelatonin ? '<div class="pr-note">' + prEsc(P.notmelatonin) + '</div>' : '') +
+      '</div></div>' +
+
+      '<div class="col-12"><div class="card"><h2>When this is not the answer</h2>' +
+        '<div style="color:var(--ink-2);line-height:1.6;font-size:14.5px">' + prEsc(d.escalate) + '</div>' +
+      '</div></div>' +
+
+      (lockedTopics.length ?
+      '<div class="col-12"><div class="card"><h2>Not unlocked</h2>' +
+        lockedTopics.map(function(t){ return '<div class="pr-locked"><div class="t">' + prEsc(t.label) + '</div><div class="d">' + prEsc(t.blurb) + '</div></div>'; }).join('') +
+      '</div></div>' : '') +
+
+      (P.cta ?
+      '<div class="col-12"><div class="pr-cta">' +
+        '<div class="line">' + prEsc(P.cta.line) + '</div>' +
+        '<div class="sub">' + prEsc(P.cta.sub) + '</div>' +
+        '<a class="pr-btn" href="' + prEsc(P.cta.href || '#') + '">' + prEsc(P.cta.button) + '</a>' +
+      '</div></div>' : '') +
+
+      '<div class="col-12" style="text-align:center"><button class="pr-restart" id="prRedo">Retake the assessment</button></div>' +
+    '</div>';
+
+  body.querySelectorAll('.pr-step input').forEach(function(cb){
+    cb.onchange = function(){ a[cb.id] = cb.checked; prSaveAnswers(PR.current, a); };
+  });
+  document.getElementById('prRedo').onclick = function(){
+    P.assessment.forEach(function(q){ delete a[q.key]; });
+    prSaveAnswers(PR.current, a);
+    prRender();
+  };
+}
+
+function prInit(){
+  if (PR.loaded) return;
+  PR.loaded = true;
+  PR.access = prReadAccess();
+  var unlocked = PR_TOPICS.filter(function(t){ return PR.access.has(t.id); });
+  PR.current = unlocked.length ? unlocked[0].id : null;
+  prRenderTabs();
+
+  if (!PR.current) {
+    document.getElementById('prBody').innerHTML = '<div class="pr-loading">No protocols are unlocked on this link.</div>';
+    return;
+  }
+
+  Promise.all(unlocked.map(function(t){
+    return fetch('protocols/' + t.id + '.json')
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){ if (j) PR.data[t.id] = j; })
+      .catch(function(){});
+  })).then(function(){
+    if (!PR.data[PR.current]) {
+      document.getElementById('prBody').innerHTML = '<div class="pr-loading">Protocols could not be loaded. Refresh, and tell your coach if it keeps happening.</div>';
+      return;
+    }
+    prRender();
+  });
+}
+
+// Load the protocol JSON only when the tab is actually opened, so it costs
+// nothing for the clients who never look at it.
+document.querySelectorAll('.tab[data-tab="protocols"]').forEach(function(b){
+  b.addEventListener('click', prInit);
+});
+
 </script>
 
 </body>
