@@ -1,0 +1,6 @@
+
+# Business metrics: aggregate pipeline and booking figures, written daily by
+# the send-list job. This repo is public, so publishing is deliberate only -
+# send-list.sh uses "git add -f" when PUBLISH_METRICS=1. Never let a bulk
+# "git add -A" sweep it in.
+business-metrics.json

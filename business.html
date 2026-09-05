@@ -143,24 +143,80 @@ const METRICS = {
   published:'published', ready_to_record:'ready', days_since_publish:'sincepub'
 };
 
+// --- Sales numbers come from business-metrics.json -------------------------
+// Written by the daily send-list job, which already holds the Calendly API and
+// the Notion CRM open. That removes the hand-maintained Business tab from the
+// path for the numbers that matter most, and means "calls booked" is measured
+// rather than typed. Revenue and acceptance rate still come from the sheet.
+let pipelineFilled = false;
+// Ids the metrics file owns. The sheet must not overwrite a measured number
+// with a typed one, whichever of the two fetches happens to land last.
+const jsonOwned = new Set();
+
+function renderPipeline(stages) {
+  if (!Array.isArray(stages) || !stages.length) return;
+  rows('pipeline', stages.map(s => ({
+    title: s.stage,
+    detail: [
+      s.hot ? s.hot + ' hot' : '',
+      s.drafts ? s.drafts + ' draft' + (s.drafts === 1 ? '' : 's') : '',
+      s.due ? s.due + ' due' : ''
+    ].filter(Boolean).join(' · '),
+    extra: String(s.n),
+    // A stage holding zero cards is the finding, not a gap in the data.
+    tag: s.n === 0 ? 'bad' : ''
+  })));
+  pipelineFilled = true;
+}
+
+fetch('./business-metrics.json?v=' + Date.now())
+  .then(r => r.ok ? r.json() : Promise.reject(new Error('no metrics file')))
+  .then(m => {
+    const c = m.calls || {}, q = m.queue || {};
+    set('calls', c.booked_this_month, c.booked_this_month === 0 ? 'bad' : 'good');
+    ['calls', 'calls-note', 'draftage', 'draftcount'].forEach(id => jsonOwned.add(id));
+    if (c.days_since_last_sales_call != null) {
+      const el = document.getElementById('calls-note');
+      if (el) el.textContent = c.days_since_last_sales_call +
+        ' days since a new person got on a sales call' +
+        (c.last_sales_call_date ? ' · last was ' + c.last_sales_call_date : '') + '.';
+    }
+    if (q.oldest_draft_days != null) set('draftage', q.oldest_draft_days + 'd', q.oldest_draft_days >= 3 ? 'warn' : '');
+    if (q.drafts_ready != null) {
+      const el = document.getElementById('draftcount');
+      if (el) el.textContent = q.drafts_ready + ' written and unsent' +
+        (q.oldest_draft_who ? ' · oldest ' + q.oldest_draft_who : '');
+    }
+    renderPipeline(m.pipeline);
+    const stamp = document.getElementById('stamp');
+    if (stamp && m.generated) stamp.textContent = 'measured ' + String(m.generated).slice(0, 16).replace('T', ' ');
+  })
+  .catch(() => { /* fall through to the sheet below; it may still have rows */ });
+
 fetch(`${CONFIG.endpoint}?type=business&t=${encodeURIComponent(CONFIG.token)}`)
   .then(r => r.json())
   .then(data => {
     const all = data.rows || [];
     all.filter(r => r.section === 'metric').forEach(r => {
       const id = METRICS[r.title];
-      if (id) set(id, r.detail, r.tag);
+      if (id && !jsonOwned.has(id)) set(id, r.detail, r.tag);
     });
     const bySection = s => all.filter(r => r.section === s)
       .sort((a, b) => (+a.order || 0) - (+b.order || 0));
-    rows('pipeline', bySection('pipeline'));
+    if (!pipelineFilled) rows('pipeline', bySection('pipeline'));
     rows('cpipeline', bySection('cpipeline'));
     rows('beliefs', bySection('belief'));
     rows('overdue', bySection('overdue'));
-    document.getElementById('stamp').textContent = data.updated ? `updated ${data.updated}` : 'live';
+    const stamp = document.getElementById('stamp');
+    if (stamp && !jsonOwned.size) stamp.textContent = data.updated ? `updated ${data.updated}` : 'live';
   })
   .catch(e => {
-    document.getElementById('stamp').textContent = 'could not load — check the token and that handleBusiness() is deployed';
+    // Only report the sheet as the failure if the metrics file did not cover
+    // the sales numbers. Otherwise the page is working and this is noise.
+    const stamp = document.getElementById('stamp');
+    if (stamp && !jsonOwned.size) {
+      stamp.textContent = 'could not load — check the token and that handleBusiness() is deployed';
+    }
     console.error(e);
   });
 </script>
