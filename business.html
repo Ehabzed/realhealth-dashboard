@@ -44,6 +44,9 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.02em}
 .row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line-soft);font-size:14px}
 .row:last-child{border-bottom:0}
 .row .r{font-family:var(--mono);color:var(--ink-2);white-space:nowrap}
+/* .good/.warn/.bad are (0,1,0) and lose to .row .r at (0,2,0), so status
+   colour silently never applied here. The zero stages are the finding. */
+.row .r.good{color:var(--green)}.row .r.warn{color:var(--amber)}.row .r.bad{color:var(--red);font-weight:700}
 .empty{color:var(--ink-3);font-size:13px;font-style:italic;padding:6px 0}
 a.link{color:var(--blue-light);text-decoration:none;font-weight:600}
 .msg{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;font-size:14px;color:var(--ink-2);line-height:1.6}
@@ -71,10 +74,10 @@ footer{margin-top:28px;text-align:center;color:var(--ink-3);font-size:11px;font-
       <div class="note" id="calls-note">The number everything else serves.</div>
     </div>
     <div class="grid">
-      <div class="tile"><div class="label">Call asks made</div><div class="val" id="asks">–</div><div class="note">Leading indicator. The leak is asks, not volume.</div></div>
+      <div class="tile"><div class="label">Call asks made</div><div class="val" id="asks">–</div><div class="note">Not measurable yet &mdash; nothing records when a draft is actually sent. The leak is asks, not volume.</div></div>
       <div class="tile"><div class="label">Oldest unsent draft</div><div class="val" id="draftage">–</div><div class="note" id="draftcount">Drafts sitting in Awaiting Send.</div></div>
-      <div class="tile"><div class="label">Revenue this month</div><div class="val" id="revenue">–</div><div class="note">Target $15,000/mo.</div></div>
-      <div class="tile"><div class="label">Acceptance rate</div><div class="val" id="car">–</div><div class="note">Gate is 40%. Below it, cap stays 15–25/day.</div></div>
+      <div class="tile"><div class="label">Revenue this month</div><div class="val" id="revenue">–</div><div class="note">Not wired &mdash; needs the Business sheet. Target $15,000/mo.</div></div>
+      <div class="tile"><div class="label">Acceptance rate</div><div class="val" id="car">–</div><div class="note">Not wired — needs the Business sheet. Gate is 40%. Below it, cap stays 15–25/day.</div></div>
     </div>
     <div class="card"><h3>Pipeline</h3><div id="pipeline"><div class="empty">No rows yet.</div></div></div>
   </div>
@@ -98,7 +101,7 @@ footer{margin-top:28px;text-align:center;color:var(--ink-3);font-size:11px;font-
     <div class="card" style="margin-top:12px"><h3>Overdue</h3><div id="overdue"><div class="empty">No rows yet.</div></div></div>
   </div>
 
-  <footer>Reads the <span style="color:var(--gold)">Business</span> tab · edit the sheet, refresh the page</footer>
+  <footer>Sales numbers measured from Calendly + the CRM by the daily send-list job · Content and Health read the <span style="color:var(--gold)">Business</span> sheet</footer>
 </div>
 
 <script>
