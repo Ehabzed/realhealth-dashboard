@@ -296,6 +296,12 @@
   .pr-cta { background: linear-gradient(150deg, rgba(29,143,219,0.20), rgba(29,58,199,0.10)); border: 1px solid rgba(126,197,232,0.35); border-radius: 14px; padding: 24px; text-align: center; }
   .pr-cta .line { font-size: 16px; font-weight: 600; line-height: 1.45; margin-bottom: 8px; }
   .pr-cta .sub { color: var(--ink-2); font-size: 14px; margin-bottom: 16px; line-height: 1.55; }
+  /* The protocol result pairs cards of very different lengths — a two-item
+     "track only these" list sits beside a seven-item "what to buy" list.
+     Grid's default align-items:stretch leaves the shorter card roughly two
+     thirds empty. Let content set the height, scoped to this panel so the
+     rest of the dashboard's grid behaviour is unchanged. */
+  .panel[data-panel="protocols"] .grid > div { align-self: start; }
   .pr-btn { display: inline-block; background: var(--gold); color: #0A1240; font-weight: 700; font-size: 14.5px; padding: 12px 24px; border-radius: 10px; text-decoration: none; }
   .pr-locked { background: rgba(255,255,255,0.04); border: 1px dashed var(--line); border-radius: 12px; padding: 16px; margin-bottom: 9px; opacity: .68; }
   .pr-locked:last-child { margin-bottom: 0; }
