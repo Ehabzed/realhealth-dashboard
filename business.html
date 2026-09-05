@@ -84,9 +84,9 @@ footer{margin-top:28px;text-align:center;color:var(--ink-3);font-size:11px;font-
 
   <div class="panel" id="p-content">
     <div class="grid">
-      <div class="tile"><div class="label">Published this week</div><div class="val" id="published">–</div><div class="note">Target: 2 YouTube, 3 posts.</div></div>
+      <div class="tile"><div class="label">Published this week</div><div class="val" id="published">–</div><div class="note">Not measurable &mdash; nothing records a publish event. Target: 2 YouTube, 3 posts.</div></div>
       <div class="tile"><div class="label">Ready to record</div><div class="val" id="ready">–</div><div class="note">The backlog number. It was 2 while 17 finished videos sat unrecorded.</div></div>
-      <div class="tile"><div class="label">Days since last publish</div><div class="val" id="sincepub">–</div><div class="note">&nbsp;</div></div>
+      <div class="tile"><div class="label">Days since last publish</div><div class="val" id="sincepub">–</div><div class="note" id="sincepub-note">&nbsp;</div></div>
     </div>
     <div class="card"><h3>Belief coverage · last 30 days</h3><div id="beliefs"><div class="empty">No rows yet.</div></div></div>
     <div class="card"><h3>Pipeline</h3><div id="cpipeline"><div class="empty">No rows yet.</div></div></div>
@@ -152,6 +152,7 @@ const METRICS = {
 // path for the numbers that matter most, and means "calls booked" is measured
 // rather than typed. Revenue and acceptance rate still come from the sheet.
 let pipelineFilled = false;
+let cpipelineFilled = false;
 // Ids the metrics file owns. The sheet must not overwrite a measured number
 // with a typed one, whichever of the two fetches happens to land last.
 const jsonOwned = new Set();
@@ -191,6 +192,34 @@ fetch('./business-metrics.json?v=' + Date.now())
         (q.oldest_draft_who ? ' · oldest ' + q.oldest_draft_who : '');
     }
     renderPipeline(m.pipeline);
+
+    // Content panel, same source. Only the numbers that are actually derivable
+    // from the Asana pipeline — "published this week" is deliberately left
+    // alone because nothing records a publish event.
+    const ct = m.content || {};
+    if (ct.ready_to_record != null) {
+      set('ready', ct.ready_to_record, ct.ready_to_record <= 3 ? 'bad' : '');
+      jsonOwned.add('ready');
+    }
+    if (ct.days_since_publish != null) {
+      set('sincepub', ct.days_since_publish + 'd', ct.days_since_publish > 14 ? 'bad' : ct.days_since_publish > 7 ? 'warn' : '');
+      jsonOwned.add('sincepub');
+      const el = document.getElementById('sincepub-note');
+      if (el && ct.last_publish_date) el.textContent = 'Last was ' + ct.last_publish_date + '.';
+    }
+    if (Array.isArray(ct.sections) && ct.sections.length) {
+      rows('cpipeline', ct.sections
+        .filter(function (x) { return x.n != null; })
+        .map(function (x) {
+          return {
+            title: x.section,
+            detail: x.section === 'Ready to record' ? 'the number that gates publishing' : '',
+            extra: String(x.n),
+            tag: x.section === 'Ready to record' && x.n <= 3 ? 'bad' : ''
+          };
+        }));
+      cpipelineFilled = true;
+    }
     const stamp = document.getElementById('stamp');
     if (stamp && m.generated) stamp.textContent = 'measured ' + String(m.generated).slice(0, 16).replace('T', ' ');
   })
@@ -207,7 +236,7 @@ fetch(`${CONFIG.endpoint}?type=business&t=${encodeURIComponent(CONFIG.token)}`)
     const bySection = s => all.filter(r => r.section === s)
       .sort((a, b) => (+a.order || 0) - (+b.order || 0));
     if (!pipelineFilled) rows('pipeline', bySection('pipeline'));
-    rows('cpipeline', bySection('cpipeline'));
+    if (!cpipelineFilled) rows('cpipeline', bySection('cpipeline'));
     rows('beliefs', bySection('belief'));
     rows('overdue', bySection('overdue'));
     const stamp = document.getElementById('stamp');
