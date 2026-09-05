@@ -4,33 +4,104 @@
   "promise": "Work out what your stress is actually doing to you physically, then lower the load without stopping.",
   "intro": "Stress advice usually means do less, which is useless if doing less is not on the table. This is about lowering the physiological cost of the same life. Five questions, then the protocol for your pattern.",
   "assessment": [
-    {"q":"Which is closest?","key":"primary","options":[
-      {"label":"Wired at night, flat in the morning","value":"inverted"},
-      {"label":"Fine until mid-afternoon, then I fall off a cliff","value":"crash"},
-      {"label":"Permanently tense. Jaw, shoulders, shallow breathing","value":"tense"},
-      {"label":"Not stressed exactly, but everything takes more effort than it should","value":"depleted"},
-      {"label":"Short fuse. Snapping at people I shouldn't","value":"reactive"}
-    ]},
-    {"q":"How many genuinely hard days in a row do you typically string together?","key":"consecutive","options":[
-      {"label":"One or two, then it eases","value":"low"},
-      {"label":"Three or four","value":"mid"},
-      {"label":"Five or more. It doesn't really stop","value":"high"}
-    ]},
-    {"q":"What does a rest day look like?","key":"rest","options":[
-      {"label":"Genuinely off. No work, no screens","value":"real"},
-      {"label":"Lighter, but I'm still on","value":"partial"},
-      {"label":"I don't really have them","value":"none"}
-    ]},
-    {"q":"Caffeine per day?","key":"caffeine","options":[
-      {"label":"One or none","value":"low"},
-      {"label":"Two or three","value":"mid"},
-      {"label":"Four or more","value":"high"}
-    ]},
-    {"q":"Do you train?","key":"training","options":[
-      {"label":"Yes, and it feels good","value":"good"},
-      {"label":"Yes, but I'm often wrecked after","value":"wrecked"},
-      {"label":"Not currently","value":"none"}
-    ]}
+    {
+      "q": "Which is closest?",
+      "key": "primary",
+      "options": [
+        {
+          "label": "Wired at night, flat in the morning",
+          "value": "inverted"
+        },
+        {
+          "label": "Fine until mid-afternoon, then I fall off a cliff",
+          "value": "crash"
+        },
+        {
+          "label": "Permanently tense. Jaw, shoulders, shallow breathing",
+          "value": "tense"
+        },
+        {
+          "label": "Not stressed exactly, but everything takes more effort than it should",
+          "value": "depleted"
+        },
+        {
+          "label": "Short fuse. Snapping at people I shouldn't",
+          "value": "reactive"
+        }
+      ]
+    },
+    {
+      "q": "How many genuinely hard days in a row do you typically string together?",
+      "key": "consecutive",
+      "options": [
+        {
+          "label": "One or two, then it eases",
+          "value": "low"
+        },
+        {
+          "label": "Three or four",
+          "value": "mid"
+        },
+        {
+          "label": "Five or more. It doesn't really stop",
+          "value": "high"
+        }
+      ]
+    },
+    {
+      "q": "What does a rest day look like?",
+      "key": "rest",
+      "options": [
+        {
+          "label": "Genuinely off. No work, no screens",
+          "value": "real"
+        },
+        {
+          "label": "Lighter, but I'm still on",
+          "value": "partial"
+        },
+        {
+          "label": "I don't really have them",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "q": "Caffeine per day?",
+      "key": "caffeine",
+      "options": [
+        {
+          "label": "One or none",
+          "value": "low"
+        },
+        {
+          "label": "Two or three",
+          "value": "mid"
+        },
+        {
+          "label": "Four or more",
+          "value": "high"
+        }
+      ]
+    },
+    {
+      "q": "Do you train?",
+      "key": "training",
+      "options": [
+        {
+          "label": "Yes, and it feels good",
+          "value": "good"
+        },
+        {
+          "label": "Yes, but I'm often wrecked after",
+          "value": "wrecked"
+        },
+        {
+          "label": "Not currently",
+          "value": "none"
+        }
+      ]
+    }
   ],
   "diagnoses": {
     "inverted": {
@@ -51,7 +122,11 @@
         "Hold it. Rhythm changes take two to three weeks, not days. This is the one where people quit at day nine.",
         "Rhodiola 200-600mg in the morning if mornings are still heavy."
       ],
-      "track": ["Morning light, yes/no","Energy at 9am, 1-10","Time you actually felt sharpest"],
+      "track": [
+        "Morning light, yes/no",
+        "Energy at 9am, 1-10",
+        "Time you actually felt sharpest"
+      ],
       "escalate": "Three weeks of daily morning light and a hard midday caffeine cutoff with no shift at all is worth measuring. A morning cortisol test tells you whether the curve is genuinely inverted or something else is driving it."
     },
     "crash": {
@@ -72,7 +147,11 @@
         "Move most carbohydrate to around training and the evening meal.",
         "If crashes have gone, that was your answer and no further intervention is needed."
       ],
-      "track": ["Crash time, or none","Protein at breakfast, yes/no","Caffeine after midday, yes/no"],
+      "track": [
+        "Crash time, or none",
+        "Protein at breakfast, yes/no",
+        "Caffeine after midday, yes/no"
+      ],
       "escalate": "If you eat protein at every meal, never fast through the afternoon, and still crash daily for three weeks, that is worth looking at properly. Two weeks of continuous glucose data will show you exactly what is happening."
     },
     "tense": {
@@ -93,7 +172,11 @@
         "L-theanine 200mg when the tension spikes. Calm without sedation.",
         "If you train, add something that requires attention. Martial arts, climbing, anything you cannot do while ruminating."
       ],
-      "track": ["Tension, 0-10, evening","Breathing practice done, yes/no","Phone-free walk, yes/no"],
+      "track": [
+        "Tension, 0-10, evening",
+        "Breathing practice done, yes/no",
+        "Phone-free walk, yes/no"
+      ],
       "escalate": "If three weeks of daily breathing work and phone-free walking has not shifted it at all, that is worth talking about properly. Persistent sympathetic dominance can have a physical driver, and it is also the point where this stops being a protocol question."
     },
     "depleted": {
@@ -114,7 +197,11 @@
         "Add rhodiola 200-600mg in the morning. Cycle it, four to six weeks on then a break.",
         "Reassess. Depletion lifts more slowly than it arrived, so judge this at four weeks not one."
       ],
-      "track": ["Energy, 1-10, daily","Disconnected hours this week","Sleep hours"],
+      "track": [
+        "Energy, 1-10, daily",
+        "Disconnected hours this week",
+        "Sleep hours"
+      ],
       "escalate": "Depletion that does not lift after a month of real recovery is worth investigating rather than pushing through. Thyroid, iron, vitamin D and inflammation all present exactly like this and all are measurable."
     },
     "reactive": {
@@ -135,7 +222,11 @@
         "Magnesium glycinate 200-400mg evening.",
         "L-theanine 200mg on days you know will be heavy."
       ],
-      "track": ["Incidents this week","Sleep hours","Longest gap between meals"],
+      "track": [
+        "Incidents this week",
+        "Sleep hours",
+        "Longest gap between meals"
+      ],
       "escalate": "If sleep and food are genuinely sorted for three weeks and the fuse is still short, that is worth taking seriously rather than managing. It can be a hormone pattern, and it can be something a protocol is the wrong tool for."
     }
   },
@@ -146,17 +237,36 @@
     "training_wrecked": "Training is leaving you wrecked rather than better. That is the clearest sign that training has become another stressor rather than a buffer. Cut the intensity, keep the frequency. This usually feels wrong and is usually right."
   },
   "buy": [
-    {"item":"Magnesium glycinate","detail":"200-400mg evening. Threonate instead if the racing mind dominates."},
-    {"item":"L-theanine","detail":"200mg. Calm without sedation. Works within an hour."},
-    {"item":"Rhodiola","detail":"200-600mg morning. For depletion and flat mornings. Cycle it."},
-    {"item":"Ashwagandha (KSM-66)","detail":"300-600mg. Lowers cortisol specifically. A stress supplement, not a sleep supplement."},
-    {"item":"Phosphatidylserine","detail":"Evening or after hard training. Blunts excess cortisol."},
-    {"item":"Holy basil","detail":"500mg daily. For the oxidative side of a chronic load."}
+    {
+      "item": "Magnesium glycinate",
+      "detail": "200-400mg evening. Threonate instead if the racing mind dominates."
+    },
+    {
+      "item": "L-theanine",
+      "detail": "200mg. Calm without sedation. Works within an hour."
+    },
+    {
+      "item": "Rhodiola",
+      "detail": "200-600mg morning. For depletion and flat mornings. Cycle it."
+    },
+    {
+      "item": "Ashwagandha (KSM-66)",
+      "detail": "300-600mg. Lowers cortisol specifically. A stress supplement, not a sleep supplement."
+    },
+    {
+      "item": "Phosphatidylserine",
+      "detail": "Evening or after hard training. Blunts excess cortisol."
+    },
+    {
+      "item": "Holy basil",
+      "detail": "500mg daily. For the oxidative side of a chronic load."
+    }
   ],
   "notmelatonin": "Every adaptogen on this list gets cycled. Four to six weeks on, then a break. Running them continuously blunts the response and, more importantly, lets you keep operating past a load you should have changed. They are a bridge, not a floor.",
   "cta": {
     "line": "Stress is the one that shows up in every other number before it shows up as a problem.",
     "sub": "If you've run this for three weeks and the load hasn't moved, the useful next step is seeing it in your data rather than guessing at it.",
-    "button": "Book a strategy call"
+    "button": "Book a Root Cause Audit ($147)",
+    "href": "https://calendly.com/realhealthsystems/health-diagnostic-call?utm_source=dashboard&utm_medium=protocols&utm_campaign=stress"
   }
 }

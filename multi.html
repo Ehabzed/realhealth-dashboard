@@ -1967,7 +1967,7 @@ function prRenderResult(P){
       '<div class="col-12"><div class="pr-cta">' +
         '<div class="line">' + prEsc(P.cta.line) + '</div>' +
         '<div class="sub">' + prEsc(P.cta.sub) + '</div>' +
-        '<a class="pr-btn" href="' + prEsc(P.cta.href || '#') + '">' + prEsc(P.cta.button) + '</a>' +
+        '<a class="pr-btn" href="' + prEsc(P.cta.href || '#') + '" target="_blank" rel="noopener noreferrer">' + prEsc(P.cta.button) + '</a>' +
       '</div></div>' : '') +
 
       '<div class="col-12" style="text-align:center"><button class="pr-restart" id="prRedo">Retake the assessment</button></div>' +

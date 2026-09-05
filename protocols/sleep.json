@@ -8,48 +8,102 @@
       "q": "Which one sounds most like your nights?",
       "key": "primary",
       "options": [
-        {"label": "I lie there and can't switch off", "value": "racing"},
-        {"label": "I fall asleep fine but wake around 3am", "value": "threeam"},
-        {"label": "I sleep 7-8 hours and still wake up wrecked", "value": "unrefreshing"},
-        {"label": "Tired all day, then wide awake at night", "value": "inverted"},
-        {"label": "My bedtime is all over the place", "value": "erratic"}
+        {
+          "label": "I lie there and can't switch off",
+          "value": "racing"
+        },
+        {
+          "label": "I fall asleep fine but wake around 3am",
+          "value": "threeam"
+        },
+        {
+          "label": "I sleep 7-8 hours and still wake up wrecked",
+          "value": "unrefreshing"
+        },
+        {
+          "label": "Tired all day, then wide awake at night",
+          "value": "inverted"
+        },
+        {
+          "label": "My bedtime is all over the place",
+          "value": "erratic"
+        }
       ]
     },
     {
       "q": "When do you have your last caffeine?",
       "key": "caffeine",
       "options": [
-        {"label": "Before 10am", "value": "early"},
-        {"label": "Between 10am and midday", "value": "midday"},
-        {"label": "Afternoon", "value": "afternoon"},
-        {"label": "I don't drink caffeine", "value": "none"}
+        {
+          "label": "Before 10am",
+          "value": "early"
+        },
+        {
+          "label": "Between 10am and midday",
+          "value": "midday"
+        },
+        {
+          "label": "Afternoon",
+          "value": "afternoon"
+        },
+        {
+          "label": "I don't drink caffeine",
+          "value": "none"
+        }
       ]
     },
     {
       "q": "How long between your last meal and bed?",
       "key": "lastmeal",
       "options": [
-        {"label": "3 hours or more", "value": "3plus"},
-        {"label": "1 to 3 hours", "value": "1to3"},
-        {"label": "Under an hour, or I eat in bed", "value": "under1"}
+        {
+          "label": "3 hours or more",
+          "value": "3plus"
+        },
+        {
+          "label": "1 to 3 hours",
+          "value": "1to3"
+        },
+        {
+          "label": "Under an hour, or I eat in bed",
+          "value": "under1"
+        }
       ]
     },
     {
       "q": "Alcohol in a normal week?",
       "key": "alcohol",
       "options": [
-        {"label": "None", "value": "none"},
-        {"label": "1 to 3 drinks", "value": "low"},
-        {"label": "4 or more", "value": "high"}
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "1 to 3 drinks",
+          "value": "low"
+        },
+        {
+          "label": "4 or more",
+          "value": "high"
+        }
       ]
     },
     {
       "q": "Do you get outside within 30 minutes of waking?",
       "key": "light",
       "options": [
-        {"label": "Most days", "value": "yes"},
-        {"label": "Sometimes", "value": "sometimes"},
-        {"label": "Almost never", "value": "no"}
+        {
+          "label": "Most days",
+          "value": "yes"
+        },
+        {
+          "label": "Sometimes",
+          "value": "sometimes"
+        },
+        {
+          "label": "Almost never",
+          "value": "no"
+        }
       ]
     }
   ],
@@ -72,7 +126,10 @@
         "L-theanine 200mg if the mind is still racing. It stacks well with magnesium and it doesn't sedate you.",
         "Room to 16-19C. Cold rooms fall asleep faster."
       ],
-      "track": ["Minutes to fall asleep", "Whether you did the 1-hour wind-down (yes/no)"],
+      "track": [
+        "Minutes to fall asleep",
+        "Whether you did the 1-hour wind-down (yes/no)"
+      ],
       "escalate": "If you have run the 1-hour rule properly for three weeks and you are still lying awake past 40 minutes, this stops being a habit problem. That is worth a proper look at your cortisol rhythm."
     },
     "threeam": {
@@ -92,7 +149,10 @@
       "week3": [
         "Add glycine 3g before bed. It drops core temperature and deepens the second half of the night."
       ],
-      "track": ["What time you wake, if you do", "Whether you hit the 3-hour meal gap"],
+      "track": [
+        "What time you wake, if you do",
+        "Whether you hit the 3-hour meal gap"
+      ],
       "escalate": "If you are waking at 3am with a pounding heart after three weeks of eating properly in the evening, that is a cortisol pattern worth measuring rather than guessing at. A morning cortisol test answers it."
     },
     "unrefreshing": {
@@ -113,7 +173,11 @@
         "Magnesium glycinate 200-400mg evening.",
         "If you have a wearable, start watching deep sleep and REM rather than total hours."
       ],
-      "track": ["Deep sleep, if you track it", "Alcoholic drinks per week", "How you feel on waking, 1-10"],
+      "track": [
+        "Deep sleep, if you track it",
+        "Alcoholic drinks per week",
+        "How you feel on waking, 1-10"
+      ],
       "escalate": "If you have cut alcohol, fixed the meal timing and held a wake time for three weeks and still wake up exhausted, the likely candidates are thyroid, iron, or a breathing problem overnight. Those need testing, not more sleep hygiene."
     },
     "inverted": {
@@ -133,7 +197,11 @@
       "week3": [
         "Hold everything above. This one takes longer than the others because you are moving a rhythm, not a habit. Two to three weeks is normal."
       ],
-      "track": ["Whether you got morning light (yes/no)", "Time of last caffeine", "Energy at 10am, 1-10"],
+      "track": [
+        "Whether you got morning light (yes/no)",
+        "Time of last caffeine",
+        "Energy at 10am, 1-10"
+      ],
       "escalate": "If you have had morning light every day and a hard midday caffeine cutoff for three weeks and the rhythm has not shifted at all, get a morning cortisol test. A genuinely inverted curve is measurable and it changes what you do next."
     },
     "erratic": {
@@ -153,7 +221,10 @@
         "Keep going with the 15-minute steps until you land where you want.",
         "Add magnesium glycinate 200-400mg evening once the timing is roughly stable."
       ],
-      "track": ["Wake time, every day", "Bedtime, every day"],
+      "track": [
+        "Wake time, every day",
+        "Bedtime, every day"
+      ],
       "escalate": "If your schedule genuinely cannot hold a fixed wake time, shift work being the obvious case, the protocol changes completely and it is worth a proper conversation rather than a generic plan."
     }
   },
@@ -164,18 +235,40 @@
     "light_no": "You almost never get morning light. This is free, takes ten minutes, and resets the cortisol rhythm that governs the whole day. Regardless of which problem you have, start here."
   },
   "buy": [
-    {"item": "Magnesium glycinate", "detail": "200-400mg, evening. Use threonate instead if the racing mind is more of a problem than the sleep itself."},
-    {"item": "L-theanine", "detail": "200mg. Calm without sedation. Stacks well with magnesium."},
-    {"item": "Glycine", "detail": "3g before bed. Drops core temperature, deepens the back half of the night."},
-    {"item": "Amber blue-light blockers", "detail": "Worn from two hours before bed."},
-    {"item": "Mouth tape", "detail": "Three night trial. Stop if it is uncomfortable."},
-    {"item": "Nasal strips", "detail": "If your nose blocks at night."},
-    {"item": "Blackout curtains or a sleep mask", "detail": "Pitch black matters more than people expect."}
+    {
+      "item": "Magnesium glycinate",
+      "detail": "200-400mg, evening. Use threonate instead if the racing mind is more of a problem than the sleep itself."
+    },
+    {
+      "item": "L-theanine",
+      "detail": "200mg. Calm without sedation. Stacks well with magnesium."
+    },
+    {
+      "item": "Glycine",
+      "detail": "3g before bed. Drops core temperature, deepens the back half of the night."
+    },
+    {
+      "item": "Amber blue-light blockers",
+      "detail": "Worn from two hours before bed."
+    },
+    {
+      "item": "Mouth tape",
+      "detail": "Three night trial. Stop if it is uncomfortable."
+    },
+    {
+      "item": "Nasal strips",
+      "detail": "If your nose blocks at night."
+    },
+    {
+      "item": "Blackout curtains or a sleep mask",
+      "detail": "Pitch black matters more than people expect."
+    }
   ],
   "notmelatonin": "Melatonin is deliberately not on this list. It is a hormone, not a supplement, and for a standard sleep problem it masks the thing you are trying to fix rather than fixing it. The exception is jet lag, where 0.3-0.5mg short term is reasonable.",
   "cta": {
     "line": "If you have run your protocol properly for three weeks and the numbers have not moved, you do not have a habit problem. You have something that needs measuring.",
     "sub": "That is the conversation worth having. Book a strategy call and we will work out what to actually test.",
-    "button": "Book a strategy call"
+    "button": "Book a Root Cause Audit ($147)",
+    "href": "https://calendly.com/realhealthsystems/health-diagnostic-call?utm_source=dashboard&utm_medium=protocols&utm_campaign=sleep"
   }
 }

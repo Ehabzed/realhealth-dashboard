@@ -4,33 +4,104 @@
   "promise": "Work out whether your gut is inflamed, under-powered, or just badly fed. Then fix that one.",
   "intro": "Almost everyone reaches for a probiotic first. For most people it is the wrong first move, because the three common gut problems need opposite things. Five questions, then you get the one for yours.",
   "assessment": [
-    {"q":"What actually happens?","key":"primary","options":[
-      {"label":"I bloat, usually within an hour of eating","value":"bloat"},
-      {"label":"I'm irregular, or things move too slowly","value":"slow"},
-      {"label":"Loose or urgent, sometimes out of nowhere","value":"loose"},
-      {"label":"More and more foods seem to set me off","value":"reactive"},
-      {"label":"My gut seems fine but my skin, mood or energy aren't","value":"systemic"}
-    ]},
-    {"q":"How fast do you usually eat?","key":"speed","options":[
-      {"label":"Slowly, sitting down","value":"slow"},
-      {"label":"Normal pace, but often at a desk","value":"desk"},
-      {"label":"Fast. Often standing or between things","value":"fast"}
-    ]},
-    {"q":"How many different plants do you eat in a week? Count vegetables, fruit, nuts, seeds, herbs, grains.","key":"diversity","options":[
-      {"label":"More than 20","value":"high"},
-      {"label":"Around 10 to 20","value":"mid"},
-      {"label":"Fewer than 10","value":"low"}
-    ]},
-    {"q":"Antibiotics in the last two years?","key":"abx","options":[
-      {"label":"No","value":"no"},
-      {"label":"Once","value":"once"},
-      {"label":"More than once","value":"multiple"}
-    ]},
-    {"q":"Has a doctor ever tested your gut, beyond a standard blood panel?","key":"tested","options":[
-      {"label":"Yes, a proper stool or microbiome test","value":"yes"},
-      {"label":"Only bloods, and I was told they were normal","value":"bloodsonly"},
-      {"label":"Never","value":"never"}
-    ]}
+    {
+      "q": "What actually happens?",
+      "key": "primary",
+      "options": [
+        {
+          "label": "I bloat, usually within an hour of eating",
+          "value": "bloat"
+        },
+        {
+          "label": "I'm irregular, or things move too slowly",
+          "value": "slow"
+        },
+        {
+          "label": "Loose or urgent, sometimes out of nowhere",
+          "value": "loose"
+        },
+        {
+          "label": "More and more foods seem to set me off",
+          "value": "reactive"
+        },
+        {
+          "label": "My gut seems fine but my skin, mood or energy aren't",
+          "value": "systemic"
+        }
+      ]
+    },
+    {
+      "q": "How fast do you usually eat?",
+      "key": "speed",
+      "options": [
+        {
+          "label": "Slowly, sitting down",
+          "value": "slow"
+        },
+        {
+          "label": "Normal pace, but often at a desk",
+          "value": "desk"
+        },
+        {
+          "label": "Fast. Often standing or between things",
+          "value": "fast"
+        }
+      ]
+    },
+    {
+      "q": "How many different plants do you eat in a week? Count vegetables, fruit, nuts, seeds, herbs, grains.",
+      "key": "diversity",
+      "options": [
+        {
+          "label": "More than 20",
+          "value": "high"
+        },
+        {
+          "label": "Around 10 to 20",
+          "value": "mid"
+        },
+        {
+          "label": "Fewer than 10",
+          "value": "low"
+        }
+      ]
+    },
+    {
+      "q": "Antibiotics in the last two years?",
+      "key": "abx",
+      "options": [
+        {
+          "label": "No",
+          "value": "no"
+        },
+        {
+          "label": "Once",
+          "value": "once"
+        },
+        {
+          "label": "More than once",
+          "value": "multiple"
+        }
+      ]
+    },
+    {
+      "q": "Has a doctor ever tested your gut, beyond a standard blood panel?",
+      "key": "tested",
+      "options": [
+        {
+          "label": "Yes, a proper stool or microbiome test",
+          "value": "yes"
+        },
+        {
+          "label": "Only bloods, and I was told they were normal",
+          "value": "bloodsonly"
+        },
+        {
+          "label": "Never",
+          "value": "never"
+        }
+      ]
+    }
   ],
   "diagnoses": {
     "bloat": {
@@ -51,7 +122,10 @@
         "If bloating is still there after two weeks of eating properly, try a digestive enzyme with your largest meal.",
         "If it is worse with onion, garlic, wheat or beans specifically, that points somewhere different and is worth testing rather than guessing."
       ],
-      "track": ["Bloating after meals, 0-10", "Whether you sat down and chewed properly"],
+      "track": [
+        "Bloating after meals, 0-10",
+        "Whether you sat down and chewed properly"
+      ],
       "escalate": "If you have eaten slowly, sitting, for three weeks and still bloat within an hour, that is worth a real look. Bloating that survives good mechanics usually has a cause you can measure rather than guess at."
     },
     "slow": {
@@ -72,7 +146,11 @@
         "Add a fermented food daily. Kefir, sauerkraut, kimchi, live yoghurt if you tolerate dairy.",
         "Ground flaxseed, a tablespoon, if variety alone hasn't done it."
       ],
-      "track": ["Frequency", "Water intake", "Number of different plants this week"],
+      "track": [
+        "Frequency",
+        "Water intake",
+        "Number of different plants this week"
+      ],
       "escalate": "If you are hydrated, moving, eating 20+ plants a week and still slow after three weeks, thyroid is the first thing worth ruling out. Slow gut and slow thyroid look identical from the outside."
     },
     "loose": {
@@ -93,7 +171,10 @@
         "Reintroduce the removed food deliberately and watch. A real trigger shows up within 48 hours.",
         "If nothing in the log correlates with anything, that points at an overgrowth or an infection rather than a food, and that needs testing."
       ],
-      "track": ["Symptom days per week", "Whether it tracked food or stress"],
+      "track": [
+        "Symptom days per week",
+        "Whether it tracked food or stress"
+      ],
       "escalate": "Blood, unexplained weight loss, night-time symptoms, or fever are not for a protocol. See a doctor. Short of that, if three weeks of logging shows no food pattern at all, a stool test is the honest next step rather than another elimination diet."
     },
     "reactive": {
@@ -114,7 +195,10 @@
         "Reintroduce one previously removed food that you actually miss. Small amount, watch 48 hours.",
         "If it goes fine, that tells you the reaction was never really to that food."
       ],
-      "track": ["Number of foods you currently avoid", "Reactions per week"],
+      "track": [
+        "Number of foods you currently avoid",
+        "Reactions per week"
+      ],
       "escalate": "A growing reaction list is the clearest case in this whole set for testing rather than protocols. Knowing whether you have inflammation, an overgrowth, a parasite or a permeability problem completely changes what you do, and no amount of careful eating will tell you which."
     },
     "systemic": {
@@ -134,7 +218,10 @@
       "week3": [
         "Hold everything. This one has a longer lag than the others, four to six weeks before the downstream symptoms shift."
       ],
-      "track": ["Plants per week", "The downstream symptom, 0-10, daily"],
+      "track": [
+        "Plants per week",
+        "The downstream symptom, 0-10, daily"
+      ],
       "escalate": "If you improve the inputs for six weeks and the skin, mood or fog hasn't moved, this stops being a diet question. A microbiome test plus inflammatory markers will tell you in one go what another six months of guessing won't."
     }
   },
@@ -145,18 +232,40 @@
     "tested_bloodsonly": "Standard bloods do not assess your gut. They were not designed to. Being told they were normal tells you nothing about diversity, inflammation in the gut lining, or what is actually living there."
   },
   "buy": [
-    {"item":"L-glutamine","detail":"5g daily, empty stomach. Supports the lining."},
-    {"item":"Omega-3 (EPA-dominant)","detail":"2-3g EPA and DHA daily, with food."},
-    {"item":"Digestive enzyme","detail":"With your largest meal. Only if bloating survives good mechanics."},
-    {"item":"Magnesium citrate","detail":"Evening, for slow motility specifically. Citrate, not glycinate."},
-    {"item":"S. boulardii","detail":"A yeast, not a bacteria. Useful after antibiotics and alongside a kill phase."},
-    {"item":"Ground flaxseed","detail":"A tablespoon daily, for motility and fibre variety."},
-    {"item":"A fermented food","detail":"Kefir, sauerkraut, kimchi. Daily beats occasional."}
+    {
+      "item": "L-glutamine",
+      "detail": "5g daily, empty stomach. Supports the lining."
+    },
+    {
+      "item": "Omega-3 (EPA-dominant)",
+      "detail": "2-3g EPA and DHA daily, with food."
+    },
+    {
+      "item": "Digestive enzyme",
+      "detail": "With your largest meal. Only if bloating survives good mechanics."
+    },
+    {
+      "item": "Magnesium citrate",
+      "detail": "Evening, for slow motility specifically. Citrate, not glycinate."
+    },
+    {
+      "item": "S. boulardii",
+      "detail": "A yeast, not a bacteria. Useful after antibiotics and alongside a kill phase."
+    },
+    {
+      "item": "Ground flaxseed",
+      "detail": "A tablespoon daily, for motility and fibre variety."
+    },
+    {
+      "item": "A fermented food",
+      "detail": "Kefir, sauerkraut, kimchi. Daily beats occasional."
+    }
   ],
   "notmelatonin": "There is no general probiotic on this list on purpose. Off-the-shelf probiotics contain a handful of species you may already have, and they do not colonise. Fermented foods and plant variety build a population; a capsule mostly passes through. The exception is a targeted strain for a specific reason, which is a testing conversation.",
   "cta": {
     "line": "The gut is the area where guessing costs the most and testing pays back the fastest.",
     "sub": "If three weeks of this hasn't moved it, you are not missing a supplement. You are missing information. That's the conversation worth having.",
-    "button": "Book a strategy call"
+    "button": "Book a Root Cause Audit ($147)",
+    "href": "https://calendly.com/realhealthsystems/health-diagnostic-call?utm_source=dashboard&utm_medium=protocols&utm_campaign=gut"
   }
 }
