@@ -258,6 +258,28 @@
     .training-week { grid-template-columns: repeat(3, 1fr); }
     .focus-card .focus-headline { font-size: 18px; }
   }
+
+  /* ---- 11 Sep 2026: protocol clock, stale stamps, mobile tab hint ---- */
+  .reviewed-tag.stale, .tag.stale { color: var(--amber); border-color: rgba(245,193,59,0.45); }
+  .proto-row { display: grid; grid-template-columns: 170px 1fr 150px; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line-soft); font-size: 12.5px; align-items: center; }
+  .proto-row:last-child { border-bottom: none; }
+  .proto-row .pr-name { font-weight: 600; color: var(--ink); }
+  .proto-row .pr-name small { display: block; font-weight: 400; color: var(--ink-3); font-size: 11px; }
+  .proto-row .pr-desc { color: var(--ink-2); font-size: 12px; }
+  .proto-row .pr-clock { font-family: var(--mono); font-size: 11.5px; color: var(--ink); text-align: right; }
+  .proto-row .pr-clock.soon { color: var(--amber); } .proto-row .pr-clock.today { color: var(--gold); font-weight: 700; } .proto-row .pr-clock.off { color: var(--ink-3); }
+  .proto-bar { height: 4px; background: rgba(255,255,255,0.10); border-radius: 2px; margin-top: 6px; overflow: hidden; }
+  .proto-bar i { display: block; height: 100%; background: var(--gold); border-radius: 2px; }
+  .tabbar { position: relative; }
+  .tabbar::after { content: ''; position: sticky; right: 0; flex: 0 0 34px; margin-left: -34px; align-self: stretch; background: linear-gradient(to right, transparent, rgba(10,22,70,0.95)); pointer-events: none; opacity: 0; transition: opacity 0.2s; border-radius: 0 8px 8px 0; }
+  .tabbar.more-right::after { opacity: 1; }
+  @media (max-width: 520px) {
+    .tab { flex: 0 0 auto; padding: 9px 12px; font-size: 12px; }
+    .delta-item { flex-wrap: wrap; row-gap: 2px; }
+    .delta-item .v { flex-basis: 100%; padding-left: 32px; font-size: 11.5px; color: var(--ink-2); }
+    .proto-row { grid-template-columns: 1fr; gap: 4px; }
+    .proto-row .pr-clock { text-align: left; }
+  }
 </style>
 </head>
 <body>
@@ -269,7 +291,7 @@
     <div class="brand-user">Command Center · <b id="userName">—</b></div>
   </div>
   <div class="top-meta">
-    <div class="now">Week of 18 Aug 2026</div>
+    <div class="now" id="weekOf">Week of —</div>
     <div>Live data auto-updates · curated sections reviewed weekly</div>
     <div class="sync-stamp" id="syncStamp">Syncing…</div>
   </div>
@@ -292,7 +314,7 @@
     <div class="vital-tile" id="tile-hrv"><div class="v-label"><span>HRV</span></div><div class="v-val" id="val-hrv">—</div><div class="v-sub" id="sub-hrv">loading</div><svg class="spark" id="spark-hrv"></svg></div>
     <div class="vital-tile" id="tile-rhr"><div class="v-label"><span>RHR</span></div><div class="v-val" id="val-rhr">—</div><div class="v-sub" id="sub-rhr">loading</div><svg class="spark" id="spark-rhr"></svg></div>
     <div class="vital-tile" id="tile-sleep"><div class="v-label"><span>Sleep</span></div><div class="v-val" id="val-sleep">—</div><div class="v-sub" id="sub-sleep">loading</div></div>
-    <div class="vital-tile" id="tile-weight"><div class="v-label"><span>Weight</span></div><div class="v-val" id="val-weight">65<span class="u">kg</span></div><div class="v-sub">stable</div></div>
+    <div class="vital-tile" id="tile-weight"><div class="v-label"><span>Weight</span></div><div class="v-val" id="val-weight">—</div><div class="v-sub" id="sub-weight">no weigh-in yet</div></div>
     <div class="vital-tile" id="tile-steps"><div class="v-label"><span>Steps</span><span data-src="steps" class="live-tag" style="margin:0;padding:1px 5px;font-size:8px">LIVE</span></div><div class="v-val" id="val-steps">—</div><div class="v-sub" id="sub-steps">loading</div><svg class="spark" id="spark-steps"></svg></div>
   </div>
 
@@ -806,6 +828,12 @@
 <!-- ============ STACK ============ -->
 <div class="panel" data-panel="stack">
   <div class="grid">
+    <div class="col-12" id="protocolWrap" hidden>
+      <div class="card card-gold">
+        <h2>Protocol Clock <span class="tag" id="protocolTag">from the Curated tab</span></h2>
+        <div id="curProtocol"></div>
+      </div>
+    </div>
     <div class="col-8">
       <div class="card">
         <h2>Daily Protocol <span class="tag">by time of day</span></h2>
@@ -1287,6 +1315,13 @@ function sparklinePath(values, w, h) {
     return (i===0 ? 'M' : 'L') + x.toFixed(1) + ',' + y.toFixed(1);
   }).join(' ');
 }
+// Gate-test and relay-test writes land in the Checkin tab with weight 0 or a
+// "test" note. They are not data; drop them before anything renders.
+function isRealCheckin(c) {
+  const w = parseFloat(c['Weight_kg']);
+  const n = String(c['Notes'] || '').toLowerCase();
+  return !(isNaN(w) || w <= 0 || /test/.test(n));
+}
 function renderSpark(id, values, color) {
   const svg = document.getElementById(id);
   if (!svg || !values.length) return;
@@ -1312,7 +1347,7 @@ async function refreshAll() {
   cache.workouts = sortByDateDesc(work || (cache.workouts.length ? cache.workouts : parseCSV(SNAPSHOT.workouts)));
   cache.cycles   = sortByDateDesc(cyc || (cache.cycles.length ? cache.cycles : parseCSV(SNAPSHOT.cycles)));
   cache.food     = food || (cache.food.length ? cache.food : parseCSV(SNAPSHOT.food));
-  cache.checkin  = sortByDateDesc(checkin || (cache.checkin.length ? cache.checkin : parseCSV(SNAPSHOT.checkin)));
+  cache.checkin = sortByDateDesc(checkin || (cache.checkin.length ? cache.checkin : parseCSV(SNAPSHOT.checkin))).filter(isRealCheckin);
   cache.steps    = sortByDateDesc(steps || (cache.steps.length ? cache.steps : parseCSV(SNAPSHOT.steps)));
   sourceLive.recovery = !!rec;
   sourceLive.sleep    = !!sleep;
@@ -1498,6 +1533,50 @@ function applyCurated(rows) {
     if (typeof initLiftLogger === 'function') initLiftLogger();
   }
 
+  // ---- reviewed stamp: one row, Title = ISO date. Goes amber past 7 days ----
+  if (S['reviewed'] && S['reviewed'][0]) {
+    const iso = String(S['reviewed'][0]['Title'] || '').trim();
+    const d = new Date(iso + 'T00:00:00');
+    if (!isNaN(d.getTime())) {
+      const age = daysAgo(iso);
+      const label = 'Reviewed ' + d.getDate() + ' ' + d.toLocaleString('en', { month: 'short' }) + (age > 7 ? ' \u00b7 ' + age + 'd old' : '');
+      document.querySelectorAll('.reviewed-tag').forEach(function (el) { el.textContent = label; el.classList.toggle('stale', age > 7); });
+    }
+  }
+
+  // ---- protocol clock: Group = compound, Title = label, Detail = dose/cadence,
+  // Tag = start ISO, Extra = end ISO (empty = open-ended). Day counts computed here.
+  if (S['protocol'] && S['protocol'].length) {
+    const wrap = document.getElementById('protocolWrap');
+    const today = new Date(); today.setHours(0,0,0,0);
+    function toD(x) { const d = new Date(String(x || '').trim() + 'T00:00:00'); return isNaN(d.getTime()) ? null : d; }
+    function dd(a, b) { return Math.round((b - a) / 86400000); }
+    const html = S['protocol'].map(function (r) {
+      const start = toD(r['Tag']), end = toD(r['Extra']);
+      let clock = '', cls = '', bar = '';
+      const isOff = /\boff\b/i.test(String(r['Title'] || ''));
+      if (start && end) {
+        const total = Math.max(1, dd(start, end)), done = dd(start, today);
+        if (done < 0) { clock = 'starts in ' + (-done) + 'd'; cls = -done <= 3 ? ' soon' : ''; }
+        else if (done >= total) { clock = 'ends ' + (done === total ? 'today' : (done - total) + 'd ago'); cls = done === total ? ' today' : ' soon'; }
+        else { clock = 'day ' + (done + 1) + ' of ' + total + ' \u00b7 ' + (total - done) + ' left'; cls = (total - done) <= 3 ? ' soon' : ''; }
+        const pct = Math.max(0, Math.min(100, Math.round(100 * done / total)));
+        bar = '<div class="proto-bar"><i style="width:' + pct + '%"></i></div>';
+      } else if (start) {
+        const done = dd(start, today);
+        if (done < 0) { clock = 'starts in ' + (-done) + 'd'; cls = -done <= 3 ? ' soon' : ''; }
+        else if (done === 0) { clock = 'starts today'; cls = ' today'; }
+        else { clock = (isOff ? 'off for ' : 'day ') + (isOff ? done + 'd' : (done + 1)); cls = isOff ? ' off' : ''; }
+      }
+      return '<div class="proto-row"><div class="pr-name">' + esc(r['Group']) + '<small>' + esc(r['Title']) + '</small></div>'
+        + '<div class="pr-desc">' + esc(r['Detail'] || '') + '</div>'
+        + '<div class="pr-clock' + cls + '">' + esc(clock) + bar + '</div></div>';
+    }).join('');
+    setHTML('curProtocol', html);
+    if (wrap) wrap.hidden = false;
+    const tag = document.getElementById('protocolTag'); if (tag) tag.textContent = S['protocol'].length + ' items \u00b7 counts computed today';
+  }
+
   if (S['bw_note']) S['bw_note'].forEach(function (r) {
     const which = String(r['Title'] || '').toLowerCase();
     if (which === 'summary') curSetText('curBwSummary', r['Detail']);
@@ -1528,6 +1607,12 @@ function applyCurated(rows) {
 
 function renderStaticConfig() {
   const n = document.getElementById('userName'); if (n) n.textContent = CONFIG.name;
+  const wo = document.getElementById('weekOf');
+  if (wo) {
+    const t = new Date(); const dow = (t.getDay() + 6) % 7; // Monday = 0
+    const mon = new Date(t); mon.setDate(t.getDate() - dow);
+    wo.textContent = 'Week of ' + mon.getDate() + ' ' + mon.toLocaleString('en', { month: 'short' }) + ' ' + mon.getFullYear();
+  }
   const pills = document.getElementById('avoidPills');
   if (pills) pills.innerHTML = (CONFIG.avoidFoods || []).map(f => '<span class="flag-pill">' + f + '</span>').join('');
   const an = document.getElementById('avoidNote'); if (an) an.textContent = CONFIG.avoidNote || '';
@@ -1602,11 +1687,32 @@ function renderReadiness() {
   let headline, why, chips, dstate;
   const last3 = rec.slice(0,3).map(r=>parseFloat(r['Recovery %']));
   const threeLowDays = last3.length===3 && last3.every(v => v < 50);
+  // Recovery alone said "push" on days with 90+ min of sleep debt. Fold in
+  // the two things his own WHOOP history says matter: accumulated debt and
+  // a hard day landing on top of another hard day.
+  const sl = cache.sleep || [];
+  const debtNow = sl.length ? parseFloat(sl[0]['Sleep Debt (min)']) : NaN;
+  const debtWeekAgo = sl.length >= 7 ? parseFloat(sl[6]['Sleep Debt (min)']) : NaN;
+  const debtHigh = !isNaN(debtNow) && debtNow >= 90;
+  const debtRising = !isNaN(debtNow) && !isNaN(debtWeekAgo) && (debtNow - debtWeekAgo) >= 30;
+  const cyc = cache.cycles || [];
+  const yStrain = cyc.length ? parseFloat(cyc[0]['Day Strain']) : NaN;
+  const hardYesterday = !isNaN(yStrain) && yStrain >= 14;
   if (threeLowDays) {
     dstate = 'red';
     headline = 'Crash risk. Pull back now.';
     why = 'Three straight low-recovery days. This is your documented crash threshold, protect sleep and skip anything optional.';
     chips = ['Rest or walk only', 'Sleep by 10:30', 'Skip everything optional'];
+  } else if (todayScore >= 67 && (debtHigh || debtRising)) {
+    dstate = 'amber';
+    headline = 'Recovered. Sleep debt is not.';
+    why = 'Recovery ' + Math.round(todayScore) + '% says train, but sleep debt is ' + Math.round(debtNow) + ' min' + (debtRising ? ' and rising' : '') + '. In your data, debt is what moves libido and mood \u2014 train, then bank the sleep.';
+    chips = ['Train as planned', 'Bed 30 min earlier', 'No caffeine after 1pm'];
+  } else if (todayScore >= 67 && hardYesterday) {
+    dstate = 'green';
+    headline = 'Green light. Second hard day \u2014 watch Tuesday.';
+    why = 'Recovery ' + Math.round(todayScore) + '% after a strain-' + Math.round(yStrain) + ' day. Fine to go again; the crash in your history lands 48\u201372h after stacked hard days, so keep tomorrow lighter.';
+    chips = ['Hard session approved', 'Tomorrow lighter', 'Log your lifts'];
   } else if (todayScore >= 67) {
     dstate = 'green';
     headline = 'Green light. Push today.';
@@ -1767,7 +1873,19 @@ function renderNutrition() {
       } else {
         setText('wt-trend', 'need more data');
       }
+      const vw = document.getElementById('val-weight');
+      if (vw) vw.innerHTML = latest.toFixed(1) + '<span class="u">kg</span>';
+      const age = daysAgo(withWeight[0]['Date']);
+      setText('sub-weight', age <= 1 ? 'logged today' : age + ' days ago');
+    } else {
+      setText('wt-latest', 'no weigh-in logged');
+      setText('wt-avg', '\u2014');
+      setText('wt-trend', 'log one at the gym');
+      setText('sub-weight', 'no weigh-in on record');
     }
+  } else {
+    setText('wt-latest', 'no weigh-in logged');
+    setText('sub-weight', 'no weigh-in on record');
   }
 }
 
@@ -1852,8 +1970,16 @@ tabs.forEach(t => {
     t.classList.add('active');
     document.querySelector(`.panel[data-panel="${t.dataset.tab}"]`).classList.add('active');
     window.scrollTo({top:0, behavior:'smooth'});
+    if (t.scrollIntoView) t.scrollIntoView({ inline: 'center', block: 'nearest' });
   });
 });
+(function () {
+  const tb = document.querySelector('.tabbar'); if (!tb) return;
+  function hint() { tb.classList.toggle('more-right', tb.scrollLeft + tb.clientWidth < tb.scrollWidth - 4); }
+  tb.addEventListener('scroll', hint, { passive: true });
+  window.addEventListener('resize', hint);
+  hint();
+})();
 document.querySelectorAll('.subtab').forEach(st => {
   st.addEventListener('click', () => {
     const parent = st.closest('.panel');
