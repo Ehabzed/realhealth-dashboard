@@ -271,8 +271,8 @@
     <div class="brand-user">Command Center · <b id="userName">—</b></div>
   </div>
   <div class="top-meta">
-    <div class="now">Week of 18 Aug 2026</div>
-    <div>Live data auto-updates · curated sections reviewed weekly</div>
+    <div class="now" id="weekOf">Week of —</div>
+    <div id="planReviewed">Live data auto-updates · curated sections reviewed weekly</div>
     <div class="sync-stamp" id="syncStamp">Syncing…</div>
   </div>
 </div>
@@ -447,11 +447,11 @@
         <div class="row"><span class="k">Latest logged</span><span class="v" id="wt-latest">—</span></div>
         <div class="row"><span class="k">7-day rolling average</span><span class="v" id="wt-avg">—</span></div>
         <div class="row"><span class="k">Trend</span><span class="v" id="wt-trend">—</span></div>
-        <div class="note">Daily weight swings 0.5–1kg on water alone. The rolling average is the number that actually matters for maingain tracking.</div>
+        <div class="note">Daily weight swings 0.5–1kg on water alone. The rolling average is the number that actually matters.</div>
       </div>
     </div>
 
-    <div class="col-6">
+    <div class="col-6" id="avoidCol" hidden>
       <div class="card">
         <h2>Avoid / Limit <span class="reviewed-tag">From gut + blood report</span></h2>
         <div id="avoidPills"></div>
@@ -476,11 +476,11 @@
     <div class="col-6">
       <div class="card">
         <h2>Core Principles</h2>
-        <div class="rule-grid">
-          <div class="rule-tile"><div class="r-title">Timing Matters</div><div class="r-body">Never skip breakfast. Eat every 3–4 hours for stable blood sugar. Carbs concentrated around training.</div></div>
+        <div class="rule-grid" id="curPrinciples">
+          <div class="rule-tile"><div class="r-title">Timing Matters</div><div class="r-body">Eat on a schedule, every 3–4 hours once your day starts. Carbs concentrated around training.</div></div>
           <div class="rule-tile"><div class="r-title">Macros Matter</div><div class="r-body">Protein target is non-negotiable. Fat cap protects against sneaky overshoot. Carbs fill the remainder.</div></div>
           <div class="rule-tile"><div class="r-title">Balance Matters</div><div class="r-body">Every meal should have protein + one other macro. Standalone-carb hits spike + crash.</div></div>
-          <div class="rule-tile"><div class="r-title">Fibre Matters</div><div class="r-body">30+ different plant foods per week. Feeds beneficial gut bacteria you’re rebuilding.</div></div>
+          <div class="rule-tile"><div class="r-title">Fibre Matters</div><div class="r-body">30+ different plant foods per week. Feeds the good bacteria in your gut.</div></div>
         </div>
       </div>
     </div>
@@ -1095,6 +1095,7 @@ async function refreshAll() {
   usingSnapshot = !rec;
   renderLiveBadges();
 
+  computeBaseline();
   if (curated) applyCurated(curated);
   renderWeightTile();
   renderVitals();
@@ -1105,6 +1106,27 @@ async function refreshAll() {
   renderNutrition();
   renderNervousSystem();
   renderSyncStamp();
+}
+
+/* Baseline = this client's own normal, not a hardcoded number. The CONFIG
+   default was one person's WHOOP numbers (52ms HRV), which told a 150ms
+   client he was "+104ms vs baseline". Uses the 30 days before the current
+   week so a hard week doesn't drag its own yardstick down; falls back to
+   everything on file for new clients. A curated `baseline` row (set in
+   applyCurated, which runs after this) overrides it. */
+function computeBaseline() {
+  const rec = cache.recovery || [];
+  const prior = rec.slice(7, 37);
+  const pool = prior.length >= 14 ? prior : rec.slice(0, 30);
+  if (pool.length < 5) return;
+  const mean = function (key) {
+    const v = pool.map(function (r) { return parseFloat(r[key]); }).filter(function (x) { return !isNaN(x); });
+    return v.length ? Math.round(v.reduce(function (a, b) { return a + b; }, 0) / v.length) : null;
+  };
+  const r = mean('Recovery %'), h = mean('HRV (ms)'), b = mean('RHR (bpm)');
+  if (r !== null) CONFIG.baseline.recovery = r;
+  if (h !== null) CONFIG.baseline.hrv = h;
+  if (b !== null) CONFIG.baseline.rhr = b;
 }
 
 /* Repaints every badge to match the real state of the source it reflects.
@@ -1160,6 +1182,37 @@ function curSetText(id, txt) {
 function applyCurated(rows) {
   if (!rows || !rows.length) return; // no curated tab yet: placeholders stay
   const S = bySection(rows);
+
+  // ---- reviewed date: header line + the section tags that said "edit per client" ----
+  let reviewed = S['reviewed'] && S['reviewed'][0] ? String(S['reviewed'][0]['Detail'] || '').trim() : '';
+  // Sheets turns a typed "11 Sep" into a date cell; show it back as "11 Sep".
+  const iso = reviewed.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/), dmy = reviewed.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  if (iso) reviewed = parseInt(iso[3], 10) + ' ' + MON[parseInt(iso[2], 10) - 1];
+  else if (dmy) reviewed = parseInt(dmy[1], 10) + ' ' + MON[parseInt(dmy[2], 10) - 1];
+  if (reviewed) curSetText('planReviewed', 'Live data auto-updates · plan updated ' + reviewed);
+  document.querySelectorAll('.reviewed-tag, .tag').forEach(function (el) {
+    if (el.textContent.trim() === 'edit per client') {
+      if (reviewed) el.textContent = 'updated ' + reviewed; else el.hidden = true;
+    }
+  });
+
+  // ---- baseline override: Title recovery|hrv|rhr|steps, Detail number ----
+  (S['baseline'] || []).forEach(function (r) {
+    const k = String(r['Title'] || '').trim(), v = parseFloat(r['Detail']);
+    if (!isNaN(v) && ['recovery','hrv','rhr','steps'].indexOf(k) !== -1) CONFIG.baseline[k] = v;
+  });
+
+  // ---- core principles + avoid list ----
+  if (S['principle']) setHTML('curPrinciples', S['principle'].map(function (r) {
+    return '<div class="rule-tile"><div class="r-title">' + esc(r['Title']) + '</div><div class="r-body">' + esc(r['Detail']) + '</div></div>';
+  }).join(''));
+  if (S['avoid']) {
+    setHTML('avoidPills', S['avoid'].map(function (r) { return '<span class="flag-pill">' + esc(r['Title']) + '</span>'; }).join(''));
+    const note = S['avoid'].map(function (r) { return r['Detail']; }).filter(Boolean).join(' ');
+    curSetText('avoidNote', note);
+    const col = document.getElementById('avoidCol'); if (col) col.hidden = false;
+  }
 
   // ---- targets: override CONFIG so macro bars + Targets panel agree ----
   (S['target'] || []).forEach(function (r) {
@@ -1247,7 +1300,7 @@ function applyCurated(rows) {
               + (e['Detail'] ? '<div class="ex-notes">' + esc(e['Detail']) + '</div>' : '') + '</div>'
               + '<div class="ex-sets-block"><div class="ex-sets">' + esc(e['Tag'] || '') + '</div><div class="ex-rpe">' + esc(e['Extra'] || '') + '</div></div></div>';
           }).join('') + '</div>'
-          : '<div class="note">[No exercises set for this session yet.]</div>');
+          : '<div class="note">' + esc(r['Extra'] || 'No exercises set for this session yet.') + '</div>');
     }
   });
   if (S['session'] && typeof initLiftLogger === 'function') initLiftLogger();
@@ -1289,7 +1342,7 @@ function applyCurated(rows) {
           return '<div class="marker-row"><div class="m-name">' + esc(r['Title']) + '<div class="m-sub">' + esc(r['Detail']) + '</div></div><div class="m-val' + vcls + '">' + esc(r['Tag'] || '\u2014') + '</div><div class="m-trend">' + esc(String(r['Extra'] || '').split('|')[0]) + '</div></div>';
         }).join('') + '</div></div>';
       }).join('');
-      const drawCard = '<div class="col-12"><div class="card"><h2>Next Blood Draw <span class="tag">edit per client</span></h2><div class="note note-gold"><span id="curBwOrderPrep2">' + esc((S['bw_note'] || []).filter(function(r){return String(r['Title']).toLowerCase()==='orderprep';}).map(function(r){return r['Detail'];})[0] || '') + '</span></div></div></div>';
+      const drawCard = '<div class="col-12"><div class="card"><h2>Next Blood Draw</h2><div class="note note-gold"><span id="curBwOrderPrep2">' + esc((S['bw_note'] || []).filter(function(r){return String(r['Title']).toLowerCase()==='orderprep';}).map(function(r){return r['Detail'];})[0] || '') + '</span></div></div></div>';
       grid.innerHTML = summaryCard + markerCards + drawCard;
     }
   }
@@ -1311,6 +1364,10 @@ function renderWeightTile() {
 /* ---- static config render (runs once at boot) ---- */
 function renderStaticConfig() {
   const n = document.getElementById('userName'); if (n) n.textContent = CONFIG.name;
+  // Header week is always the current week (Monday), never a hardcoded date.
+  const d = new Date(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+  const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  curSetText('weekOf', 'Week of ' + d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear());
   const pills = document.getElementById('avoidPills');
   if (pills) pills.innerHTML = (CONFIG.avoidFoods || []).map(f => '<span class="flag-pill">' + f + '</span>').join('');
   const an = document.getElementById('avoidNote'); if (an) an.textContent = CONFIG.avoidNote || '';
@@ -1318,7 +1375,7 @@ function renderStaticConfig() {
 
 function renderSteps() {
   const steps = cache.steps;
-  if (!steps.length) return;
+  if (!steps.length) { setText('sub-steps', 'not synced yet'); return; }
   const today = new Date().toISOString().split('T')[0];
   const todayRow = steps.find(s => s['Date'] === today);
   const latest = todayRow || steps[0]; // cache.steps is sorted newest-first, so [0] is the most recent day on file
@@ -1355,7 +1412,8 @@ function renderVitals() {
 
     const rhrVal = parseFloat(today['RHR (bpm)']);
     setText('val-rhr', Math.round(rhrVal) + 'bpm');
-    setText('sub-rhr', (rhrVal>=CONFIG.baseline.rhr?'▲ ':'▼ ') + Math.abs(Math.round(rhrVal-CONFIG.baseline.rhr)) + ' vs ' + CONFIG.baseline.rhr + ' base');
+    const rhrDiff = Math.round(rhrVal - CONFIG.baseline.rhr);
+    setText('sub-rhr', rhrDiff === 0 ? 'at your ' + CONFIG.baseline.rhr + ' base' : (rhrDiff > 0 ? '▲ ' : '▼ ') + Math.abs(rhrDiff) + ' vs ' + CONFIG.baseline.rhr + ' base');
     renderSpark('spark-rhr', rec.slice(0,14).map(r=>parseFloat(r['RHR (bpm)'])), '#4FD1A5');
   }
   if (sleep.length) {
@@ -1394,7 +1452,7 @@ function renderReadiness() {
   } else if (todayScore >= 67) {
     dstate = 'green';
     headline = 'Green light. Push today.';
-    why = 'Recovery ' + Math.round(todayScore) + '% is at or above baseline. Good day for a harder session if the schedule calls for it.';
+    why = 'Recovery ' + Math.round(todayScore) + '%, against your usual ' + CONFIG.baseline.recovery + '%. Good day for a harder session if the schedule calls for it.';
     chips = ['Hard session approved', 'Carbs around training', 'Log your lifts'];
   } else if (todayScore >= 34) {
     dstate = 'amber';
@@ -1404,7 +1462,7 @@ function renderReadiness() {
   } else {
     dstate = 'red';
     headline = 'Low recovery. Protect today.';
-    why = 'Recovery ' + Math.round(todayScore) + '% is well below baseline. Consider a lighter session or active recovery.';
+    why = 'Recovery ' + Math.round(todayScore) + '%, well below your usual ' + CONFIG.baseline.recovery + '%. Consider a lighter session or active recovery.';
     chips = ['Active recovery only', 'Sleep is the workout', 'No doubles'];
   }
   setText('readinessHeadline', headline);
@@ -1434,14 +1492,15 @@ function renderPerformance() {
   const recAvg = avg(recVals), hrvAvg = avg(hrvVals), rhrAvg = avg(rhrVals);
 
   setText('perf-recovery', Math.round(recAvg) + '%'); setText('perf-recovery-sub', 'vs ' + CONFIG.baseline.recovery + '% baseline'); setWidth('perf-recovery-bar', recAvg);
-  setText('perf-hrv', Math.round(hrvAvg) + 'ms'); setText('perf-hrv-sub', 'vs ' + CONFIG.baseline.hrv + 'ms baseline'); setWidth('perf-hrv-bar', (hrvAvg/120)*100);
+  setText('perf-hrv', Math.round(hrvAvg) + 'ms'); setText('perf-hrv-sub', 'vs ' + CONFIG.baseline.hrv + 'ms baseline'); setWidth('perf-hrv-bar', (hrvAvg/(CONFIG.baseline.hrv*1.5))*100);
   setText('perf-rhr', Math.round(rhrAvg) + 'bpm'); setText('perf-rhr-sub', 'vs ' + CONFIG.baseline.rhr + ' baseline'); setWidth('perf-rhr-bar', 100-(rhrAvg/80)*100);
   }
 
   if (sleep.length) {
     const perfVals = sleep.map(s=>parseFloat(s['Performance %']));
     const consVals = sleep.map(s=>parseFloat(s['Consistency %'])).filter(v=>!isNaN(v));
-    setText('perf-sleepperf', Math.round(avg(perfVals)) + '%'); setText('perf-sleepperf-sub', 'good'); setWidth('perf-sleepperf-bar', avg(perfVals));
+    const perfAvg = avg(perfVals);
+    setText('perf-sleepperf', Math.round(perfAvg) + '%'); setText('perf-sleepperf-sub', perfAvg >= 85 ? 'strong' : perfAvg >= 70 ? 'good' : 'below 70% target'); setWidth('perf-sleepperf-bar', avg(perfVals));
     const consAvg = avg(consVals);
     setText('perf-consistency', Math.round(consAvg) + '%'); setText('perf-consistency-sub', consAvg>=75?'strong':'improving'); setWidth('perf-consistency-bar', consAvg);
   }
