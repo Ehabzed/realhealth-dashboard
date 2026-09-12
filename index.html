@@ -1395,9 +1395,10 @@ function esc(s) {
 }
 function bySection(rows) {
   const out = {};
-  (rows || []).forEach(function (r) {
+  (rows || []).forEach(function (r, i) {
     const s = String(r['Section'] || '').trim();
     if (!s) return;
+    r.__i = i; // sheet position: blocks() orders groups by this, not by Order
     (out[s] = out[s] || []).push(r);
   });
   Object.keys(out).forEach(function (k) {
@@ -1455,6 +1456,10 @@ function applyCurated(rows) {
       if (!groups[g]) { groups[g] = []; order.push(g); }
       groups[g].push(r);
     });
+    // Groups keep their sheet order; Order only sorts rows inside a group.
+    // (An Order of 0 in any group used to pull that whole group to the top.)
+    const first = function (g) { return Math.min.apply(null, groups[g].map(function (r) { return r.__i == null ? Infinity : r.__i; })); };
+    order.sort(function (a, b) { return first(a) - first(b); });
     return order.map(function (g) {
       return '<div class="stack-block"><div class="stack-time">' + esc(g) + '</div>' + groups[g].map(function (r) {
         return '<div class="stack-item"><div class="si-name">' + esc(r['Title']) + '</div>' + (withDesc && r['Detail'] ? '<div class="si-desc">' + esc(r['Detail']) + '</div>' : '') + '</div>';
