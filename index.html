@@ -283,6 +283,7 @@
 </style>
 </head>
 <body>
+<div id="lockNote" class="note note-gold" hidden style="margin:12px 16px">This device isn't unlocked yet, so no data is shown. Open your private dashboard link on it once (on the Mac, run <b>dashboard-unlock</b> in Terminal; it copies the link for your phone too).</div>
 
 <div class="topbar">
   <div class="brand">
@@ -348,26 +349,14 @@
     <div class="col-6">
       <div class="card">
         <h2>Weekly Changes <span class="reviewed-tag" id="curReviewed1">Reviewed 24 Aug</span></h2>
-        <div class="delta-list" id="curWeeklyChanges">
-          <div class="delta-item"><span class="arrow flat">•</span><span class="k">Gut kill-off phase</span><span class="v">22 days left</span></div>
-          <div class="delta-item"><span class="arrow up">▲</span><span class="k">Die-off symptoms easing</span><span class="v">tracking with best recovery stretch</span></div>
-          <div class="delta-item"><span class="arrow flat">•</span><span class="k">Berberine</span><span class="v">holding 2/day, occasional 1</span></div>
-          <div class="delta-item"><span class="arrow down">▼</span><span class="k">BPC-157 finished, KLOW ordered</span><span class="v">arriving ~2wk</span></div>
-          <div class="delta-item"><span class="arrow down">▼</span><span class="k">Recovery dropped hard</span><span class="v">30% then 32%, post 4-session Friday</span></div>
-        </div>
+        <div class="delta-list" id="curWeeklyChanges"></div>
       </div>
     </div>
 
     <div class="col-6">
       <div class="card">
         <h2>Top Priorities <span class="reviewed-tag" id="curReviewed2">Reviewed 24 Aug</span></h2>
-        <div id="curTopPriorities">
-        <div class="todo-item"><div class="todo-priority p-high">1</div><div class="todo-body"><div class="t-main">Back off training intensity 1-2 days</div><div class="t-sub">recovery/HRV moved before you felt it, don't wait for the crash</div></div></div>
-        <div class="todo-item"><div class="todo-priority p-high">2</div><div class="todo-body"><div class="t-main">Confirm KLOW shipment</div><div class="t-sub">you'll run dry on CJC/Ipamorelin before it lands if it slips</div></div></div>
-        <div class="todo-item"><div class="todo-priority p-med">3</div><div class="todo-body"><div class="t-main">Book TSH retest</div><div class="t-sub">target early Sept · 6.38 → confirm before treatment · pause iodine · calm/rested state</div></div></div>
-        <div class="todo-item"><div class="todo-priority p-med">4</div><div class="todo-body"><div class="t-main">Kill-off phase transition plan</div><div class="t-sub">ends Sept 15, 22 days out, start thinking through next phase</div></div></div>
-        <div class="todo-item"><div class="todo-priority p-med">5</div><div class="todo-body"><div class="t-main">Reorder magnesium glycinate</div><div class="t-sub">out of stock · pair with threonate for full pre-bed support</div></div></div>
-        </div>
+        <div id="curTopPriorities"></div>
       </div>
     </div>
 
@@ -482,14 +471,7 @@
     <div class="col-6">
       <div class="card">
         <h2>Targets</h2>
-        <div id="curTargets">
-        <div class="row"><span class="k">Calories (rest)</span><span class="v">~2,300 kcal</span></div>
-        <div class="row"><span class="k">Calories (training)</span><span class="v">~2,550 kcal</span></div>
-        <div class="row"><span class="k">Calories (hard day)</span><span class="v">~2,700 kcal</span></div>
-        <div class="row"><span class="k">Protein</span><span class="v good">145g / day</span></div>
-        <div class="row"><span class="k">Fat cap</span><span class="v">≤80g</span></div>
-        <div class="row"><span class="k">Water</span><span class="v good">3,000ml (3L)</span></div>
-        </div>
+        <div id="curTargets"></div>
       </div>
     </div>
 
@@ -508,26 +490,7 @@
     <div class="col-12">
       <div class="card">
         <h2>Meal Rotation <span class="reviewed-tag">Diversity plan, updated 24 Aug</span></h2>
-        <div id="curMeals">
-        <div class="stack-block"><div class="stack-time">8:00 AM · Breakfast, rotate</div>
-          <div class="stack-item"><div class="si-name">A · Greek yoghurt bowl</div><div class="si-desc">Greek yoghurt 200g + mixed fruit 250g + collagen + 2 Brazil nuts (3-4x/wk) · ~470 kcal · 20g P · calcium, folate, vit C, selenium</div></div>
-          <div class="stack-item"><div class="si-name">B · Fruit + raw milk</div><div class="si-desc">Mixed fruit 250g + raw milk + collagen, pinch of salt on training mornings · ~420 kcal · 15g P · lighter pre-training option</div></div>
-        </div>
-        <div class="stack-block"><div class="stack-time">12:00 PM · Lunch, rotate</div>
-          <div class="stack-item"><div class="si-name">A · Salmon rice bowl</div><div class="si-desc">Search: cơm cá hồi áp chảo · salmon + rice + broccoli + carrot · ~550 kcal · 40g P · vit D, omega-3, calcium, biggest single upgrade</div></div>
-          <div class="stack-item"><div class="si-name">B · Beef rice bowl</div><div class="si-desc">Beef + rice + broccoli/carrot + extra chicken + boiled eggs, extra greens on the side · ~820 kcal · 70g P</div></div>
-          <div class="stack-item"><div class="si-name">C · Chicken + sweet potato</div><div class="si-desc">Search: cơm gà khoai lang · grilled chicken + sweet potato + sautéed greens · ~550 kcal · 45g P · vit A, folate, magnesium</div></div>
-        </div>
-        <div class="stack-block"><div class="stack-time">5:00 PM · Post-Training Meal</div>
-          <div class="stack-item"><div class="si-name">Protein smoothie, low-sugar</div><div class="si-desc">Whey + 1 banana + milk + chia seeds, no added honey or mango · ~360 kcal · 34g P</div></div>
-        </div>
-        <div class="stack-block"><div class="stack-time">8:00 PM · Dinner, rotate</div>
-          <div class="stack-item"><div class="si-name">A · Beef pho + extra greens</div><div class="si-desc">Extra beef, ask for extra rau muống or spinach · ~645 kcal · 53g P · iron, folate</div></div>
-          <div class="stack-item"><div class="si-name">B · Salmon + mash</div><div class="si-desc">Search: cá hồi khoai tây nghiền · salmon + mashed potato + broccoli · ~600 kcal · 40g P · vit D, omega-3, calcium</div></div>
-          <div class="stack-item"><div class="si-name">C · Grilled chicken + greens</div><div class="si-desc">Search: gà nướng rau xào · chicken + rice + sautéed dark greens · ~550 kcal · 50g P · folate, magnesium, vit A</div></div>
-        </div>
-        <div class="note note-gold">Salmon minimum 3x per week is the single biggest lever here. Everything else is secondary to that one rule.</div>
-        </div>
+        <div id="curMeals"></div>
       </div>
     </div>
   </div>
@@ -547,51 +510,28 @@
       <div class="col-12">
         <div class="card">
           <h2>Weekly Structure <span class="tag" id="curWeekBadge">3 gym + 2 striking</span></h2>
-          <div class="training-week" id="curWeekGrid">
-            <div class="day-tile trained"><div class="d-label">Mon</div><div class="d-act">Gym<br>Day 1</div></div>
-            <div class="day-tile trained"><div class="d-label">Tue</div><div class="d-act">Kickboxing</div></div>
-            <div class="day-tile rest"><div class="d-label">Wed</div><div class="d-act">Rest</div></div>
-            <div class="day-tile trained"><div class="d-label">Thu</div><div class="d-act">Gym<br>Day 2</div></div>
-            <div class="day-tile trained"><div class="d-label">Fri</div><div class="d-act">Kickboxing</div></div>
-            <div class="day-tile trained"><div class="d-label">Sat</div><div class="d-act">Optional<br>3rd MA or Day 3</div></div>
-            <div class="day-tile rest"><div class="d-label">Sun</div><div class="d-act">Rest</div></div>
-          </div>
+          <div class="training-week" id="curWeekGrid"></div>
         </div>
       </div>
 
       <div class="col-6">
         <div class="card">
           <h2>Physique Priorities</h2>
-          <div id="curPhysique">
-          <div class="row"><span class="k">1. Lateral delts</span><span class="v warn">biggest visual lever</span></div>
-          <div class="row"><span class="k">2. Rear delts + upper back</span><span class="v">3D shoulder look</span></div>
-          <div class="row"><span class="k">3. Upper chest</span><span class="v">incline focus</span></div>
-          <div class="row"><span class="k">4. Neck</span><span class="v">bridges 3–4×/wk + plate</span></div>
-          <div class="row"><span class="k">5. Arms + abs</span><span class="v">accessory work</span></div>
-          <div class="row"><span class="k">6. Legs</span><span class="v">maintenance only</span></div>
-          </div>
+          <div id="curPhysique"></div>
         </div>
       </div>
 
       <div class="col-6">
         <div class="card">
           <h2>Programme Structure</h2>
-          <div class="note" id="curProgramme">
-            <b>Each gym day has 2 sections.</b> Friends section (shared compounds) + solo stay-back (10–15 min, priority work). The stay-back is where physique priorities live, short enough to always do it.<br><br>
-            <b>Maingain rule.</b> Weight creeping up fast or waist wider, pull back 100–150 kcal. Weight dropping, add 100 kcal from carbs.
-          </div>
+          <div class="note" id="curProgramme"></div>
         </div>
       </div>
 
       <div class="col-12">
         <div class="card">
           <h2>Recovery Rules</h2>
-          <div class="note" id="curRecovery">
-            <b>Cap strain ≤12</b> on any day recovery &lt;60%.<br>
-            <b>Don’t stack</b> hard training day after low-recovery night, Tuesday crashes trace to weekend push.<br>
-            <b>Sprints (1×/wk)</b> planned post-bloodwork window.<br>
-            <b>Sleep consistency</b> beats sleep duration for your recovery numbers.
-          </div>
+          <div class="note" id="curRecovery"></div>
         </div>
       </div>
     </div>
@@ -837,84 +777,24 @@
     <div class="col-8">
       <div class="card">
         <h2>Daily Protocol <span class="tag">by time of day</span></h2>
-        <div id="curStack">
-
-        <div class="stack-block">
-          <div class="stack-time">On Waking · Fasted</div>
-          <div class="stack-item"><div class="si-name peptide">KLOW, on arrival<span class="subq-tag">SUBQ</span></div><div class="si-desc">BPC-157 + TB-500 + KPV + GHK-Cu · current BPC vial finished, KLOW ordered and arriving ~2wk · gut lining + systemic tissue repair, KPV lands as kill-phase ends</div></div>
-          <div class="stack-item"><div class="si-name">NAC</div><div class="si-desc">600mg fasted · biofilm disruption + glutathione</div></div>
-        </div>
-
-        <div class="stack-block">
-          <div class="stack-time">Breakfast</div>
-          <div class="stack-item"><div class="si-name">Vitamin C</div><div class="si-desc">1000mg · collagen cofactor + immune/adrenal support</div></div>
-          <div class="stack-item"><div class="si-name">Tadalafil (Cialis)</div><div class="si-desc">2.5mg · every other day · low-dose regimen, consistent morning slot</div></div>
-          <div class="stack-item"><div class="si-name">B-Complex OR TMG</div><div class="si-desc">alternate daily · activated B-complex ×2 caps one day, TMG 1g the next · methylation support for homocysteine</div></div>
-          <div class="stack-item"><div class="si-name">Myo-inositol</div><div class="si-desc">standard dose · thyroid/insulin signalling</div></div>
-          <div class="stack-item"><div class="si-name">Bioflora S. boulardii + Multi-strain probiotic</div><div class="si-desc">Bioflora 200mg, CNCM I-745 strain, together with multi-strain · I-745 competes with Candida, multi-strain rebuilds Lacto/Bifido gaps</div></div>
-          <div class="stack-item"><div class="si-name">Fish Oil</div><div class="si-desc">1 tab · EPA/DHA · anti-inflammatory + cognition</div></div>
-        </div>
-
-        <div class="stack-block">
-          <div class="stack-time">Pre-Training</div>
-          <div class="stack-item"><div class="si-name">Collagen + Vit C</div><div class="si-desc">15g + 500mg · connective tissue substrate for training load</div></div>
-          <div class="stack-item"><div class="si-name">Electrolytes</div><div class="si-desc">as needed · heat + fluid loss</div></div>
-          <div class="stack-item"><div class="si-name">Taurine</div><div class="si-desc">3g (optional) · CNS calm + exercise recovery</div></div>
-        </div>
-
-        <div class="stack-block">
-          <div class="stack-time">Lunch · With Food</div>
-          <div class="stack-item"><div class="si-name">Copper glycinate</div><div class="si-desc">3mg daily · offsets zinc-driven depletion</div></div>
-          <div class="stack-item"><div class="si-name">Berberine</div><div class="si-desc">500mg · Candida/Bacteroides antimicrobial (never fasted)</div></div>
-        </div>
-
-        <div class="stack-block">
-          <div class="stack-time">Dinner · With Food</div>
-          <div class="stack-item"><div class="si-name">Berberine</div><div class="si-desc">500mg (2nd dose)</div></div>
-          <div class="stack-item"><div class="si-name">Zinc picolinate</div><div class="si-desc">50mg elemental · alternate days (M/W/F/Sun) · thyroid T4→T3</div></div>
-          <div class="stack-item"><div class="si-name">Vitamin K2 (MK-7)</div><div class="si-desc">100mcg · directs Ca to bone, arterial protection</div></div>
-          <div class="stack-item"><div class="si-name">Fish Oil</div><div class="si-desc">1 tab · EPA/DHA · 2nd daily dose · LDL + inflammation</div></div>
-          <div class="stack-item"><div class="si-name">L-Glutamine</div><div class="si-desc">5g · gut lining fuel</div></div>
-        </div>
-
-        <div class="stack-block">
-          <div class="stack-time">Pre-Bed · Fasted 2–3h</div>
-          <div class="stack-item"><div class="si-name peptide">CJC-1295 / Ipamorelin<span class="subq-tag">SUBQ</span></div><div class="si-desc">10u · 5 nights/wk (weekends off) · GH pulse for recovery</div></div>
-          <div class="stack-item"><div class="si-name">Magnesium Threonate</div><div class="si-desc">brain magnesium · sleep + cognition (glycinate out of stock, reorder)</div></div>
-          <div class="stack-item"><div class="si-name">Myo-inositol</div><div class="si-desc">2nd dose · sleep quality</div></div>
-        </div>
-        </div>
+        <div id="curStack"></div>
       </div>
     </div>
 
     <div class="col-4">
       <div class="card">
         <h2>Standing Rules</h2>
-        <div id="curRules">
-        <div class="row"><span class="k">Creatine</span><span class="v bad">Excluded</span></div>
-        <div class="row"><span class="k">Zinc</span><span class="v warn">Alt days only</span></div>
-        <div class="row"><span class="k">Berberine</span><span class="v warn">Always w/ food</span></div>
-        <div class="row"><span class="k">S. boulardii ↔ Berberine</span><span class="v">2h+ apart</span></div>
-        <div class="row"><span class="k">CJC/Ipa fasted window</span><span class="v">2–3h</span></div>
-        </div>
+        <div id="curRules"></div>
       </div>
 
       <div class="card" style="margin-top:16px">
         <h2>Restock Tracker</h2>
-        <div id="curRestock">
-        <div class="row"><span class="k">Berberine</span><span class="v warn">~2wk left</span></div>
-        <div class="row"><span class="k">NAC</span><span class="v good">~6wk left</span></div>
-        <div class="row"><span class="k">Bioflora S. boulardii</span><span class="v good">~30 days</span></div>
-        <div class="row"><span class="k">BPC-157</span><span class="v bad">out, KLOW in transit</span></div>
-        <div class="row"><span class="k">CJC-1295/Ipamorelin</span><span class="v bad">days left, reorder placed</span></div>
-        <div class="row"><span class="k">Raw milk + raw honey</span><span class="v good">arriving this week</span></div>
-        <div class="row"><span class="k">Mag glycinate</span><span class="v bad">OUT, reorder</span></div>
-        </div>
+        <div id="curRestock"></div>
       </div>
 
       <div class="card" style="margin-top:16px">
         <h2>Expected Effects</h2>
-        <div class="note" id="curEffects">Most items work upstream, you won&rsquo;t feel them acutely. Watch for: better sleep depth (CJC/Ipa), less bloating (gut protocol), steadier energy (methylation stack), reduced tendon soreness (collagen + peptide combo).</div>
+        <div class="note" id="curEffects"></div>
       </div>
     </div>
   </div>
@@ -926,184 +806,14 @@
     <div class="col-12">
       <div class="card">
         <h2>Ranked Priorities <span class="tag">active</span></h2>
-        <div id="curTodo">
-
-        <div class="todo-item">
-          <div class="todo-priority p-high">HIGH</div>
-          <div class="todo-body">
-            <div class="t-main">Book TSH retest in calm/rested state</div>
-            <div class="t-sub">6.38 (up from 3.81) · pause iodine · morning draw, similar time as before for comparability</div>
-          </div>
-        </div>
-
-        <div class="todo-item">
-          <div class="todo-priority p-low">MONITOR</div>
-          <div class="todo-body">
-            <div class="t-main">Multi-strain probiotic, started today ✓</div>
-            <div class="t-sub">watch for changes in bloating, energy, stool over 2–4wk · retest stool at 3–4mo mark</div>
-          </div>
-        </div>
-
-        <div class="todo-item">
-          <div class="todo-priority p-med">MED</div>
-          <div class="todo-body">
-            <div class="t-main">Schedule next full bloodwork panel (~Oct–Nov)</div>
-            <div class="t-sub">homocysteine, TSH+FT3/FT4, ApoB, Lp(a), hs-CRP, insulin, HbA1c, serum zinc + copper, vit D</div>
-          </div>
-        </div>
-
-        <div class="todo-item">
-          <div class="todo-priority p-low">LOW</div>
-          <div class="todo-body">
-            <div class="t-main">Reintroduce sprint session (1×/week)</div>
-            <div class="t-sub">testosterone/GH bump + fast-twitch, start after recovery baseline stabilises</div>
-          </div>
-        </div>
-
-        <div class="todo-item">
-          <div class="todo-priority p-low">LOW</div>
-          <div class="todo-body">
-            <div class="t-main">Consider CGM 2-week trial</div>
-            <div class="t-sub">glucose response to specific meals + training timing · high ROI given previous reactive hypo</div>
-          </div>
-        </div>
-
-        <div class="todo-item">
-          <div class="todo-priority p-low">LOW</div>
-          <div class="todo-body">
-            <div class="t-main">Stool retest at 3–4 month mark (~Nov–Dec)</div>
-            <div class="t-sub">confirms Candida + Bacteroides normalisation from protocol</div>
-          </div>
-        </div>
-        </div>
+        <div id="curTodo"></div>
       </div>
     </div>
   </div>
 </div>
 <!-- ============ BLOODWORK ============ -->
 <div class="panel" data-panel="bloods">
-  <div class="grid" id="curBloodworkGrid">
-    <div class="col-12">
-      <div class="card card-gold">
-        <h2>Overall Trajectory <span class="tag">Aug 4 2026 · Medilab</span></h2>
-        <div style="font-size:14px; line-height:1.6; color:var(--ink)">Four major open threads from earlier this year, <b>homocysteine, kidney markers, LDL, and inflammation</b>, have all resolved or improved into normal range. Cardiovascular and renal pictures now both fully clean. <b style="color:var(--gold)">TSH (6.38, worsened) is the one open marker.</b> Retest in calm state before any treatment decision.</div>
-      </div>
-    </div>
-
-    <div class="col-6">
-      <div class="card">
-        <h2>Metabolic / Inflammation</h2>
-        <div class="marker-row">
-          <div class="m-name">Homocysteine<div class="m-sub">ref 5–15 µmol/L</div></div>
-          <div class="m-val good">9.17</div>
-          <div class="m-trend">16.1 → 9.17 ✓</div>
-        </div>
-        <div class="marker-row">
-          <div class="m-name">hs-CRP<div class="m-sub">low risk &lt;1.0</div></div>
-          <div class="m-val good">0.951</div>
-          <div class="m-trend">low CV risk</div>
-        </div>
-        <div class="marker-row">
-          <div class="m-name">HbA1c<div class="m-sub">ref &lt;5.7%</div></div>
-          <div class="m-val good">4.8%</div>
-          <div class="m-trend">excellent</div>
-        </div>
-        <div class="marker-row">
-          <div class="m-name">Fasting insulin<div class="m-sub">ref 2.6–24.9 µU/mL</div></div>
-          <div class="m-val good">11.5</div>
-          <div class="m-trend">normal</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6">
-      <div class="card">
-        <h2>Cardiovascular</h2>
-        <div class="marker-row">
-          <div class="m-name">LDL-C<div class="m-sub">ref &lt;3.35 mmol/L</div></div>
-          <div class="m-val good">2.73</div>
-          <div class="m-trend">4.2 → 3.8 → 2.73 ✓</div>
-        </div>
-        <div class="marker-row">
-          <div class="m-name">ApoB<div class="m-sub">ref 49–173 mg/dL</div></div>
-          <div class="m-val good">93.7</div>
-          <div class="m-trend">normal</div>
-        </div>
-        <div class="marker-row">
-          <div class="m-name">Lp(a)<div class="m-sub">ref ≤50 mg/dL</div></div>
-          <div class="m-val good">6.31</div>
-          <div class="m-trend">low (genetic ✓)</div>
-        </div>
-        <div class="marker-row">
-          <div class="m-name">HDL / Trig<div class="m-sub">HDL ≥1.04 · Trig &lt;1.7</div></div>
-          <div class="m-val good">1.44 / 1.14</div>
-          <div class="m-trend">both good</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6">
-      <div class="card">
-        <h2>Kidney</h2>
-        <div class="marker-row">
-          <div class="m-name">Creatinine<div class="m-sub">ref 62–106 µmol/L</div></div>
-          <div class="m-val good">105</div>
-          <div class="m-trend">112 → 105 ✓</div>
-        </div>
-        <div class="marker-row">
-          <div class="m-name">eGFR<div class="m-sub">optimal ≥90</div></div>
-          <div class="m-val good">87</div>
-          <div class="m-trend">78 → 87 ✓</div>
-        </div>
-        <div class="marker-row">
-          <div class="m-name">Cystatin C<div class="m-sub">ref 0.31–0.79 mg/L</div></div>
-          <div class="m-val good">0.760</div>
-          <div class="m-trend">confirms clean</div>
-        </div>
-        <div class="marker-row">
-          <div class="m-name">Urine ACR<div class="m-sub">ref &lt;3 mg/mmol</div></div>
-          <div class="m-val good">0.01</div>
-          <div class="m-trend">no damage marker</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6">
-      <div class="card">
-        <h2>Hormones / Thyroid</h2>
-        <div class="marker-row">
-          <div class="m-name">Total T<div class="m-sub">ref 8.64–29.0 nmol/L</div></div>
-          <div class="m-val warn">36.14</div>
-          <div class="m-trend">above range</div>
-        </div>
-        <div class="marker-row">
-          <div class="m-name">Free T<div class="m-sub">ref 0.198–0.619 nmol/L</div></div>
-          <div class="m-val warn">0.730</div>
-          <div class="m-trend">above range</div>
-        </div>
-        <div class="marker-row">
-          <div class="m-name">TSH<div class="m-sub">ref 0.27–4.2 µIU/mL</div></div>
-          <div class="m-val bad">6.38</div>
-          <div class="m-trend">4.12 → 3.81 → 6.38 ⚠</div>
-        </div>
-        <div class="marker-row">
-          <div class="m-name">Free T4 / T3<div class="m-sub">both in range (subclinical)</div></div>
-          <div class="m-val good">15.6 / 2.94</div>
-          <div class="m-trend">no overt hypo</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12">
-      <div class="card">
-        <h2>Next Blood Draw <span class="tag">target ~Oct–Nov 2026</span></h2>
-        <div class="note note-gold">
-          <b>Order:</b> Homocysteine, TSH + Free T3/T4, ApoB, Lp(a), hs-CRP, fasting insulin, HbA1c, serum zinc + copper, vitamin D. Cystatin C optional (just confirmed clean).<br>
-          <b>Prep:</b> 12h fast, drink water, rest day before draw (no hard training 24h prior, protects creatinine/hs-CRP accuracy). Similar morning draw time to prior tests for TSH comparability.
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="grid" id="curBloodworkGrid"></div>
 </div>
 
 
@@ -1113,10 +823,23 @@
 </div>
 
 <script>
+// The data token is NOT in this file: this repo is public. A device is unlocked
+// once by opening the private link (.../#k=TOKEN). The token is kept in this
+// browser's localStorage and the #k= part is wiped from the address bar.
+function rhToken() {
+  try {
+    const m = location.hash.match(/(?:^#|&)k=([^&]+)/);
+    if (m) {
+      localStorage.setItem('rh_token', decodeURIComponent(m[1]));
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+    return localStorage.getItem('rh_token') || '';
+  } catch (e) { return ''; }
+}
 const CONFIG = {
   name: 'Ehab',
   dataEndpoint: 'https://script.google.com/macros/s/AKfycbx1DnPyoKzyc-n9WS_j0YtsCq75HbjQTzlFMG9WUKTP8870v8TKDItCuTZaiy1aq2APtw/exec',
-  token: 'adadedb5-4ca7-4739-bb03-03e66ae892866e50e502-6647-4491-adac-a586aa8a4f36',
+  token: rhToken(),
   urls: {
     recovery: 'https://docs.google.com/spreadsheets/d/1WKj4hxG9GeLZq0LPn6wIWJFifmNvmwH9n2qpbLoDRqk/gviz/tq?tqx=out:csv&gid=1342778894',
     sleep: 'https://docs.google.com/spreadsheets/d/1WKj4hxG9GeLZq0LPn6wIWJFifmNvmwH9n2qpbLoDRqk/gviz/tq?tqx=out:csv&gid=579100533',
@@ -1141,68 +864,12 @@ const CONFIG = {
   refreshMs: 30000
 };
 
-const SNAPSHOT = {
-recovery: `Date,Recovery %,HRV (ms),RHR (bpm),SpO2,Skin Temp C
-2026-08-19,86,86.069016,50,97.25,33.97867
-2026-08-18,54,65.74101,51,96.72222,33.828335
-2026-08-17,68,76.02083,50,97.0625,32.423332
-2026-08-16,50,66.90383,51,98.333336,33.587666
-2026-08-15,46,66.60675,51,95.361115,32.906666
-2026-08-14,32,59.362854,54,98.30769,32.844334
-2026-08-13,70,81.17538,49,96.77778,33.642334
-2026-08-12,63,78.22745,49,92.78571,32.815834
-2026-08-11,24,53.367268,54,97.44444,33.722668
-2026-08-10,38,68.931305,53,96.94118,34.122166
-2026-08-09,58,75.40973,52,98.64286,34.124
-2026-08-08,48,72.90331,52,96.23529,34.224
-2026-08-07,58,74.28646,52,97.8,32.712666
-2026-08-06,55,73.51704,49,97.375,33.376335`,
-sleep: `Date,Performance %,Duration (min),Efficiency %,Respiratory Rate,Consistency %,Sleep Debt (min)
-2026-08-18,81,481.8115,92.83914,14.238281,70,72.9918
-2026-08-17,86,451.8755,97.1941,14.707031,85,57.8004
-2026-08-16,88,470.742,90.22742,14.326172,86,43.53681667
-2026-08-15,89,499.4948333,94.093735,14.276367,86,53.4538
-2026-08-14,86,505.0296667,94.04754,14.824219,81,88.02225
-2026-08-13,82,437.1915,93.48085,14.765625,77,52.57468333
-2026-08-12,83,471.8771667,93.43028,14.472656,72,53.00716667
-2026-08-11,84,454.028,95.45063,14.589844,76,44.47115
-2026-08-10,81,475.9621667,92.64602,14.542969,66,45.66821667
-2026-08-09,80,513.8618333,95.3219,15.1171875,61,75.39961667
-2026-08-08,77,402.0901667,94.980934,14.865234,58,56.25443333
-2026-08-07,76,462.8426667,97.50556,14.941406,46,57.53816667
-2026-08-06,87,502.8123333,94.92853,15.234375,83,79.76601667
-2026-08-05,83,429.7753333,94.87713,14.255859,81,73.41025`,
-workouts: `Key,Date,Time,Activity,Strain,Avg HR,Max HR,Kcal,Duration (min)
-6f08485b,2026-08-18,10:55,walking,5.485309,105,126,132,40
-d0106022,2026-08-18,9:16,boxing,5.279469,111,167,87,20
-2420f669,2026-08-18,8:02,boxing,15.383288,149,199,726,62
-1aed4a2d,2026-08-17,12:35,walking,4.6104355,94,107,61,33
-f04ad3a1,2026-08-17,9:06,walking,4.7584076,107,125,71,19
-438db4b8,2026-08-17,8:02,weightlifting,11.4985075,112,151,227,49
-8c0fd6ad,2026-08-16,10:37,walking,5.6578937,102,115,137,51
-55238520,2026-08-15,7:01,weightlifting,10.327295,101,140,118,45`,
-cycles: `Date,Day Strain,Avg HR,Max HR,Kcal
-2026-08-18,3.122178,56,110,809
-2026-08-17,16.408794,69,199,2609
-2026-08-16,12.778461,65,151,2025
-2026-08-15,7.195436,65,137,1792
-2026-08-14,11.836201,65,140,1808
-2026-08-13,5.671705,64,127,1674
-2026-08-12,13.555375,67,164,1907
-2026-08-11,6.1175346,63,134,1810
-2026-08-10,4.5506406,63,124,1703
-2026-08-09,11.823752,66,157,1836
-2026-08-08,15.416572,67,198,2125
-2026-08-07,8.257211,68,130,1858
-2026-08-06,15.347271,72,198,2673
-2026-08-05,12.425667,66,150,1906`,
-food: `Date,Time,Meal,Kcal,Protein,Carbs,Fat,Water_ml,VitC,VitA,VitD,B12,Folate,Iron,Calcium,Magnesium,Potassium,Zinc,Omega3
-2026-08-19,13:59,Test,100,,,,,,,,,,,,,,,`,
-checkin: `Date,Time,Weight_kg,Regulation_1to5,Notes
-2026-08-19,13:50,65,4,test`,
-steps: `Date,Time,Steps
-2026-08-19,17:42,4194`
-};
+// Offline fallback. It used to hold real WHOOP rows in this public file; now it
+// is filled from the last good bundle this browser saw (unlocked devices only).
+const SNAPSHOT = { recovery: '', sleep: '', workouts: '', cycles: '', food: '', checkin: '', steps: '' };
+function rhSavedBundle() {
+  try { return JSON.parse(localStorage.getItem('rh_last_bundle') || 'null'); } catch (e) { return null; }
+}
 
 let lastValues = {};
 let usingSnapshot = false;
@@ -1246,6 +913,7 @@ async function fetchCSV(url) {
 
 let _rhDataCounter = 0;
 function fetchAllData() {
+  if (!CONFIG.token) return Promise.resolve(null);
   return new Promise((resolve) => {
     const cbName = '__rhData' + (_rhDataCounter++);
     const script = document.createElement('script');
@@ -1334,6 +1002,11 @@ function renderSpark(id, values, color) {
 
 async function refreshAll() {
   const bundle = await fetchAllData();
+  const lockEl = document.getElementById('lockNote');
+  if (lockEl) lockEl.hidden = !!CONFIG.token;
+  if (bundle) { try { localStorage.setItem('rh_last_bundle', JSON.stringify(bundle)); } catch (e) {} }
+  const saved = bundle ? null : rhSavedBundle();
+  if (saved) Object.keys(SNAPSHOT).forEach(function (k) { SNAPSHOT[k] = saved[k] || ''; });
   const rec     = bundle ? parseCSV(bundle.recovery)  : null;
   const sleep   = bundle ? parseCSV(bundle.sleep)     : null;
   const work    = bundle ? parseCSV(bundle.workouts)  : null;
@@ -1341,7 +1014,7 @@ async function refreshAll() {
   const food    = bundle ? parseCSV(bundle.food)      : null;
   const checkin = bundle ? parseCSV(bundle.checkin)   : null;
   const steps   = bundle ? parseCSV(bundle.steps)     : null;
-  const curated = bundle && bundle.curated ? parseCSV(bundle.curated) : null;
+  const curated = bundle && bundle.curated ? parseCSV(bundle.curated) : (saved && saved.curated ? parseCSV(saved.curated) : null);
   cache.recovery = sortByDateDesc(rec || (cache.recovery.length ? cache.recovery : parseCSV(SNAPSHOT.recovery)));
   cache.sleep    = sortByDateDesc(sleep || (cache.sleep.length ? cache.sleep : parseCSV(SNAPSHOT.sleep)));
   cache.workouts = sortByDateDesc(work || (cache.workouts.length ? cache.workouts : parseCSV(SNAPSHOT.workouts)));
