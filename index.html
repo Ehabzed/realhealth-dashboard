@@ -283,7 +283,7 @@
 </style>
 </head>
 <body>
-<div id="lockNote" class="note note-gold" hidden style="margin:12px 16px">This device isn't unlocked yet, so no data is shown. Open your private dashboard link on it once (on the Mac, run <b>dashboard-unlock</b> in Terminal; it copies the link for your phone too).</div>
+<div id="lockNote" class="note note-gold" hidden style="margin:12px 16px">This device isn't unlocked yet, so no data is shown. On the Mac, run <b>dashboard-unlock</b> in Terminal (it copies your key), then <button type="button" onclick="rhUnlockPrompt()" style="font:inherit;font-weight:600;padding:2px 10px;border-radius:4px;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer">Paste key</button> here. Works in the Home Screen app too.</div>
 
 <div class="topbar">
   <div class="brand">
@@ -836,6 +836,13 @@ function rhToken() {
     return localStorage.getItem('rh_token') || '';
   } catch (e) { return ''; }
 }
+function rhUnlockPrompt() {
+  const v = (prompt('Paste your dashboard key (or the whole unlock link)') || '').trim();
+  if (!v) return;
+  const m = v.match(/[#&?]k=([^&\s]+)/);
+  try { localStorage.setItem('rh_token', decodeURIComponent(m ? m[1] : v)); } catch (e) {}
+  location.reload();
+}
 const CONFIG = {
   name: 'Ehab',
   dataEndpoint: 'https://script.google.com/macros/s/AKfycbx1DnPyoKzyc-n9WS_j0YtsCq75HbjQTzlFMG9WUKTP8870v8TKDItCuTZaiy1aq2APtw/exec',
@@ -926,6 +933,10 @@ function fetchAllData() {
       if (settled) return;
       settled = true;
       cleanup();
+      if (data && data.error === 'unauthorized') { // wrong or rotated key: forget it so the unlock note shows
+        try { localStorage.removeItem('rh_token'); } catch (e) {}
+        CONFIG.token = '';
+      }
       resolve(data && !data.error ? data : null);
     };
     script.onerror = () => {
