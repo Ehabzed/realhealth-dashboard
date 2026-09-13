@@ -133,7 +133,7 @@
   .readiness-inner .l { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-3); margin-top: 3px; }
   .readiness-detail .label { font-family: var(--mono); font-size: 10px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.12em; }
   .readiness-detail .val { font-size: 15px; font-weight: 500; margin-top: 4px; color: var(--ink); }
-  .readiness-detail .val.warn { color: var(--gold); }
+  .readiness-detail .val.warn { color: var(--gold); } .readiness-detail .val.bad { color: var(--red); }
 
   .delta-list { display: flex; flex-direction: column; gap: 10px; }
   .delta-item { display: flex; align-items: center; gap: 10px; font-size: 13px; }
@@ -260,6 +260,27 @@
     .training-week { grid-template-columns: repeat(3, 1fr); }
     .focus-card .focus-headline { font-size: 18px; }
   }
+
+  /* ---- 13 Sep 2026, ported from Ehab's page: protocol clock, mobile tab hint ---- */
+  .proto-row { display: grid; grid-template-columns: 170px 1fr 150px; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line-soft); font-size: 12.5px; align-items: center; }
+  .proto-row:last-child { border-bottom: none; }
+  .proto-row .pr-name { font-weight: 600; color: var(--ink); }
+  .proto-row .pr-name small { display: block; font-weight: 400; color: var(--ink-3); font-size: 11px; }
+  .proto-row .pr-desc { color: var(--ink-2); font-size: 12px; }
+  .proto-row .pr-clock { font-family: var(--mono); font-size: 11.5px; color: var(--ink); text-align: right; }
+  .proto-row .pr-clock.soon { color: var(--amber); } .proto-row .pr-clock.today { color: var(--gold); font-weight: 700; } .proto-row .pr-clock.off { color: var(--ink-3); }
+  .proto-bar { height: 4px; background: rgba(255,255,255,0.10); border-radius: 2px; margin-top: 6px; overflow: hidden; }
+  .proto-bar i { display: block; height: 100%; background: var(--gold); border-radius: 2px; }
+  .tabbar { position: relative; }
+  .tabbar::after { content: ''; position: sticky; right: 0; flex: 0 0 34px; margin-left: -34px; align-self: stretch; background: linear-gradient(to right, transparent, rgba(10,22,70,0.95)); pointer-events: none; opacity: 0; transition: opacity 0.2s; border-radius: 0 8px 8px 0; }
+  .tabbar.more-right::after { opacity: 1; }
+  @media (max-width: 520px) {
+    .tab { flex: 0 0 auto; padding: 9px 12px; font-size: 12px; }
+    .delta-item { flex-wrap: wrap; row-gap: 2px; }
+    .delta-item .v { flex-basis: 100%; padding-left: 32px; font-size: 11.5px; color: var(--ink-2); }
+    .proto-row { grid-template-columns: 1fr; gap: 4px; }
+    .proto-row .pr-clock { text-align: left; }
+  }
 </style>
 </head>
 <body>
@@ -320,6 +341,7 @@
           <div class="readiness-detail" style="flex:1">
             <div style="margin-bottom:12px"><div class="label">Trend</div><div class="val warn" id="readinessTrend">loading</div></div>
             <div><div class="label">Last 7 days avg</div><div class="val" id="readiness7d">loading</div></div>
+            <div style="margin-top:12px"><div class="label">Strain today <span data-src="cycles" class="live-tag" style="margin:0 0 0 4px;padding:1px 5px;font-size:8px">LIVE</span></div><div class="val" id="strainToday">loading</div></div>
           </div>
         </div>
       </div>
@@ -611,6 +633,12 @@
 <!-- ============ STACK ============ -->
 <div class="panel" data-panel="stack">
   <div class="grid">
+    <div class="col-12" id="protocolWrap" hidden>
+      <div class="card card-gold">
+        <h2>Protocol Clock <span class="tag" id="protocolTag">from your plan</span></h2>
+        <div id="curProtocol"></div>
+      </div>
+    </div>
     <div class="col-8">
       <div class="card">
         <h2>Daily Protocol <span class="tag">by time of day</span></h2>
@@ -977,6 +1005,17 @@ async function fetchCSV(url) {
    token, network error, timeout) so refreshAll()'s existing snapshot-fallback
    logic below is completely unchanged. */
 let _rhDataCounter = 0;
+/* Offline fallback (ported 13 Sep 2026): the last good bundle is kept in this
+   browser, keyed by client id AND token, so a cold open with no signal still
+   shows the client's own numbers (badges say CACHED), two clients on one
+   device can never see each other's data, and a wrong or revoked link shows
+   nothing. The server refusing the token deletes the saved copy. */
+let rhRejected = false;
+function rhBundleKey() { return 'rh_last_bundle:' + (RUNTIME.clientId || '') + ':' + String(RUNTIME.token || '').slice(0, 16); }
+function rhSavedBundle() {
+  if (!RUNTIME.valid || rhRejected) return null;
+  try { return JSON.parse(localStorage.getItem(rhBundleKey()) || 'null'); } catch (e) { return null; }
+}
 function fetchAllData() {
   return new Promise((resolve) => {
     if (!RUNTIME.valid) { resolve(null); return; } // handled by renderSyncStamp's messaging below
@@ -991,6 +1030,7 @@ function fetchAllData() {
       if (settled) return;
       settled = true;
       cleanup();
+      if (data && data.error === 'unauthorized') { rhRejected = true; try { localStorage.removeItem(rhBundleKey()); } catch (e) {} }
       resolve(data && !data.error ? data : null);
     };
     script.onerror = () => {
@@ -1079,6 +1119,9 @@ function isRealCheckin(c) {
 
 async function refreshAll() {
   const bundle = await fetchAllData();
+  if (bundle) { try { localStorage.setItem(rhBundleKey(), JSON.stringify(bundle)); } catch (e) {} }
+  const saved = bundle ? null : rhSavedBundle();
+  if (saved) Object.keys(SNAPSHOT).forEach(function (k) { SNAPSHOT[k] = saved[k] || ''; });
   const rec     = bundle ? parseCSV(bundle.recovery)  : null;
   const sleep   = bundle ? parseCSV(bundle.sleep)     : null;
   const work    = bundle ? parseCSV(bundle.workouts)  : null;
@@ -1086,7 +1129,7 @@ async function refreshAll() {
   const food    = bundle ? parseCSV(bundle.food)      : null;
   const checkin = bundle ? parseCSV(bundle.checkin)   : null;
   const steps   = bundle ? parseCSV(bundle.steps)     : null;
-  const curated = bundle && bundle.curated ? parseCSV(bundle.curated) : null;
+  const curated = bundle && bundle.curated ? parseCSV(bundle.curated) : (saved && saved.curated ? parseCSV(saved.curated) : null);
   cache.recovery = sortByDateDesc(rec || (cache.recovery.length ? cache.recovery : parseCSV(SNAPSHOT.recovery)));
   cache.sleep    = sortByDateDesc(sleep || (cache.sleep.length ? cache.sleep : parseCSV(SNAPSHOT.sleep)));
   cache.workouts = sortByDateDesc(work || (cache.workouts.length ? cache.workouts : parseCSV(SNAPSHOT.workouts)));
@@ -1212,6 +1255,40 @@ function applyCurated(rows) {
     const k = String(r['Title'] || '').trim(), v = parseFloat(r['Detail']);
     if (!isNaN(v) && ['recovery','hrv','rhr','steps'].indexOf(k) !== -1) CONFIG.baseline[k] = v;
   });
+
+  // ---- protocol clock: Group = compound or phase, Title = label, Detail = dose/cadence,
+  // Tag = start ISO, Extra = end ISO (empty = open-ended). Day counts computed here.
+  // Hidden until the client has protocol rows. Ported from Ehab's page 13 Sep 2026.
+  if (S['protocol'] && S['protocol'].length) {
+    const wrap = document.getElementById('protocolWrap');
+    const today = new Date(); today.setHours(0,0,0,0);
+    function toD(x) { const d = new Date(String(x || '').trim() + 'T00:00:00'); return isNaN(d.getTime()) ? null : d; }
+    function dd(a, b) { return Math.round((b - a) / 86400000); }
+    const html = S['protocol'].map(function (r) {
+      const start = toD(r['Tag']), end = toD(r['Extra']);
+      let clock = '', cls = '', bar = '';
+      const isOff = /\boff\b/i.test(String(r['Title'] || ''));
+      if (start && end) {
+        const total = Math.max(1, dd(start, end)), done = dd(start, today);
+        if (done < 0) { clock = 'starts in ' + (-done) + 'd'; cls = -done <= 3 ? ' soon' : ''; }
+        else if (done >= total) { clock = 'ends ' + (done === total ? 'today' : (done - total) + 'd ago'); cls = done === total ? ' today' : ' soon'; }
+        else { clock = 'day ' + (done + 1) + ' of ' + total + ' \u00b7 ' + (total - done) + ' left'; cls = (total - done) <= 3 ? ' soon' : ''; }
+        const pct = Math.max(0, Math.min(100, Math.round(100 * done / total)));
+        bar = '<div class="proto-bar"><i style="width:' + pct + '%"></i></div>';
+      } else if (start) {
+        const done = dd(start, today);
+        if (done < 0) { clock = 'starts in ' + (-done) + 'd'; cls = -done <= 3 ? ' soon' : ''; }
+        else if (done === 0) { clock = 'starts today'; cls = ' today'; }
+        else { clock = (isOff ? 'off for ' : 'day ') + (isOff ? done + 'd' : (done + 1)); cls = isOff ? ' off' : ''; }
+      }
+      return '<div class="proto-row"><div class="pr-name">' + esc(r['Group']) + '<small>' + esc(r['Title']) + '</small></div>'
+        + '<div class="pr-desc">' + esc(r['Detail'] || '') + '</div>'
+        + '<div class="pr-clock' + cls + '">' + esc(clock) + bar + '</div></div>';
+    }).join('');
+    setHTML('curProtocol', html);
+    if (wrap) wrap.hidden = false;
+    const tag = document.getElementById('protocolTag'); if (tag) tag.textContent = S['protocol'].length + ' items \u00b7 counts computed today';
+  }
 
   // ---- core principles + avoid list ----
   if (S['principle']) setHTML('curPrinciples', S['principle'].map(function (r) {
@@ -1458,11 +1535,39 @@ function renderReadiness() {
   let headline, why, chips, dstate;
   const last3 = rec.slice(0,3).map(r=>parseFloat(r['Recovery %']));
   const threeLowDays = last3.length===3 && last3.every(v => v < 50);
+  // Ported from Ehab's page 13 Sep 2026. Recovery alone says "push" on days
+  // when sleep debt has just jumped, or when yesterday was already hard.
+  // Calibrated for clients: Nick and Reezuan sit at ~125 min of debt on a
+  // normal day (Ehab ~75), so a fixed 90 min line would turn most green days
+  // amber. It fires only when debt is high AND up 30+ min on a week ago.
+  const sl = cache.sleep || [];
+  const slNow = sl.length && daysAgo(sl[0]['Date']) <= 2 ? sl[0] : null;
+  const slWeek = sl.find(function (x) { return daysAgo(x['Date']) >= 7; });
+  const debtNow = slNow ? parseFloat(slNow['Sleep Debt (min)']) : NaN;
+  const debtWeekAgo = slWeek ? parseFloat(slWeek['Sleep Debt (min)']) : NaN;
+  const debtJump = !isNaN(debtNow) && debtNow >= 90 && !isNaN(debtWeekAgo) && (debtNow - debtWeekAgo) >= 30;
+  // Cycles are filed under the day you wake into and keep updating all day,
+  // so today's row is still running: yesterday is looked up by date.
+  const cyc = cache.cycles || [];
+  const yRow = cyc.find(function (c) { return daysAgo(c['Date']) === 1; });
+  const yStrain = yRow ? parseFloat(yRow['Day Strain']) : NaN;
+  const hardYesterday = !isNaN(yStrain) && yStrain >= 14;
+  let strainCap = null;
   if (threeLowDays) {
     dstate = 'red';
     headline = 'Crash risk. Pull back now.';
     why = 'Three straight low-recovery days. This is your documented crash threshold, protect sleep and skip anything optional.';
     chips = ['Rest or walk only', 'Sleep by 10:30', 'Skip everything optional'];
+  } else if (todayScore >= 67 && debtJump) {
+    dstate = 'amber';
+    headline = 'Recovered. Sleep debt is not.';
+    why = 'Recovery ' + Math.round(todayScore) + '% says train, but sleep debt is ' + Math.round(debtNow) + ' min, up ' + Math.round(debtNow - debtWeekAgo) + ' on a week ago. Train, then bank the sleep tonight.';
+    chips = ['Train as planned', 'Bed 30 min earlier', 'No caffeine after 1pm'];
+  } else if (todayScore >= 67 && hardYesterday) {
+    dstate = 'green';
+    headline = 'Green light. Second hard day in a row.';
+    why = 'Recovery ' + Math.round(todayScore) + '% after a strain-' + Math.round(yStrain) + ' day. Fine to go again, but back-to-back hard days tend to show up as a dip a day or two later, so keep tomorrow lighter.';
+    chips = ['Hard session approved', 'Tomorrow lighter', 'Log your lifts'];
   } else if (todayScore >= 67) {
     dstate = 'green';
     headline = 'Green light. Push today.';
@@ -1473,6 +1578,7 @@ function renderReadiness() {
     headline = 'Moderate. Train smart.';
     why = 'Recovery ' + Math.round(todayScore) + '%. Cap strain at 12 and prioritise technique over intensity today.';
     chips = ['Cap strain at 12', 'Technique over intensity', 'No doubles'];
+    strainCap = 12;
   } else {
     dstate = 'red';
     headline = 'Low recovery. Protect today.';
@@ -1481,6 +1587,7 @@ function renderReadiness() {
   }
   setText('readinessHeadline', headline);
   document.getElementById('readinessWhy').textContent = why;
+  renderStrainToday(cyc, strainCap);
   const dicons = {
     red: '<svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L14.7 3.86a2 2 0 0 0-3.4 0z"/></svg>',
     amber: '<svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
@@ -1492,8 +1599,21 @@ function renderReadiness() {
   if (chipsEl) chipsEl.innerHTML = chips.map(c => '<span class="chip">' + c + '</span>').join('');
 }
 
+// Live day strain: today's cycle row updates at every hourly WHOOP sync.
+function renderStrainToday(cyc, cap) {
+  const el = document.getElementById('strainToday');
+  if (!el) return;
+  const row = (cyc || []).find(function (c) { return daysAgo(c['Date']) === 0; });
+  const v = row ? parseFloat(row['Day Strain']) : NaN;
+  el.classList.remove('warn', 'bad');
+  if (isNaN(v)) { el.textContent = 'none yet today'; return; }
+  el.textContent = v.toFixed(1) + (cap ? ' of today\u2019s ' + cap + ' cap' : ' so far') + ' \u00b7 updates hourly';
+  if (cap && v >= cap) el.classList.add('bad'); else if (cap && v >= cap - 2) el.classList.add('warn');
+}
+
 function renderPerformance() {
-  const rec = cache.recovery.slice(0,14), sleep = cache.sleep.slice(0,14), cyc = cache.cycles.slice(0,14);
+  // Today's cycle is still running, so the strain average uses finished days only.
+  const rec = cache.recovery.slice(0,14), sleep = cache.sleep.slice(0,14), cyc = cache.cycles.filter(function (c) { return daysAgo(c['Date']) >= 1; }).slice(0,14);
   // Same class of bug as renderNervousSystem: recovery/HRV/RHR tiles and the
   // Day Ratings + insight text genuinely need recovery data, but sleep and
   // cycle metrics below are already independently guarded by their own
@@ -1747,8 +1867,16 @@ tabs.forEach(t => {
     t.classList.add('active');
     document.querySelector(`.panel[data-panel="${t.dataset.tab}"]`).classList.add('active');
     window.scrollTo({top:0, behavior:'smooth'});
+    if (t.scrollIntoView) t.scrollIntoView({ inline: 'center', block: 'nearest' });
   });
 });
+(function () {
+  const tb = document.querySelector('.tabbar'); if (!tb) return;
+  function hint() { tb.classList.toggle('more-right', tb.scrollLeft + tb.clientWidth < tb.scrollWidth - 4); }
+  tb.addEventListener('scroll', hint, { passive: true });
+  window.addEventListener('resize', hint);
+  hint();
+})();
 document.querySelectorAll('.subtab').forEach(st => {
   st.addEventListener('click', () => {
     const parent = st.closest('.panel');

@@ -133,7 +133,7 @@
   .readiness-inner .l { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-3); margin-top: 3px; }
   .readiness-detail .label { font-family: var(--mono); font-size: 10px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.12em; }
   .readiness-detail .val { font-size: 15px; font-weight: 500; margin-top: 4px; color: var(--ink); }
-  .readiness-detail .val.warn { color: var(--gold); }
+  .readiness-detail .val.warn { color: var(--gold); } .readiness-detail .val.bad { color: var(--red); }
 
   .delta-list { display: flex; flex-direction: column; gap: 10px; }
   .delta-item { display: flex; align-items: center; gap: 10px; font-size: 13px; }
@@ -341,6 +341,7 @@
           <div class="readiness-detail" style="flex:1">
             <div style="margin-bottom:12px"><div class="label">Trend</div><div class="val warn" id="readinessTrend">loading</div></div>
             <div><div class="label">Last 7 days avg</div><div class="val" id="readiness7d">loading</div></div>
+            <div style="margin-top:12px"><div class="label">Strain today <span data-src="cycles" class="live-tag" style="margin:0 0 0 4px;padding:1px 5px;font-size:8px">LIVE</span></div><div class="val" id="strainToday">loading</div></div>
           </div>
         </div>
       </div>
@@ -1384,9 +1385,14 @@ function renderReadiness() {
   const debtWeekAgo = sl.length >= 7 ? parseFloat(sl[6]['Sleep Debt (min)']) : NaN;
   const debtHigh = !isNaN(debtNow) && debtNow >= 90;
   const debtRising = !isNaN(debtNow) && !isNaN(debtWeekAgo) && (debtNow - debtWeekAgo) >= 30;
+  // Since v24 (13 Sep 2026) cycles are filed under the day he wakes into and
+  // keep updating all day, so the newest row is today's, still running.
+  // Before that, cyc[0] was a frozen ~0.1 and this branch could never fire.
   const cyc = cache.cycles || [];
-  const yStrain = cyc.length ? parseFloat(cyc[0]['Day Strain']) : NaN;
+  const yRow = cyc.find(function (c) { return daysAgo(c['Date']) === 1; });
+  const yStrain = yRow ? parseFloat(yRow['Day Strain']) : NaN;
   const hardYesterday = !isNaN(yStrain) && yStrain >= 14;
+  let strainCap = null;
   if (threeLowDays) {
     dstate = 'red';
     headline = 'Crash risk. Pull back now.';
@@ -1412,6 +1418,7 @@ function renderReadiness() {
     headline = 'Moderate. Train smart.';
     why = 'Recovery ' + Math.round(todayScore) + '%. Cap strain at 12 and prioritise technique over intensity today.';
     chips = ['Cap strain at 12', 'Technique over intensity', 'No doubles'];
+    strainCap = 12;
   } else {
     dstate = 'red';
     headline = 'Low recovery. Protect today.';
@@ -1420,6 +1427,7 @@ function renderReadiness() {
   }
   setText('readinessHeadline', headline);
   document.getElementById('readinessWhy').textContent = why;
+  renderStrainToday(cyc, strainCap);
   const dicons = {
     red: '<svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L14.7 3.86a2 2 0 0 0-3.4 0z"/></svg>',
     amber: '<svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
@@ -1431,8 +1439,21 @@ function renderReadiness() {
   if (chipsEl) chipsEl.innerHTML = chips.map(c => '<span class="chip">' + c + '</span>').join('');
 }
 
+// Live day strain: today's cycle row updates at every hourly WHOOP sync (v24).
+function renderStrainToday(cyc, cap) {
+  const el = document.getElementById('strainToday');
+  if (!el) return;
+  const row = (cyc || []).find(function (c) { return daysAgo(c['Date']) === 0; });
+  const v = row ? parseFloat(row['Day Strain']) : NaN;
+  el.classList.remove('warn', 'bad');
+  if (isNaN(v)) { el.textContent = 'none yet today'; return; }
+  el.textContent = v.toFixed(1) + (cap ? ' of today\u2019s ' + cap + ' cap' : ' so far') + ' \u00b7 updates hourly';
+  if (cap && v >= cap) el.classList.add('bad'); else if (cap && v >= cap - 2) el.classList.add('warn');
+}
+
 function renderPerformance() {
-  const rec = cache.recovery.slice(0,14), sleep = cache.sleep.slice(0,14), cyc = cache.cycles.slice(0,14);
+  // Today's cycle is still running, so the strain average uses finished days only.
+  const rec = cache.recovery.slice(0,14), sleep = cache.sleep.slice(0,14), cyc = cache.cycles.filter(function (c) { return daysAgo(c['Date']) >= 1; }).slice(0,14);
   if (!rec.length) return;
   const recVals = rec.map(r=>parseFloat(r['Recovery %']));
   const hrvVals = rec.map(r=>parseFloat(r['HRV (ms)']));
