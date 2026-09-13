@@ -46,7 +46,7 @@
     <div id="loading">
       <div class="spinner"></div>
       <div class="title">Logging…</div>
-      <div class="sub">Sending to your dashboard</div>
+      <div class="sub" id="loadSub">Sending to your dashboard</div>
     </div>
 
     <div id="done" class="hidden">
@@ -61,7 +61,7 @@
       <div class="icon bad">
         <svg viewBox="0 0 24 24" fill="none" stroke="#E85A5A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </div>
-      <div class="title">Not saved</div>
+      <div class="title" id="failTitle">Not saved</div>
       <div class="sub" id="failSub">Couldn't reach the server.</div>
       <div class="retry" id="retryBtn">Try again</div>
     </div>
@@ -88,8 +88,16 @@
   const type = params.get('type') || '';
   const meal = params.get('meal');
   const count = params.get('count');
+  // Food links carry entry ids (13 Sep 2026). The server updates a known id
+  // instead of adding a row, so a resend can't double-log and this page can
+  // retry on its own. Links without ids (old ones) are never resent.
+  const idempotent = type === 'foodbatch' || (type === 'food' && !!params.get('id'));
 
   function friendlyMessage() {
+    if (type === 'foodbatch') {
+      try { const n = JSON.parse(params.get('m') || '[]').length; return n + (n === 1 ? ' entry' : ' entries') + ' synced'; }
+      catch (e) { return 'Synced'; }
+    }
     if (type === 'food') return meal ? 'Meal logged: ' + decodeURIComponent(meal.replace(/\+/g, ' ')) : 'Meal logged';
     if (type === 'checkin') return 'Check-in logged';
     if (type === 'steps') return 'Steps logged' + (count ? ': ' + count : '');
@@ -97,15 +105,18 @@
     return 'Logged';
   }
 
+  // A timeout or network error means we never heard back. The write may
+  // still have landed, so never claim "nothing was saved" for those.
+  function uncertain(reason) { return reason === 'timeout' || reason === 'network'; }
   function reasonText(reason) {
-    if (reason === 'timeout')      return 'The server didn\u2019t respond in time. Nothing was saved \u2014 tap to try again.';
-    if (reason === 'network')      return 'Couldn\u2019t reach the server. Check your connection and try again.';
-    if (reason === 'unauthorized') return 'The server rejected this request (bad or missing token). Nothing was saved.';
-    return 'The server didn\u2019t confirm the save. Nothing was written \u2014 tap to try again.';
+    if (uncertain(reason) && idempotent) return 'The server didn\u2019t answer after three tries. Tap to try again. It can\u2019t double-log.';
+    if (uncertain(reason))               return 'The server didn\u2019t answer in time. It may still have saved, so check the dashboard before tapping again.';
+    if (reason === 'unauthorized')       return 'The server rejected this request (bad or missing token). Nothing was saved.';
+    return 'The server said no (' + reason + '). Nothing was saved.';
   }
 
   // Resolves only on a real, readable answer from the server.
-  function send() {
+  function send(timeoutMs) {
     return new Promise(function (resolve) {
       const cb = '__rhLog' + Math.floor(Math.random() * 1e9);
       const s = document.createElement('script');
@@ -130,7 +141,7 @@
       setTimeout(function () {
         if (settled) return; settled = true; cleanup();
         resolve({ ok: false, reason: 'timeout' });
-      }, 12000);
+      }, timeoutMs);
     });
   }
 
@@ -142,17 +153,23 @@
 
   async function run() {
     show('loading');
-    // Retry only on genuine transport failure, never after the server
-    // has answered — retrying a landed write would double-log the meal.
-    let res = await send();
-    if (!res.ok && res.reason === 'network') {
-      await new Promise(function (r) { setTimeout(r, 800); });
-      res = await send();
+    const sub = document.getElementById('loadSub');
+    sub.textContent = 'Sending to your dashboard';
+    const slow = setTimeout(function () { sub.textContent = 'Waking the server up. The first sync after a quiet spell can take 15\u201320 seconds.'; }, 6000);
+    // Apps Script can take 15s+ to wake, and it keeps writing after we stop
+    // waiting (that was the "failed, but it logged anyway" bug: this page gave
+    // up at 12s). Wait 25s, and with entry ids retry quietly up to twice.
+    let res = await send(25000);
+    for (let i = 0; idempotent && !res.ok && uncertain(res.reason) && i < 2; i++) {
+      await new Promise(function (r) { setTimeout(r, 1000); });
+      res = await send(25000);
     }
+    clearTimeout(slow);
     if (res.ok) {
       document.getElementById('doneTitle').textContent = res.msg || friendlyMessage();
       show('done');
     } else {
+      document.getElementById('failTitle').textContent = uncertain(res.reason) ? 'Didn\u2019t hear back' : 'Not saved';
       document.getElementById('failSub').textContent = reasonText(res.reason);
       show('failed');
     }
