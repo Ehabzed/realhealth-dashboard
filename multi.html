@@ -1068,6 +1068,15 @@ function renderSpark(id, values, color) {
 }
 
 /* ---- main render ---- */
+// Gate-test and relay-test writes land in the Checkin tab with weight 0 or a
+// "test" note. They are not data; drop them before anything renders.
+// (Ported from the personal dashboard, 13 Sep 2026.)
+function isRealCheckin(c) {
+  const w = parseFloat(c['Weight_kg']);
+  const n = String(c['Notes'] || '').toLowerCase();
+  return !(isNaN(w) || w <= 0 || /test/.test(n));
+}
+
 async function refreshAll() {
   const bundle = await fetchAllData();
   const rec     = bundle ? parseCSV(bundle.recovery)  : null;
@@ -1083,7 +1092,7 @@ async function refreshAll() {
   cache.workouts = sortByDateDesc(work || (cache.workouts.length ? cache.workouts : parseCSV(SNAPSHOT.workouts)));
   cache.cycles   = sortByDateDesc(cyc || (cache.cycles.length ? cache.cycles : parseCSV(SNAPSHOT.cycles)));
   cache.food     = food || (cache.food.length ? cache.food : parseCSV(SNAPSHOT.food)); // filter()-based, not [0]-based — order doesn't matter here
-  cache.checkin  = sortByDateDesc(checkin || (cache.checkin.length ? cache.checkin : parseCSV(SNAPSHOT.checkin)));
+  cache.checkin  = sortByDateDesc(checkin || (cache.checkin.length ? cache.checkin : parseCSV(SNAPSHOT.checkin))).filter(isRealCheckin);
   cache.steps    = sortByDateDesc(steps || (cache.steps.length ? cache.steps : parseCSV(SNAPSHOT.steps)));
   sourceLive.recovery = !!rec;
   sourceLive.sleep    = !!sleep;
@@ -1160,9 +1169,10 @@ function esc(s) {
 }
 function bySection(rows) {
   const out = {};
-  (rows || []).forEach(function (r) {
+  (rows || []).forEach(function (r, i) {
     const s = String(r['Section'] || '').trim();
     if (!s) return;
+    r.__i = i; // sheet position: blocks() orders groups by this, not by Order
     (out[s] = out[s] || []).push(r);
   });
   Object.keys(out).forEach(function (k) {
@@ -1256,6 +1266,10 @@ function applyCurated(rows) {
       if (!groups[g]) { groups[g] = []; order.push(g); }
       groups[g].push(r);
     });
+    // Groups keep their sheet order; Order only sorts rows inside a group.
+    // (An Order of 0 in any group used to pull that whole group to the top.)
+    const first = function (g) { return Math.min.apply(null, groups[g].map(function (r) { return r.__i == null ? Infinity : r.__i; })); };
+    order.sort(function (a, b) { return first(a) - first(b); });
     return order.map(function (g) {
       return '<div class="stack-block"><div class="stack-time">' + esc(g) + '</div>' + groups[g].map(function (r) {
         return '<div class="stack-item"><div class="si-name">' + esc(r['Title']) + '</div>' + (withDesc && r['Detail'] ? '<div class="si-desc">' + esc(r['Detail']) + '</div>' : '') + '</div>';
