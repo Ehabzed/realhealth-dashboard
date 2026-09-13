@@ -98,7 +98,7 @@
   @keyframes pulseLive { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }
   .reviewed-tag { font-family: var(--mono); font-size: 9px; color: var(--ink-3); background: rgba(255,255,255,0.06); text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 8px; border-radius: 4px; margin-left: auto; font-weight: 500; border: 1px solid var(--line); }
 
-  .vitals-ribbon { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 20px; }
+  .vitals-ribbon { display: grid; grid-template-columns: repeat(var(--tiles, 6), 1fr); gap: 12px; margin-bottom: 20px; }
   .vital-tile { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px 12px; position: relative; overflow: hidden; backdrop-filter: blur(20px); }
   .vital-tile::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--blue-mid); }
   .vital-tile.tile-green::before { background: var(--green); } .vital-tile.tile-amber::before { background: var(--gold); } .vital-tile.tile-red::before { background: var(--red); }
@@ -261,6 +261,9 @@
     .focus-card .focus-headline { font-size: 18px; }
   }
 
+  /* ---- 13 Sep 2026: Weekly Changes detail sits under its label at every width ---- */
+  .delta-item { flex-wrap: wrap; row-gap: 2px; } .delta-item .v { flex-basis: 100%; padding-left: 32px; }
+  @media (max-width: 520px) { .vitals-ribbon .vital-tile.wide { grid-column: span 2; } }
   /* ---- 13 Sep 2026, ported from Ehab's page: protocol clock, mobile tab hint ---- */
   .proto-row { display: grid; grid-template-columns: 170px 1fr 150px; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line-soft); font-size: 12.5px; align-items: center; }
   .proto-row:last-child { border-bottom: none; }
@@ -339,8 +342,7 @@
             <div class="readiness-inner"><div class="n" id="readinessNum">—</div><div class="l">%</div></div>
           </div>
           <div class="readiness-detail" style="flex:1">
-            <div style="margin-bottom:12px"><div class="label">Trend</div><div class="val warn" id="readinessTrend">loading</div></div>
-            <div><div class="label">Last 7 days avg</div><div class="val" id="readiness7d">loading</div></div>
+            <div style="margin-bottom:12px"><div class="label">This week</div><div class="val" id="readiness7d">loading</div></div>
             <div style="margin-top:12px"><div class="label">Strain today <span data-src="cycles" class="live-tag" style="margin:0 0 0 4px;padding:1px 5px;font-size:8px">LIVE</span></div><div class="val" id="strainToday">loading</div></div>
           </div>
         </div>
@@ -1157,6 +1159,7 @@ async function refreshAll() {
   renderSessions();
   renderNutrition();
   renderNervousSystem();
+  hideEmptyTiles();
   renderSyncStamp();
 }
 
@@ -1440,6 +1443,21 @@ function applyCurated(rows) {
 }
 
 /* Weight tile: renders from live check-in data, never from a hardcoded value. */
+// A tile with nothing to show is hidden (13 Sep 2026): Nick's phone showed six
+// tiles, two of them "no data yet". Columns follow the visible count; on a phone
+// an odd last tile spans the row.
+function hideEmptyTiles() {
+  const hasWeight = (cache.checkin || []).some(function (r) { return parseFloat(r['Weight_kg']) > 0; });
+  const hasSteps = (cache.steps || []).length > 0;
+  const w = document.getElementById('tile-weight'), st = document.getElementById('tile-steps');
+  if (w) w.hidden = !hasWeight;
+  if (st) st.hidden = !hasSteps;
+  const rib = document.getElementById('vitalsRibbon'); if (!rib) return;
+  const shown = [...rib.querySelectorAll('.vital-tile')].filter(function (t) { return !t.hidden; });
+  rib.style.setProperty('--tiles', shown.length || 6);
+  shown.forEach(function (t, i) { t.classList.toggle('wide', shown.length % 2 === 1 && i === shown.length - 1); });
+}
+
 function renderWeightTile() {
   const el = document.getElementById('val-weight');
   if (!el) return;
@@ -1529,8 +1547,11 @@ function renderReadiness() {
 
   const last7 = rec.slice(0,7).map(r=>parseFloat(r['Recovery %']));
   const avg7 = avg(last7);
-  setText('readiness7d', Math.round(avg7) + '% · ' + (avg7 >= CONFIG.baseline.recovery - 5 ? 'holding' : 'below baseline'));
-  setText('readinessTrend', (avg7 >= CONFIG.baseline.recovery ? 'At/above baseline' : 'Below baseline (was ~' + CONFIG.baseline.recovery + '%)'));
+  // One statement about the week (13 Sep 2026): "Trend: below baseline" under
+  // "Green light. Push today." read as a contradiction (Nick, 74% today, 64% week).
+  const wkDiff = Math.round(avg7 - CONFIG.baseline.recovery);
+  setText('readiness7d', Math.round(avg7) + '% avg · ' + (Math.abs(wkDiff) <= 3 ? 'at your normal' : (wkDiff > 0 ? 'above' : 'under') + ' your usual ' + CONFIG.baseline.recovery + '%'));
+  const r7 = document.getElementById('readiness7d'); if (r7) r7.classList.toggle('warn', wkDiff < -3);
 
   let headline, why, chips, dstate;
   const last3 = rec.slice(0,3).map(r=>parseFloat(r['Recovery %']));
