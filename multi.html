@@ -1072,6 +1072,15 @@ function setWidth(id, pct) {
   const el = document.getElementById(id);
   if (el) el.style.width = Math.max(0, Math.min(100, pct)) + '%';
 }
+/* Today's date on the viewer's own clock (14 Sep 2026). Food rows are dated in
+   the client's local day (the food tracker builds each id from the day it was
+   eaten), and daysAgo() already reads dates as local. "Today" was the UTC date,
+   so east of UTC the bar summed yesterday's food from local midnight until UTC
+   midnight (00:00 to 07:00 in Da Nang), and west of UTC it rolled over early. */
+function localISO(d) {
+  d = d || new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
 function daysAgo(dateStr) {
   const d = new Date(dateStr + 'T00:00:00');
   const now = new Date();
@@ -1510,7 +1519,7 @@ function renderStaticConfig() {
 function renderSteps() {
   const steps = cache.steps;
   if (!steps.length) { setText('sub-steps', 'not synced yet'); return; }
-  const today = new Date().toISOString().split('T')[0];
+  const today = localISO();
   const todayRow = steps.find(s => s['Date'] === today);
   const latest = todayRow || steps[0]; // cache.steps is sorted newest-first, so [0] is the most recent day on file
   const count = latest ? parseInt(latest['Steps']) : null;
@@ -1789,7 +1798,7 @@ function renderKcalDay(t) {
 
 function renderNutrition() {
   const food = cache.food, checkin = cache.checkin;
-  const today = new Date().toISOString().split('T')[0];
+  const today = localISO();
   const todayRows = food.filter(f => f['Date'] === today);
 
   const sum = (key) => todayRows.reduce((a,r) => a + (parseFloat(r[key]) || 0), 0);
