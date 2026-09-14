@@ -77,6 +77,8 @@
   .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
   /* Paired cards stretch to match the tallest in the row. Space stays INSIDE the border, never outside it. */
   .grid > [class^="col-"] { display: flex; flex-direction: column; }
+  /* The display:flex above beat the hidden attribute, so a column the script hid stayed on screen. */
+  .grid > [class^="col-"][hidden] { display: none; }
   .grid > [class^="col-"] > .card { flex: 1; display: flex; flex-direction: column; }
   .grid > [class^="col-"] > .focus-card { flex: 1; display: flex; flex-direction: column; }
   /* Last element of a stretched card pins to the bottom so the card reads as deliberately full.
@@ -1405,6 +1407,25 @@ function applyCurated(rows) {
   }).join(''));
   if (S['programme_notes'] && S['programme_notes'][0]) curSetText('curProgramme', S['programme_notes'][0]['Detail']);
   if (S['recovery_rules'] && S['recovery_rules'][0]) curSetText('curRecovery', S['recovery_rules'][0]['Detail']);
+
+  // ---- a card with no rows on the Sheet is hidden, not left as template filler ----
+  // 14 Sep 2026: Reezuan's page showed "[Change 1 — edit per client]" under Weekly
+  // Changes (no weekly review yet) and three filler cards on Training (walking-only
+  // phase). Runs only after the Curated rows load, so a slow feed never hides a card.
+  function hideUnless(section, id) {
+    const has = (S[section] || []).some(function (r) { return String((r['Title'] || '') + (r['Detail'] || '')).trim(); });
+    const el = document.getElementById(id);
+    const col = el && el.closest('.col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-12');
+    if (col) col.hidden = !has;
+    return has;
+  }
+  const hasWeekly = hideUnless('weekly_change', 'curWeeklyChanges');
+  const tpCol = document.getElementById('curTopPriorities');
+  const tp = tpCol && tpCol.closest('.col-6');
+  if (tp) tp.style.gridColumn = hasWeekly ? '' : 'span 12'; // Top Priorities takes the row alone
+  hideUnless('physique_priority', 'curPhysique');
+  hideUnless('programme_notes', 'curProgramme');
+  hideUnless('recovery_rules', 'curRecovery');
 
   // ---- bloodwork ----
   if (S['bw_note']) S['bw_note'].forEach(function (r) {
