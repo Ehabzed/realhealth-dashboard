@@ -226,6 +226,9 @@
   .macro-bar-label .mn { color: var(--ink-2); font-weight: 500; } .macro-bar-label .mv { font-family: var(--mono); color: var(--ink); }
   .macro-bar-track { height: 10px; background: rgba(255,255,255,0.08); border-radius: 5px; overflow: hidden; }
   .macro-bar-fill { height: 100%; border-radius: 5px; transition: width 0.6s ease; }
+  .kcal-day { font-size: 11.5px; color: var(--ink-3); margin-top: 7px; line-height: 1.45; }
+  .kcal-day b { font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 8px; color: var(--ink-3); }
+  .kcal-day.train { color: var(--ink-2); } .kcal-day.train b { color: var(--gold); }
 
   .micro-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 14px; }
   .micro-cell { background: var(--glass); border: 1px solid var(--line-soft); border-radius: 8px; padding: 8px 6px; text-align: center; }
@@ -442,7 +445,7 @@
       <div class="card">
         <h2>Today <span data-src="food" class="live-tag">● LIVE</span></h2>
         <div id="macroBars">
-          <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Calories</span><span class="mv" id="mb-kcal-txt">— / —</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-kcal" style="width:0%;background:var(--gold)"></div></div></div>
+          <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Calories</span><span class="mv" id="mb-kcal-txt">— / —</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-kcal" style="width:0%;background:var(--gold)"></div></div><div class="kcal-day" id="mb-kcal-day" hidden></div></div>
           <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Protein</span><span class="mv" id="mb-p-txt">— / —</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-p" style="width:0%;background:var(--gold)"></div></div></div>
           <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Carbs</span><span class="mv" id="mb-c-txt">0g</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-c" style="width:0%;background:var(--gold)"></div></div></div>
           <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Fat</span><span class="mv" id="mb-f-txt">— / —</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-f" style="width:0%;background:var(--gold)"></div></div></div>
@@ -1312,6 +1315,7 @@ function applyCurated(rows) {
     const v = parseFloat(r['Detail']);
     if (!isNaN(v) && ['kcal','protein','fat','water'].indexOf(k) !== -1) CONFIG.targets[k] = v;
   });
+  readDayTargets(S); // calorie bar switches rest / training by day
   if (S['target']) {
     const label = { kcal_rest:'Calories (rest)', kcal_training:'Calories (training)', kcal_hard:'Calories (hard day)', kcal:'Calories', protein:'Protein', fat:'Fat cap', water:'Water' };
     const shown = S['target'].filter(function (r) { return label[String(r['Title']).trim()]; });
@@ -1374,7 +1378,7 @@ function applyCurated(rows) {
 
   // ---- training: week grid + badge ----
   if (S['week_day']) setHTML('curWeekGrid', S['week_day'].map(function (r) {
-    const type = String(r['Tag'] || 'rest').toLowerCase() === 'trained' ? 'trained' : 'rest';
+    const type = ['trained', 'hard'].indexOf(String(r['Tag'] || 'rest').trim().toLowerCase()) !== -1 ? 'trained' : 'rest';
     return '<div class="day-tile ' + type + '"><div class="d-label">' + esc(r['Title']) + '</div><div class="d-act">' + esc(r['Detail']) + '</div></div>';
   }).join(''));
   if (S['week_badge'] && S['week_badge'][0]) curSetText('curWeekBadge', S['week_badge'][0]['Detail']);
@@ -1722,6 +1726,67 @@ function microStatus(val, target) {
   return 'bad';
 }
 
+/* Calorie bar by day (14 Sep 2026, Ehab's call). The bar used one number every
+   day. Now it uses the plan's rest or training number for today, with a short
+   note so nobody eats the training number and then skips the session.
+   - Numbers: target rows kcal_rest / kcal_training / kcal_hard. Their Detail is
+     prose ("~3,000 kcal on your rest day"), so the first 800-8000 number is used.
+   - Today's type: the week_day row for today's weekday (Title Mon..Sun, else
+     Order 1-7). Tag trained = training, rest = rest, hard = hard day (kcal_hard,
+     or kcal_training if there is no hard number).
+   - No rest AND training pair: the bar keeps the plain kcal row, no note.
+     No week_day row for today: rest number, no note. Never guess.
+   Same block in index.html; keep the two in step. */
+function kcalNumber(s) {
+  const m = String(s == null ? '' : s).match(/\d[\d,]*(\.\d+)?/g) || [];
+  for (let i = 0; i < m.length; i++) {
+    const n = parseFloat(m[i].replace(/,/g, ''));
+    if (n >= 800 && n <= 8000) return Math.round(n);
+  }
+  return null;
+}
+function readDayTargets(S) {
+  const k = {};
+  (S['target'] || []).forEach(function (r) {
+    const key = String(r['Title'] || '').trim().replace(/^kcal_/, '');
+    if (['rest', 'training', 'hard'].indexOf(key) !== -1) { const n = kcalNumber(r['Detail']); if (n) k[key] = n; }
+  });
+  const DOW = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+  let plan = null;
+  (S['week_day'] || []).forEach(function (r) {
+    let i = DOW.indexOf(String(r['Title'] || '').trim().toLowerCase().slice(0, 3));
+    if (i === -1) i = parseInt(r['Order'], 10) - 1;
+    const tag = String(r['Tag'] || '').trim().toLowerCase();
+    if (!(i >= 0 && i <= 6) || ['trained', 'rest', 'hard'].indexOf(tag) === -1) return;
+    (plan = plan || [])[i] = tag;
+  });
+  CONFIG.kcalDay = k;
+  CONFIG.weekPlan = plan;
+}
+function kcalToday() {
+  const k = CONFIG.kcalDay || {};
+  if (!k.rest || !k.training) return { target: CONFIG.targets.kcal, kind: '' };
+  const kind = (CONFIG.weekPlan || [])[(new Date().getDay() + 6) % 7] || '';
+  if (kind === 'hard') return { target: k.hard || k.training, kind: k.hard ? 'hard' : 'trained', rest: k.rest };
+  if (kind === 'trained') return { target: k.training, kind: 'trained', rest: k.rest };
+  return { target: k.rest, kind: kind };
+}
+function renderKcalDay(t) {
+  const el = document.getElementById('mb-kcal-day');
+  if (!el) return;
+  const fmt = function (n) { return Math.round(n).toLocaleString('en-US'); };
+  let html = '';
+  if (t.kind === 'rest') html = '<b>Rest day</b>';
+  else if (t.kind) {
+    const extra = t.target - t.rest;
+    html = '<b>' + (t.kind === 'hard' ? 'Hard training day' : 'Training day') + '</b>'
+      + (extra > 0 ? '+' + fmt(extra) + ' kcal for your session. If you skip training, eat to ' + fmt(t.rest) + '.' : '');
+  }
+  if (el.innerHTML !== html) el.innerHTML = html;
+  el.className = 'kcal-day' + (t.kind && t.kind !== 'rest' ? ' train' : '');
+  el.hidden = !html;
+}
+
 function renderNutrition() {
   const food = cache.food, checkin = cache.checkin;
   const today = new Date().toISOString().split('T')[0];
@@ -1730,7 +1795,9 @@ function renderNutrition() {
   const sum = (key) => todayRows.reduce((a,r) => a + (parseFloat(r[key]) || 0), 0);
   const kcal = sum('Kcal'), p = sum('Protein'), c = sum('Carbs'), f = sum('Fat'), water = sum('Water_ml');
 
-  setText('mb-kcal-txt', Math.round(kcal) + ' / ' + CONFIG.targets.kcal); setWidth('mb-kcal', (kcal/CONFIG.targets.kcal)*100);
+  const kd = kcalToday();
+  setText('mb-kcal-txt', Math.round(kcal) + ' / ' + kd.target); setWidth('mb-kcal', (kcal/kd.target)*100);
+  renderKcalDay(kd);
   setText('mb-p-txt', Math.round(p) + 'g / ' + CONFIG.targets.protein + 'g'); setWidth('mb-p', (p/CONFIG.targets.protein)*100);
   document.getElementById('mb-p').style.background = p >= CONFIG.targets.protein ? 'var(--green)' : 'var(--gold)';
   setText('mb-c-txt', Math.round(c) + 'g'); setWidth('mb-c', Math.min(100,(c/300)*100));
