@@ -79,6 +79,8 @@
 
   .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
   .grid > [class^="col-"] { display: flex; flex-direction: column; }
+  /* The display:flex above beat the hidden attribute, so a column the script hid stayed on screen. */
+  .grid > [class^="col-"][hidden] { display: none; }
   .grid > [class^="col-"] > .card { flex: 1; display: flex; flex-direction: column; }
   .grid > [class^="col-"] > .focus-card { flex: 1; display: flex; flex-direction: column; }
   .card > :not(h2) ~ .note:last-child { margin-top: auto; }
@@ -1684,7 +1686,7 @@ function annotateWeek() {
     const old = el.querySelector('.d-done'); if (old) old.remove();
     el.classList.toggle('today', i === dow);
     el.style.opacity = byDay[i] ? '1' : '';
-    if (!byDay[i] && i >= dow) return;
+    if (!byDay[i] && (i >= dow || el.classList.contains('rest'))) return;
     const x = document.createElement('div');
     x.className = 'd-done' + (byDay[i] ? '' : ' none');
     x.textContent = byDay[i] ? '✓ ' + byDay[i].join(' · ') : 'nothing logged';
