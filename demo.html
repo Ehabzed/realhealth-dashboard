@@ -82,12 +82,11 @@
   .flash { animation: flashUpdate 1.4s ease; border-radius: 4px; }
 
   .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
-  /* Paired cards stretch to match the tallest in the row. Space stays INSIDE the border, never outside it. */
   .grid > [class^="col-"] { display: flex; flex-direction: column; }
+  /* The display:flex above beat the hidden attribute, so a column the script hid stayed on screen. */
+  .grid > [class^="col-"][hidden] { display: none; }
   .grid > [class^="col-"] > .card { flex: 1; display: flex; flex-direction: column; }
   .grid > [class^="col-"] > .focus-card { flex: 1; display: flex; flex-direction: column; }
-  /* Last element of a stretched card pins to the bottom so the card reads as deliberately full.
-     Only when the note FOLLOWS other content; a card that is just heading + note stays top-anchored. */
   .card > :not(h2) ~ .note:last-child { margin-top: auto; }
   .focus-card > .focus-why { margin-top: auto; padding-top: 12px; }
   .card { background: var(--card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--line); border-radius: 16px; padding: 20px; transition: background 0.2s; }
@@ -139,7 +138,7 @@
   .readiness-inner .l { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-3); margin-top: 3px; }
   .readiness-detail .label { font-family: var(--mono); font-size: 10px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.12em; }
   .readiness-detail .val { font-size: 15px; font-weight: 500; margin-top: 4px; color: var(--ink); }
-  .readiness-detail .val.warn { color: var(--gold); }
+  .readiness-detail .val.warn { color: var(--gold); } .readiness-detail .val.bad { color: var(--red); }
 
   .delta-list { display: flex; flex-direction: column; gap: 10px; }
   .delta-item { display: flex; align-items: center; gap: 10px; font-size: 13px; }
@@ -224,12 +223,14 @@
   .day-section-label { font-family: var(--mono); font-size: 11px; color: var(--blue-light); text-transform: uppercase; letter-spacing: 0.14em; font-weight: 700; margin-bottom: 8px; margin-top: 4px; }
   .day-summary { font-size: 12px; color: var(--ink-2); margin-bottom: 16px; } .day-summary b { color: var(--ink); font-weight: 500; }
 
-  /* NUTRITION LIVE ADDITIONS */
   .macro-bar-row { margin-bottom: 14px; } .macro-bar-row:last-child { margin-bottom: 0; }
   .macro-bar-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
   .macro-bar-label .mn { color: var(--ink-2); font-weight: 500; } .macro-bar-label .mv { font-family: var(--mono); color: var(--ink); }
   .macro-bar-track { height: 10px; background: rgba(255,255,255,0.08); border-radius: 5px; overflow: hidden; }
   .macro-bar-fill { height: 100%; border-radius: 5px; transition: width 0.6s ease; }
+  .kcal-day { font-size: 11.5px; color: var(--ink-3); margin-top: 7px; line-height: 1.45; }
+  .kcal-day b { font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 8px; color: var(--ink-3); }
+  .kcal-day.train { color: var(--ink-2); } .kcal-day.train b { color: var(--gold); }
 
   .micro-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 14px; }
   .micro-cell { background: var(--glass); border: 1px solid var(--line-soft); border-radius: 8px; padding: 8px 6px; text-align: center; }
@@ -244,7 +245,6 @@
 
   .flag-pill { display: inline-block; font-size: 11.5px; padding: 5px 10px; border-radius: 999px; background: rgba(255,107,107,0.12); border: 1px solid rgba(255,107,107,0.3); color: #ffb3b3; margin: 3px 4px 3px 0; }
 
-  /* NERVOUS SYSTEM */
   .ns-state { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
   .ns-state.regulated { color: var(--green); } .ns-state.loading { color: var(--gold); } .ns-state.crash { color: var(--red); }
   .checkin-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line-soft); font-size: 12.5px; }
@@ -266,6 +266,84 @@
     .training-week { grid-template-columns: repeat(3, 1fr); }
     .focus-card .focus-headline { font-size: 18px; }
   }
+
+  /* ---- 11 Sep 2026: protocol clock, stale stamps, mobile tab hint ---- */
+  .reviewed-tag.stale, .tag.stale { color: var(--amber); border-color: rgba(245,193,59,0.45); }
+  .proto-row { display: grid; grid-template-columns: 170px 1fr 150px; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line-soft); font-size: 12.5px; align-items: center; }
+  .proto-row:last-child { border-bottom: none; }
+  .proto-row .pr-name { font-weight: 600; color: var(--ink); }
+  .proto-row .pr-name small { display: block; font-weight: 400; color: var(--ink-3); font-size: 11px; }
+  .proto-row .pr-desc { color: var(--ink-2); font-size: 12px; }
+  .proto-row .pr-clock { font-family: var(--mono); font-size: 11.5px; color: var(--ink); text-align: right; }
+  .proto-row .pr-clock.soon { color: var(--amber); } .proto-row .pr-clock.today { color: var(--gold); font-weight: 700; } .proto-row .pr-clock.off { color: var(--ink-3); }
+  .proto-bar { height: 4px; background: rgba(255,255,255,0.10); border-radius: 2px; margin-top: 6px; overflow: hidden; }
+  .proto-bar i { display: block; height: 100%; background: var(--gold); border-radius: 2px; }
+  .tabbar { position: relative; }
+  .tabbar::after { content: ''; position: sticky; right: 0; flex: 0 0 34px; margin-left: -34px; align-self: stretch; background: linear-gradient(to right, transparent, rgba(10,22,70,0.95)); pointer-events: none; opacity: 0; transition: opacity 0.2s; border-radius: 0 8px 8px 0; }
+  .tabbar.more-right::after { opacity: 1; }
+  @media (max-width: 520px) {
+    .tab { flex: 0 0 auto; padding: 9px 12px; font-size: 12px; }
+    .delta-item { flex-wrap: wrap; row-gap: 2px; }
+    .delta-item .v { flex-basis: 100%; padding-left: 32px; font-size: 11.5px; color: var(--ink-2); }
+    .proto-row { grid-template-columns: 1fr; gap: 4px; }
+    .proto-row .pr-clock { text-align: left; }
+  }
+
+  /* ---- 13 Sep 2026 refresh: big three, last night, health monitor, stress, plan vs done ---- */
+  .vital-tile.tap { cursor: pointer; } .vital-tile.tap:hover { border-color: rgba(245,193,59,0.45); }
+  .vital-tile.tap:focus-visible, .stress-btns button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .tap-hint { color: var(--gold); letter-spacing: 0.06em; }
+  .ln-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; margin: 4px 0 14px; }
+  .ln-big { font-size: 34px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
+  .ln-sub { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-top: 8px; }
+  .ln-perf { text-align: right; } .ln-perf .n { font-size: 26px; font-weight: 700; color: var(--gold); line-height: 1; } .ln-perf .l { font-family: var(--mono); font-size: 9px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+  .stage-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; gap: 2px; }
+  .stage-bar i { display: block; height: 100%; }
+  .st-awake { background: rgba(255,255,255,0.35); } .st-light { background: #7EC5E8; } .st-deep { background: #E86FB6; } .st-rem { background: #B9A6FF; }
+  .stage-rows { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
+  .stage-rows .sr { background: var(--glass); border: 1px solid var(--line-soft); border-radius: 8px; padding: 8px 10px; }
+  .stage-rows .sr .k { font-family: var(--mono); font-size: 9px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px; }
+  .stage-rows .sr .k b, .stage-key b { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+  .stage-rows .sr .v { font-size: 16px; font-weight: 700; margin-top: 4px; font-variant-numeric: tabular-nums; } .stage-rows .sr .d { font-family: var(--mono); font-size: 10px; color: var(--ink-3); margin-top: 2px; }
+  .stage-rows .sr .d.up { color: var(--green); } .stage-rows .sr .d.down { color: var(--gold); }
+  .stage-key { display: flex; gap: 14px; margin-top: 12px; font-family: var(--mono); font-size: 10px; color: var(--ink-3); } .stage-key span { display: flex; align-items: center; gap: 6px; }
+  .nights { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; align-items: end; height: 170px; padding-top: 8px; }
+  .nights .nt { display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; }
+  .nights .col { width: 100%; max-width: 28px; display: flex; flex-direction: column-reverse; border-radius: 5px; overflow: hidden; gap: 1px; }
+  .nights .h { font-family: var(--mono); font-size: 10px; color: var(--ink-2); margin-bottom: 4px; } .nights .dl { font-family: var(--mono); font-size: 9px; color: var(--ink-3); margin-top: 6px; text-transform: uppercase; }
+  .rs-chart { position: relative; display: grid; grid-template-columns: repeat(14, 1fr); gap: 6px; align-items: end; height: 170px; }
+  .rs-chart .dcol { position: relative; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+  .rs-chart .bar { width: 100%; max-width: 26px; border-radius: 4px 4px 0 0; opacity: 0.85; }
+  .rs-chart .dot { position: absolute; width: 9px; height: 9px; border-radius: 50%; background: #7EC5E8; border: 2px solid #0A1646; transform: translateY(50%); }
+  .rs-chart .dl { font-family: var(--mono); font-size: 9px; color: var(--ink-3); margin-top: 6px; }
+  .rs-chart .today .dot { background: #fff; }
+  .hm-row { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--line-soft); font-size: 13px; }
+  .hm-row .k { color: var(--ink-2); } .hm-row .v { font-family: var(--mono); font-weight: 600; font-variant-numeric: tabular-nums; } .hm-row .r { font-family: var(--mono); font-size: 11px; color: var(--ink-3); min-width: 108px; text-align: right; }
+  .hm-row .v::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--green); margin-right: 8px; vertical-align: 1px; }
+  .hm-row.off .v::before { background: var(--gold); } .hm-row.off .v { color: var(--gold); }
+  .hm-verdict { margin-top: 10px; font-size: 13px; color: var(--ink); font-weight: 600; }
+  .hm-foot { font-family: var(--mono); font-size: 10px; color: var(--ink-3); margin-top: 10px; }
+  .stress-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 0 4px; flex-wrap: wrap; }
+  .stress-row .k { font-size: 13px; color: var(--ink); font-weight: 600; } .stress-status { font-family: var(--mono); font-size: 10px; color: var(--ink-3); margin-top: 3px; }
+  .stress-btns { display: flex; gap: 6px; }
+  .stress-btns button { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--line); background: var(--glass); color: var(--ink); font: 600 13px var(--mono); cursor: pointer; }
+  .stress-btns button:hover { border-color: rgba(245,193,59,0.5); }
+  .stress-btns button.on { background: var(--gold); color: #1a1a1a; border-color: var(--gold); }
+  .stress-week { display: flex; align-items: center; gap: 10px; margin-top: 8px; } .stress-week .lbl { font-family: var(--mono); font-size: 9px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.1em; }
+  .stress-week #stressWeek { display: flex; gap: 4px; }
+  .sw { width: 20px; height: 20px; border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; font: 600 10px var(--mono); background: var(--glass); color: var(--ink-3); border: 1px solid var(--line-soft); }
+  .sw.l1, .sw.l2 { background: rgba(79,209,165,0.22); color: var(--green); } .sw.l3 { color: var(--ink); } .sw.l4 { background: rgba(245,193,59,0.25); color: var(--gold); } .sw.l5 { background: rgba(255,107,107,0.25); color: var(--red); }
+  .day-tile .d-done { margin-top: 6px; font-family: var(--mono); font-size: 9.5px; color: var(--green); line-height: 1.3; }
+  .day-tile .d-done.none { color: var(--ink-3); }
+  .day-tile.today { outline: 1px solid var(--gold); }
+  .delta-item { flex-wrap: wrap; row-gap: 2px; } .delta-item .v { flex-basis: 100%; padding-left: 32px; }
+  @media (max-width: 900px) { .stage-rows { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) {
+    .top-meta > div:nth-child(2) { display: none; }
+    .perf-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .rs-chart { gap: 3px; } .rs-chart .dl { font-size: 8px; }
+    .hm-row .r { min-width: 0; }
+  }
 </style>
 </head>
 <body>
@@ -277,7 +355,7 @@
     <div class="brand-user">Command Center · <b id="userName">—</b><span style="background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.32);border-radius:4px;padding:2px 7px;font-size:9px;letter-spacing:.14em;margin-left:10px;vertical-align:middle;font-family:var(--mono)">DEMO</span></div>
   </div>
   <div class="top-meta">
-    <div class="now">Week of 18 Aug 2026</div>
+    <div class="now" id="weekOf">Week of —</div>
     <div>Live data auto-updates · curated sections reviewed weekly</div>
     <div class="sync-stamp" id="syncStamp">Syncing…</div>
   </div>
@@ -296,12 +374,12 @@
 <!-- ============ THIS WEEK ============ -->
 <div class="panel active" data-panel="week">
   <div class="vitals-ribbon" id="vitalsRibbon">
-    <div class="vital-tile" id="tile-recovery"><div class="v-label"><span>Recovery</span><span class="live-tag" style="margin:0;padding:1px 5px;font-size:8px">LIVE</span></div><div class="v-val" id="val-recovery">—</div><div class="v-sub" id="sub-recovery">loading</div><svg class="spark" id="spark-recovery"></svg></div>
+    <div class="vital-tile" id="tile-recovery"><div class="v-label"><span>Recovery</span><span data-src="recovery" class="live-tag" style="margin:0;padding:1px 5px;font-size:8px">LIVE</span></div><div class="v-val" id="val-recovery">—</div><div class="v-sub" id="sub-recovery">loading</div><svg class="spark" id="spark-recovery"></svg></div>
+    <div class="vital-tile tap" id="tile-sleep" role="button" tabindex="0" aria-label="Sleep: open last night" onclick="jumpTo('perf', 'lastNightCard')" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); jumpTo('perf', 'lastNightCard'); }"><div class="v-label"><span>Sleep</span><span class="tap-hint">last night ›</span></div><div class="v-val" id="val-sleep">—</div><div class="v-sub" id="sub-sleep">loading</div><svg class="spark" id="spark-sleep"></svg></div>
+    <div class="vital-tile" id="tile-strain"><div class="v-label"><span>Strain</span><span data-src="cycles" class="live-tag" style="margin:0;padding:1px 5px;font-size:8px">LIVE</span></div><div class="v-val" id="val-strain">—</div><div class="v-sub" id="sub-strain">loading</div><svg class="spark" id="spark-strain"></svg></div>
     <div class="vital-tile" id="tile-hrv"><div class="v-label"><span>HRV</span></div><div class="v-val" id="val-hrv">—</div><div class="v-sub" id="sub-hrv">loading</div><svg class="spark" id="spark-hrv"></svg></div>
-    <div class="vital-tile" id="tile-rhr"><div class="v-label"><span>RHR</span></div><div class="v-val" id="val-rhr">—</div><div class="v-sub" id="sub-rhr">loading</div><svg class="spark" id="spark-rhr"></svg></div>
-    <div class="vital-tile" id="tile-sleep"><div class="v-label"><span>Sleep</span></div><div class="v-val" id="val-sleep">—</div><div class="v-sub" id="sub-sleep">loading</div></div>
-    <div class="vital-tile" id="tile-weight"><div class="v-label"><span>Weight</span></div><div class="v-val" id="val-weight">65<span class="u">kg</span></div><div class="v-sub">stable</div></div>
-    <div class="vital-tile" id="tile-steps"><div class="v-label"><span>Steps</span><span class="live-tag" style="margin:0;padding:1px 5px;font-size:8px">LIVE</span></div><div class="v-val" id="val-steps">—</div><div class="v-sub" id="sub-steps">loading</div><svg class="spark" id="spark-steps"></svg></div>
+    <div class="vital-tile" id="tile-steps"><div class="v-label"><span>Steps</span><span data-src="steps" class="live-tag" style="margin:0;padding:1px 5px;font-size:8px">LIVE</span></div><div class="v-val" id="val-steps">—</div><div class="v-sub" id="sub-steps">loading</div><svg class="spark" id="spark-steps"></svg></div>
+    <div class="vital-tile" id="tile-weight"><div class="v-label"><span>Weight</span></div><div class="v-val" id="val-weight">—</div><div class="v-sub" id="sub-weight">no weigh-in yet</div></div>
   </div>
 
   <div class="grid">
@@ -324,8 +402,8 @@
             <div class="readiness-inner"><div class="n" id="readinessNum">—</div><div class="l">%</div></div>
           </div>
           <div class="readiness-detail" style="flex:1">
-            <div style="margin-bottom:12px"><div class="label">Trend</div><div class="val warn" id="readinessTrend">loading</div></div>
-            <div><div class="label">Last 7 days avg</div><div class="val" id="readiness7d">loading</div></div>
+            <div style="margin-bottom:12px"><div class="label">This week</div><div class="val" id="readiness7d">loading</div></div>
+            <div style="margin-top:12px"><div class="label">Strain today <span data-src="cycles" class="live-tag" style="margin:0 0 0 4px;padding:1px 5px;font-size:8px">LIVE</span></div><div class="val" id="strainToday">loading</div></div>
           </div>
         </div>
       </div>
@@ -333,20 +411,20 @@
 
     <div class="col-6">
       <div class="card">
-        <h2>Weekly Changes <span class="reviewed-tag">Reviewed 24 Aug</span></h2>
+        <h2>Weekly Changes <span class="reviewed-tag" id="curReviewed1">Reviewed 24 Aug</span></h2>
         <div class="delta-list">
           <div class="delta-item"><span class="arrow up">▲</span><span class="k">Recovery trend</span><span class="v">42% → 74% since week 1</span></div>
           <div class="delta-item"><span class="arrow up">▲</span><span class="k">HRV climbing</span><span class="v">46 → 69ms, best 30-day stretch</span></div>
           <div class="delta-item"><span class="arrow down">▼</span><span class="k">Resting HR</span><span class="v">62 → 54bpm</span></div>
           <div class="delta-item"><span class="arrow up">▲</span><span class="k">Sleep consistency</span><span class="v">52% → 84%, the big unlock</span></div>
-          <div class="delta-item"><span class="arrow down">▼</span><span class="k">Weight</span><span class="v">94.2 → 88.4kg, strength held</span></div>
+          <div class="delta-item"><span class="arrow down">▼</span><span class="k">Weight</span><span class="v">94.2 → 88.6kg, strength held</span></div>
         </div>
       </div>
     </div>
 
     <div class="col-6">
       <div class="card">
-        <h2>Top Priorities <span class="reviewed-tag">Reviewed 24 Aug</span></h2>
+        <h2>Top Priorities <span class="reviewed-tag" id="curReviewed2">Reviewed 24 Aug</span></h2>
         <div class="todo-item"><div class="todo-priority p-high">1</div><div class="todo-body"><div class="t-main">Hold the 10:30pm wind-down</div><div class="t-sub">every recovery gain this month traces back to it — protect it through the launch week</div></div></div>
         <div class="todo-item"><div class="todo-priority p-high">2</div><div class="todo-body"><div class="t-main">Book the 60-day retest panel</div><div class="t-sub">fasting insulin, ApoB, hs-CRP, full thyroid — target next week</div></div></div>
         <div class="todo-item"><div class="todo-priority p-med">3</div><div class="todo-body"><div class="t-main">Protein floor: 180g, no exceptions</div><div class="t-sub">you hit it 4/7 days last week — the 3 misses were all travel days</div></div></div>
@@ -357,20 +435,23 @@
 
     <div class="col-12">
       <div class="card">
-        <h2>Nervous System <span class="live-tag">● LIVE</span></h2>
+        <h2>Health Monitor <span class="tag">today vs your normal</span></h2>
         <div class="grid">
           <div class="col-4">
             <div class="ns-state" id="nsState">Loading…</div>
-            <div class="note" id="nsWhy" style="margin-top:8px">Computed from HRV trend, sleep consistency, and your crash-threshold rule.</div>
+            <div class="note" id="nsWhy" style="margin-top:8px">Computed from your HRV, recovery and the five signals against your own last 30 days.</div>
+            <div class="hm-verdict" id="hmVerdict"></div>
           </div>
-          <div class="col-4">
-            <div class="row"><span class="k">HRV vs baseline</span><span class="v" id="nsHrv">—</span></div>
-            <div class="row"><span class="k">Sleep consistency streak</span><span class="v" id="nsSleepStreak">—</span></div>
-            <div class="row"><span class="k">Consecutive low-recovery days</span><span class="v" id="nsCrashDays">—</span></div>
-          </div>
-          <div class="col-4">
-            <div class="row" style="border:none; padding-bottom:6px"><span class="k" style="font-weight:600;color:var(--ink)">Recent check-ins</span></div>
-            <div id="checkinList"><div class="note">No check-ins logged yet.</div></div>
+          <div class="col-8">
+            <div id="hmRows"></div>
+            <div class="stress-row">
+              <div><div class="k" id="stressAsk">How stressed were you today?</div><div class="stress-status" id="stressStatus">1 calm · 5 very stressed</div></div>
+              <div class="stress-btns" id="stressBtns" role="group" aria-label="Today's stress, 1 calm to 5 very stressed">
+                <button type="button" data-v="1" aria-pressed="false">1</button><button type="button" data-v="2" aria-pressed="false">2</button><button type="button" data-v="3" aria-pressed="false">3</button><button type="button" data-v="4" aria-pressed="false">4</button><button type="button" data-v="5" aria-pressed="false">5</button>
+              </div>
+            </div>
+            <div class="stress-week"><span class="lbl">last 7 days</span><span id="stressWeek"></span></div>
+            <div class="hm-foot">Normal = your own last 30 days. Stress is yours to rate; WHOOP doesn't share its stress score.</div>
           </div>
         </div>
       </div>
@@ -381,6 +462,28 @@
 <!-- ============ PERFORMANCE ============ -->
 <div class="panel" data-panel="perf">
   <div class="grid">
+    <div class="col-7" id="lastNightCard">
+      <div class="card">
+        <h2>Last Night <span class="tag" id="lnDate">—</span></h2>
+        <div class="ln-top"><div><div class="ln-big" id="lnAsleep">—</div><div class="ln-sub" id="lnSub">waiting for sleep data</div></div><div class="ln-perf"><div class="n" id="lnPerf">—</div><div class="l">sleep<br>performance</div></div></div>
+        <div class="stage-bar" id="lnBar"></div>
+        <div class="stage-rows" id="lnRows"></div>
+        <div class="note" id="lnRead" style="margin-top:12px" hidden></div>
+      </div>
+    </div>
+    <div class="col-5">
+      <div class="card">
+        <h2>Last 7 Nights <span class="tag">hours asleep</span></h2>
+        <div class="nights" id="lnNights"></div>
+        <div class="stage-key"><span><b class="st-deep"></b>deep</span><span><b class="st-rem"></b>REM</span><span><b class="st-light"></b>light</span></div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card">
+        <h2>Recovery &amp; Strain · 14 Days <span class="tag">bar = recovery · dot = strain, 0–21</span></h2>
+        <div class="rs-chart" id="rsChart"></div>
+      </div>
+    </div>
     <div class="col-12">
       <div class="card">
         <h2>WHOOP · 14-Day Averages <span class="live-tag">● LIVE</span></h2>
@@ -420,7 +523,7 @@
       <div class="card">
         <h2>Today <span class="live-tag">● LIVE</span></h2>
         <div id="macroBars">
-          <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Calories</span><span class="mv" id="mb-kcal-txt">0 / 2,550</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-kcal" style="width:0%;background:var(--gold)"></div></div></div>
+          <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Calories</span><span class="mv" id="mb-kcal-txt">0 / 2,550</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-kcal" style="width:0%;background:var(--gold)"></div></div><div class="kcal-day" id="mb-kcal-day" hidden></div></div>
           <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Protein</span><span class="mv" id="mb-p-txt">0 / 145g</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-p" style="width:0%;background:var(--gold)"></div></div></div>
           <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Carbs</span><span class="mv" id="mb-c-txt">0g</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-c" style="width:0%;background:var(--gold)"></div></div></div>
           <div class="macro-bar-row"><div class="macro-bar-label"><span class="mn">Fat</span><span class="mv" id="mb-f-txt">0 / 80g</span></div><div class="macro-bar-track"><div class="macro-bar-fill" id="mb-f" style="width:0%;background:var(--gold)"></div></div></div>
@@ -466,12 +569,14 @@
     <div class="col-6">
       <div class="card">
         <h2>Targets</h2>
+        <div id="curTargets">
         <div class="row"><span class="k">Calories (rest)</span><span class="v">~2,300 kcal</span></div>
         <div class="row"><span class="k">Calories (training)</span><span class="v">~2,550 kcal</span></div>
         <div class="row"><span class="k">Calories (hard day)</span><span class="v">~2,700 kcal</span></div>
         <div class="row"><span class="k">Protein</span><span class="v good">145g / day</span></div>
         <div class="row"><span class="k">Fat cap</span><span class="v">≤80g</span></div>
         <div class="row"><span class="k">Water</span><span class="v good">3,000ml (3L)</span></div>
+        </div>
       </div>
     </div>
 
@@ -490,6 +595,7 @@
     <div class="col-12">
       <div class="card">
         <h2>Meal Rotation <span class="reviewed-tag">Diversity plan, updated 24 Aug</span></h2>
+        <div id="curMeals">
         <div class="stack-block"><div class="stack-time">8:00 AM · Breakfast, rotate</div>
           <div class="stack-item"><div class="si-name">A · Greek yoghurt bowl</div><div class="si-desc">Greek yoghurt 200g + mixed fruit 250g + collagen + 2 Brazil nuts (3-4x/wk) · ~470 kcal · 20g P · calcium, folate, vit C, selenium</div></div>
           <div class="stack-item"><div class="si-name">B · Fruit + raw milk</div><div class="si-desc">Mixed fruit 250g + raw milk + collagen, pinch of salt on training mornings · ~420 kcal · 15g P · lighter pre-training option</div></div>
@@ -508,6 +614,7 @@
           <div class="stack-item"><div class="si-name">C · Grilled chicken + greens</div><div class="si-desc">Search: gà nướng rau xào · chicken + rice + sautéed dark greens · ~550 kcal · 50g P · folate, magnesium, vit A</div></div>
         </div>
         <div class="note note-gold">Salmon minimum 3x per week is the single biggest lever here. Everything else is secondary to that one rule.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -516,9 +623,9 @@
 <div class="panel" data-panel="training">
   <div class="subtabbar" role="tablist">
     <button class="subtab active" data-subtab="tr-overview">Overview</button>
-    <button class="subtab" data-subtab="tr-d1">Day 1 · Push</button>
-    <button class="subtab" data-subtab="tr-d2">Day 2 · Pull</button>
-    <button class="subtab" data-subtab="tr-d3">Day 3 · Hybrid</button>
+    <button class="subtab" data-subtab="tr-d1" id="curTrTab1">Day 1 · Push</button>
+    <button class="subtab" data-subtab="tr-d2" id="curTrTab2">Day 2 · Pull</button>
+    <button class="subtab" data-subtab="tr-d3" id="curTrTab3">Day 3 · Hybrid</button>
     <button class="subtab" data-subtab="tr-log">Session Log</button>
   </div>
 
@@ -526,8 +633,8 @@
     <div class="grid">
       <div class="col-12">
         <div class="card">
-          <h2>Weekly Structure <span class="tag">3 gym + 2 striking</span></h2>
-          <div class="training-week">
+          <h2>Weekly Structure <span class="tag" id="curWeekBadge">3 gym + 2 striking</span></h2>
+          <div class="training-week" id="curWeekGrid">
             <div class="day-tile trained"><div class="d-label">Mon</div><div class="d-act">Gym<br>Day 1</div></div>
             <div class="day-tile trained"><div class="d-label">Tue</div><div class="d-act">Zone 2</div></div>
             <div class="day-tile rest"><div class="d-label">Wed</div><div class="d-act">Rest</div></div>
@@ -564,7 +671,7 @@
       <div class="col-12">
         <div class="card">
           <h2>Recovery Rules</h2>
-          <div class="note">
+          <div class="note" id="curRecovery">
             <b>Cap strain ≤12</b> on any day recovery &lt;60%.<br>
             <b>Don’t stack</b> hard training day after low-recovery night, Tuesday crashes trace to weekend push.<br>
             <b>Sprints (1×/wk)</b> planned post-bloodwork window.<br>
@@ -578,7 +685,7 @@
   <div class="subpanel" data-subpanel="tr-d1">
     <div class="grid">
       <div class="col-12">
-        <div class="card">
+        <div class="card" id="curSession1">
           <h2>Day 1 · Push <span class="tag">chest · shoulders · tris · legs (maint)</span></h2>
           <div class="day-summary">Heavy presses first, then a short <b>finisher block</b> for shoulders and triceps.</div>
 
@@ -648,7 +755,7 @@
   <div class="subpanel" data-subpanel="tr-d2">
     <div class="grid">
       <div class="col-12">
-        <div class="card">
+        <div class="card" id="curSession2">
           <h2>Day 2 · Pull <span class="tag">back · rear delts · biceps · abs</span></h2>
           <div class="day-summary">Heavy pulls first, then a short <b>finisher block</b> for upper back and core.</div>
 
@@ -725,7 +832,7 @@
   <div class="subpanel" data-subpanel="tr-d3">
     <div class="grid">
       <div class="col-12">
-        <div class="card">
+        <div class="card" id="curSession3">
           <h2>Day 3 · Hybrid <span class="tag">shoulders · arms · posterior · abs · neck</span></h2>
           <div class="day-summary">Posterior chain + arms, then a short <b>finisher block</b> revisiting shoulders for the week.</div>
 
@@ -806,9 +913,16 @@
 <!-- ============ STACK ============ -->
 <div class="panel" data-panel="stack">
   <div class="grid">
+    <div class="col-12" id="protocolWrap" hidden>
+      <div class="card card-gold">
+        <h2>Protocol Clock <span class="tag" id="protocolTag">from the Curated tab</span></h2>
+        <div id="curProtocol"></div>
+      </div>
+    </div>
     <div class="col-8">
       <div class="card">
         <h2>Daily Protocol <span class="tag">by time of day</span></h2>
+        <div id="curStack">
 
         <div class="stack-block">
           <div class="stack-time">On Waking · Fasted</div>
@@ -851,8 +965,8 @@
         <div class="stack-block">
           <div class="stack-time">Pre-Bed · Fasted 2–3h</div>
           <div class="stack-item"><div class="si-name">Glycine</div><div class="si-desc">3g · sleep onset + core temp drop</div></div>
-          <div class="stack-item"><div class="si-name">Magnesium Threonate</div><div class="si-desc">brain magnesium · sleep + cognition (glycinate out of stock, reorder)</div></div>
-          <div class="stack-item"><div class="si-name">Magnesium glycinate</div><div class="si-desc">400mg · 60min pre-bed</div></div>
+                    <div class="stack-item"><div class="si-name">Magnesium glycinate</div><div class="si-desc">400mg · 60min pre-bed</div></div>
+        </div>
         </div>
       </div>
     </div>
@@ -860,7 +974,8 @@
     <div class="col-4">
       <div class="card">
         <h2>Standing Rules</h2>
-        <div class="row"><span class="k">Creatine</span><span class="v bad">Excluded</span></div>
+        <div id="curRules">
+        <div class="row"><span class="k">Caffeine</span><span class="v warn">None after 12pm</span></div>
         <div class="row"><span class="k">Zinc</span><span class="v warn">Alt days only</span></div>
         <div class="row"><span class="k">Vitamin D3 + K2</span><span class="v warn">Always w/ food</span></div>
         <div class="row"><span class="k">Magnesium ↔ Zinc</span><span class="v">2h+ apart</span></div>
@@ -872,7 +987,7 @@
         <div class="row"><span class="k">Omega-3</span><span class="v warn">~2wk left</span></div>
         <div class="row"><span class="k">NAC</span><span class="v good">~6wk left</span></div>
         <div class="row"><span class="k">Creatine</span><span class="v good">~30 days</span></div>
-        <div class="row"><span class="k">Magnesium glycinate</span><span class="v bad">out, reorder placed</span></div>
+        <div class="row"><span class="k">Magnesium glycinate</span><span class="v good">~3wk left</span></div>
         <div class="row"><span class="k">Vitamin D3 + K2</span><span class="v good">~5wk left</span></div>
         <div class="row"><span class="k">Whey isolate</span><span class="v good">arriving this week</span></div>
         </div>
@@ -891,6 +1006,7 @@
     <div class="col-12">
       <div class="card">
         <h2>Ranked Priorities <span class="tag">active</span></h2>
+        <div id="curTodo">
 
         <div class="todo-item">
           <div class="todo-priority p-high">HIGH</div>
@@ -939,13 +1055,14 @@
             <div class="t-sub">confirms the protocol moved what it was meant to move</div>
           </div>
         </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 <!-- ============ BLOODWORK ============ -->
 <div class="panel" data-panel="bloods">
-  <div class="grid">
+  <div class="grid" id="curBloodworkGrid">
     <div class="col-12">
       <div class="card card-gold">
         <h2>Overall Trajectory <span class="tag">Aug 4 2026 · quarterly panel</span></h2>
@@ -1076,10 +1193,8 @@
 </div>
 
 <script>
-/* ============ CONFIG ============
-   To duplicate this dashboard for a client, change ONLY this block.
-   Everything below reads from here — no personal values live anywhere else.
-   ===================================== */
+// DEMO: no unlock path, no token, no endpoint — the sample month below is
+// all this page ever reads.
 const CONFIG = {
   name: 'Michael',
 
@@ -1142,37 +1257,37 @@ recovery: `Date,Recovery %,HRV (ms),RHR (bpm),SpO2,Skin Temp C
 2026-08-01,37,44.27,61,95.69,33.2
 2026-07-31,44,43.55,63,95.66,33.66
 2026-07-30,40,49.58,62,97.26,33.18`,
-sleep: `Date,Performance %,Duration (min),Efficiency %,Respiratory Rate,Consistency %,Sleep Debt (min)
-2026-08-28,92,456.7,94.59,14.71,86,85.74
-2026-08-27,92,442.8,91.59,14.7,85,53.93
-2026-08-26,90,428.0,88.2,14.96,83,24.75
-2026-08-25,83,443.8,88.4,14.05,82,23.16
-2026-08-24,82,439.9,88.43,14.69,81,59.8
-2026-08-23,82,434.8,88.03,14.84,81,32.93
-2026-08-22,87,450.7,91.72,14.48,73,21.4
-2026-08-21,83,412.4,92.64,14.86,77,58.76
-2026-08-20,80,417.1,92.11,14.14,81,51.43
-2026-08-19,82,445.6,93.78,14.07,71,38.89
-2026-08-18,75,402.1,94.8,14.64,78,59.49
-2026-08-17,83,399.4,92.6,14.26,72,61.15
-2026-08-16,75,397.1,89.06,14.98,64,80.49
-2026-08-15,78,389.5,90.81,15.03,70,74.36
-2026-08-14,74,401.2,94.22,14.36,69,67.69
-2026-08-13,75,423.7,92.5,14.89,73,28.99
-2026-08-12,76,391.7,94.9,14.59,69,20.14
-2026-08-11,73,407.5,88.56,13.93,64,55.26
-2026-08-10,70,391.5,92.24,14.25,69,80.64
-2026-08-09,73,374.5,93.12,15.09,62,79.26
-2026-08-08,68,399.0,89.68,14.32,67,80.25
-2026-08-07,72,384.2,92.46,14.6,59,79.13
-2026-08-06,67,358.7,90.57,14.02,61,77.9
-2026-08-05,70,358.0,93.31,14.19,52,68.22
-2026-08-04,63,388.7,88.16,15.04,59,59.62
-2026-08-03,61,368.0,88.72,14.25,52,39.86
-2026-08-02,60,358.6,93.94,15.09,50,54.95
-2026-08-01,67,380.6,89.04,14.13,54,46.05
-2026-07-31,59,333.5,88.71,14.27,55,21.91
-2026-07-30,60,333.4,89.14,14.24,53,23.94`,
+sleep: `Date,Performance %,Duration (min),Efficiency %,Respiratory Rate,Consistency %,Sleep Debt (min),Asleep (min),Light (min),Deep (min),REM (min),Awake (min),Disturbances,Sleep Cycles,Need (min)
+2026-08-28,92,456.7,94.59,14.71,86,85.74,432.0,247.9,85.7,98.4,24.7,2,5,469.6
+2026-08-27,92,442.8,91.59,14.7,85,53.93,405.6,225.1,80.9,99.6,37.2,2,5,440.9
+2026-08-26,90,428.0,88.2,14.96,83,24.75,377.5,210.0,80.0,87.5,50.5,2,4,419.4
+2026-08-25,83,443.8,88.4,14.05,82,23.16,392.3,221.5,80.7,90.1,51.5,3,4,472.7
+2026-08-24,82,439.9,88.43,14.69,81,59.8,389.0,225.8,74.4,88.8,50.9,3,4,474.4
+2026-08-23,82,434.8,88.03,14.84,81,32.93,382.8,224.1,71.9,86.8,52.0,3,4,466.8
+2026-08-22,87,450.7,91.72,14.48,73,21.4,413.4,235.6,82.8,95.0,37.3,2,5,475.2
+2026-08-21,83,412.4,92.64,14.86,77,58.76,382.0,227.0,72.2,82.8,30.4,3,4,460.2
+2026-08-20,80,417.1,92.11,14.14,81,51.43,384.2,223.9,73.8,86.5,32.9,2,4,480.2
+2026-08-19,82,445.6,93.78,14.07,71,38.89,417.9,243.1,85.4,89.4,27.7,3,5,509.6
+2026-08-18,75,402.1,94.8,14.64,78,59.49,381.2,229.4,68.0,83.8,20.9,3,4,508.3
+2026-08-17,83,399.4,92.6,14.26,72,61.15,369.8,209.1,71.9,88.8,29.6,2,4,445.5
+2026-08-16,75,397.1,89.06,14.98,64,80.49,353.7,208.6,68.0,77.1,43.4,4,4,471.6
+2026-08-15,78,389.5,90.81,15.03,70,74.36,353.7,206.9,65.9,80.9,35.8,3,4,453.5
+2026-08-14,74,401.2,94.22,14.36,69,67.69,378.0,221.5,71.4,85.1,23.2,4,4,510.8
+2026-08-13,75,423.7,92.5,14.89,73,28.99,391.9,235.1,74.9,81.9,31.8,3,4,522.5
+2026-08-12,76,391.7,94.9,14.59,69,20.14,371.7,227.5,66.0,78.2,20.0,3,4,489.1
+2026-08-11,73,407.5,88.56,13.93,64,55.26,360.9,227.9,61.6,71.4,46.6,4,4,494.4
+2026-08-10,70,391.5,92.24,14.25,69,80.64,361.1,223.0,61.2,76.9,30.4,4,4,515.9
+2026-08-09,73,374.5,93.12,15.09,62,79.26,348.7,211.8,64.5,72.4,25.8,3,4,477.7
+2026-08-08,68,399.0,89.68,14.32,67,80.25,357.8,217.4,64.8,75.6,41.2,5,4,526.2
+2026-08-07,72,384.2,92.46,14.6,59,79.13,355.2,214.6,65.4,75.2,29.0,4,4,493.3
+2026-08-06,67,358.7,90.57,14.02,61,77.9,324.9,203.0,56.0,65.9,33.8,4,4,484.9
+2026-08-05,70,358.0,93.31,14.19,52,68.22,334.0,209.9,54.5,69.6,24.0,4,4,477.1
+2026-08-04,63,388.7,88.16,15.04,59,59.62,342.7,218.9,52.9,70.9,46.0,4,4,544.0
+2026-08-03,61,368.0,88.72,14.25,52,39.86,326.5,212.3,53.8,60.4,41.5,5,4,535.2
+2026-08-02,60,358.6,93.94,15.09,50,54.95,336.9,224.7,51.0,61.2,21.7,4,4,561.5
+2026-08-01,67,380.6,89.04,14.13,54,46.05,338.9,218.3,54.4,66.2,41.7,4,4,505.8
+2026-07-31,59,333.5,88.71,14.27,55,21.91,295.8,195.0,47.4,53.4,37.7,5,3,501.4
+2026-07-30,60,333.4,89.14,14.24,53,23.94,297.2,196.8,45.0,55.4,36.2,5,3,495.3`,
 workouts: `Key,Date,Time,Activity,Strain,Avg HR,Max HR,Kcal,Duration (min)
 w0017a1,2026-08-28,07:15,weightlifting,7.8456,112,160,454,38
 w0016a1,2026-08-26,12:30,swimming,11.1302,140,176,457,43
@@ -1294,15 +1409,37 @@ steps: `Date,Time,Steps
 2026-08-02,21:30,6132
 2026-08-01,21:30,6045
 2026-07-31,21:30,6078
-2026-07-30,21:30,5496`
+2026-07-30,21:30,5496`,
+stress: `Date,Time,Stress_1to5
+2026-08-08,21:40,4
+2026-08-09,21:40,4
+2026-08-10,21:40,5
+2026-08-11,21:40,4
+2026-08-12,21:40,3
+2026-08-13,21:40,4
+2026-08-14,21:40,4
+2026-08-15,21:40,3
+2026-08-16,21:40,3
+2026-08-17,21:40,4
+2026-08-18,21:40,3
+2026-08-19,21:40,3
+2026-08-20,21:40,2
+2026-08-21,21:40,3
+2026-08-22,21:40,3
+2026-08-23,21:40,2
+2026-08-24,21:40,2
+2026-08-25,21:40,3
+2026-08-26,21:40,2
+2026-08-27,21:40,2
+2026-08-28,21:40,3`
 };
 
 
 let lastValues = {};
 let usingSnapshot = false;
-let cache = { recovery:[], sleep:[], workouts:[], cycles:[], food:[], checkin:[], steps:[] };
+const sourceLive = { recovery:false, sleep:false, workouts:false, cycles:false, food:false, checkin:false, steps:false };
+let cache = { recovery:[], sleep:[], workouts:[], cycles:[], food:[], checkin:[], steps:[], stress:[] };
 
-/* ---- CSV parsing (handles quoted fields, e.g. gviz output and meal names with commas) ---- */
 function parseCSVLine(line) {
   const out = []; let cur = ''; let inQ = false;
   for (let i = 0; i < line.length; i++) {
@@ -1334,20 +1471,13 @@ async function fetchCSV(url) {
     if (!res.ok) throw new Error('bad response');
     return parseCSV(await res.text());
   } catch (err) {
-    return null; // graceful failure: caller keeps last known data
+    return null;
   }
 }
 
-/* ---- NEW: token-gated data fetch, replaces the 7 direct gviz CSV fetches ----
-   Uses a JSONP-style <script> tag load instead of fetch() on purpose: Apps
-   Script Web App CORS behaviour on cross-origin fetch() is inconsistent (this
-   is exactly why log.html had to fall back to mode:'no-cors' for writes), so
-   a <script src=...> load sidesteps that uncertainty entirely — browsers
-   never apply CORS to script tags. Resolves to null on any failure (bad
-   token, network error, timeout) so refreshAll()'s existing snapshot-fallback
-   logic below is completely unchanged. */
 let _rhDataCounter = 0;
 function fetchAllData() {
+  if (!CONFIG.token) return Promise.resolve(null);
   return new Promise((resolve) => {
     // DEMO MODE: never touch the network. Falls straight through to
     // SNAPSHOT sample data via refreshAll()'s existing fallback path.
@@ -1363,6 +1493,10 @@ function fetchAllData() {
       if (settled) return;
       settled = true;
       cleanup();
+      if (data && data.error === 'unauthorized') { // wrong or rotated key: forget it so the unlock note shows
+        try { localStorage.removeItem('rh_token'); } catch (e) {}
+        CONFIG.token = '';
+      }
       resolve(data && !data.error ? data : null);
     };
     script.onerror = () => {
@@ -1382,7 +1516,6 @@ function fetchAllData() {
   });
 }
 
-/* ---- helpers ---- */
 function setText(id, text) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -1412,14 +1545,6 @@ function daysAgo(dateStr) {
   return Math.floor((now - d) / 86400000);
 }
 function avg(arr) { return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0; }
-/* Sheets get rows appended in whatever order they arrive — a bulk historical
-   import in one order, then each new day tacked onto the end going forward.
-   Row position is NOT reliable as a recency signal. Every render function in
-   this file assumes array[0] is "most recent" (today's vitals, 7-day/3-day
-   windows, sparklines, weight trend, the sync-stamp date) — so instead of
-   patching each of those call sites, every cached array is sorted newest-first
-   by its actual Date field once here, right after it arrives. That keeps the
-   rest of the file's [0]/.slice(0,N) assumptions correct without touching them. */
 function sortByDateDesc(rows, dateField) {
   dateField = dateField || 'Date';
   return rows.slice().sort((a, b) => {
@@ -1438,6 +1563,13 @@ function sparklinePath(values, w, h) {
     return (i===0 ? 'M' : 'L') + x.toFixed(1) + ',' + y.toFixed(1);
   }).join(' ');
 }
+// Gate-test and relay-test writes land in the Checkin tab with weight 0 or a
+// "test" note. They are not data; drop them before anything renders.
+function isRealCheckin(c) {
+  const w = parseFloat(c['Weight_kg']);
+  const n = String(c['Notes'] || '').toLowerCase();
+  return !(isNaN(w) || w <= 0 || /test/.test(n));
+}
 function renderSpark(id, values, color) {
   const svg = document.getElementById(id);
   if (!svg || !values.length) return;
@@ -1448,9 +1580,13 @@ function renderSpark(id, values, color) {
   svg.innerHTML = '<path d="' + path + '" fill="none" stroke="' + color + '" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>';
 }
 
-/* ---- main render ---- */
 async function refreshAll() {
   const bundle = await fetchAllData();
+  const lockEl = document.getElementById('lockNote');
+  if (lockEl) lockEl.hidden = !!CONFIG.token;
+  if (bundle) { try { localStorage.setItem('rh_last_bundle', JSON.stringify(bundle)); } catch (e) {} }
+  const saved = (bundle || CONFIG.demo) ? null : rhSavedBundle();
+  if (saved) Object.keys(SNAPSHOT).forEach(function (k) { SNAPSHOT[k] = saved[k] || ''; });
   const rec     = bundle ? parseCSV(bundle.recovery)  : null;
   const sleep   = bundle ? parseCSV(bundle.sleep)     : null;
   const work    = bundle ? parseCSV(bundle.workouts)  : null;
@@ -1458,14 +1594,29 @@ async function refreshAll() {
   const food    = bundle ? parseCSV(bundle.food)      : null;
   const checkin = bundle ? parseCSV(bundle.checkin)   : null;
   const steps   = bundle ? parseCSV(bundle.steps)     : null;
+  const stress  = bundle && bundle.stress ? parseCSV(bundle.stress) : null;
+  const curated = bundle && bundle.curated ? parseCSV(bundle.curated) : (saved && saved.curated ? parseCSV(saved.curated) : null);
   cache.recovery = sortByDateDesc(rec || (cache.recovery.length ? cache.recovery : parseCSV(SNAPSHOT.recovery)));
   cache.sleep    = sortByDateDesc(sleep || (cache.sleep.length ? cache.sleep : parseCSV(SNAPSHOT.sleep)));
   cache.workouts = sortByDateDesc(work || (cache.workouts.length ? cache.workouts : parseCSV(SNAPSHOT.workouts)));
   cache.cycles   = sortByDateDesc(cyc || (cache.cycles.length ? cache.cycles : parseCSV(SNAPSHOT.cycles)));
-  cache.food     = food || (cache.food.length ? cache.food : parseCSV(SNAPSHOT.food)); // filter()-based, not [0]-based — order doesn't matter here
-  cache.checkin  = sortByDateDesc(checkin || (cache.checkin.length ? cache.checkin : parseCSV(SNAPSHOT.checkin)));
+  cache.food     = food || (cache.food.length ? cache.food : parseCSV(SNAPSHOT.food));
+  cache.checkin = sortByDateDesc(checkin || (cache.checkin.length ? cache.checkin : parseCSV(SNAPSHOT.checkin))).filter(isRealCheckin);
   cache.steps    = sortByDateDesc(steps || (cache.steps.length ? cache.steps : parseCSV(SNAPSHOT.steps)));
-  usingSnapshot = !rec; // any live fetch succeeding means we're live
+  cache.stress   = sortByDateDesc(stress || (cache.stress.length ? cache.stress : parseCSV(SNAPSHOT.stress))).filter(function (r) { return r['Date']; });
+  // DEMO: the snapshot IS the data, so nothing is stale and no badge says CACHED.
+  const live = function (v) { return CONFIG.demo || !!v; };
+  sourceLive.recovery = live(rec);
+  sourceLive.sleep    = live(sleep);
+  sourceLive.workouts = live(work);
+  sourceLive.cycles   = live(cyc);
+  sourceLive.food     = live(food);
+  sourceLive.checkin  = live(checkin);
+  sourceLive.steps    = live(steps);
+  usingSnapshot = !rec;
+  renderLiveBadges();
+
+  if (curated) applyCurated(curated);
 
   renderVitals();
   renderSteps();
@@ -1474,12 +1625,260 @@ async function refreshAll() {
   renderSessions();
   renderNutrition();
   renderNervousSystem();
+  renderLastNight();
+  renderStrainRecovery();
+  annotateWeek();
   renderSyncStamp();
 }
 
-/* ---- static config render (runs once at boot) ---- */
+function renderLiveBadges() {
+  document.querySelectorAll('.live-tag[data-src]').forEach(function (el) {
+    const live = sourceLive[el.getAttribute('data-src')];
+    const dot = el.textContent.trim().charAt(0) === '\u25cf';
+    el.textContent = live ? (dot ? '\u25cf LIVE' : 'LIVE') : (dot ? '\u25cf CACHED' : 'CACHED');
+    el.classList.toggle('cached', !live);
+    el.title = live ? 'Fetched live this refresh' : 'Live fetch failed \u2014 showing last known data';
+  });
+}
+
+/* ================================================================
+   CURATED CONTENT RENDERER — same proven logic as the client system,
+   scoped to the sections that map cleanly onto it. Training's Day 1/2/3
+   exercise lists are NOT covered yet (see handoff notes: shared vs
+   solo-stayback structure needs its own schema, deliberately not
+   forced into this pass). Everything else — weekly changes, top
+   priorities, targets, meals, full stack, standing rules, restock,
+   training overview, to-do, bloodwork — reads from here.
+   ================================================================ */
+function esc(s) {
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function bySection(rows) {
+  const out = {};
+  (rows || []).forEach(function (r, i) {
+    const s = String(r['Section'] || '').trim();
+    if (!s) return;
+    r.__i = i; // sheet position: blocks() orders groups by this, not by Order
+    (out[s] = out[s] || []).push(r);
+  });
+  Object.keys(out).forEach(function (k) {
+    out[k].sort(function (a, b) { return (parseFloat(a['Order']) || 0) - (parseFloat(b['Order']) || 0); });
+  });
+  return out;
+}
+function setHTML(id, html) {
+  const el = document.getElementById(id);
+  if (el && html) el.innerHTML = html;
+}
+function curSetText(id, txt) {
+  const el = document.getElementById(id);
+  if (el && txt) el.textContent = txt;
+}
+
+function applyCurated(rows) {
+  if (!rows || !rows.length) return;
+  const S = bySection(rows);
+
+  (S['target'] || []).forEach(function (r) {
+    const k = String(r['Title'] || '').trim();
+    const v = parseFloat(r['Detail']);
+    if (!isNaN(v) && ['kcal','protein','fat','water'].indexOf(k) !== -1) CONFIG.targets[k] = v;
+  });
+  readDayTargets(S); // calorie bar switches rest / training by day
+  if (S['target']) {
+    const label = { kcal_rest:'Calories (rest)', kcal_training:'Calories (training)', kcal_hard:'Calories (hard day)', kcal:'Calories', protein:'Protein', fat:'Fat cap', water:'Water' };
+    const shown = S['target'].filter(function (r) { return label[String(r['Title']).trim()]; });
+    if (shown.length) setHTML('curTargets', shown.map(function (r) {
+      return '<div class="row"><span class="k">' + esc(label[String(r['Title']).trim()]) + '</span><span class="v">' + esc(r['Detail']) + esc(r['Tag'] ? ' ' + r['Tag'] : '') + '</span></div>';
+    }).join(''));
+  }
+
+  if (S['weekly_change']) setHTML('curWeeklyChanges', S['weekly_change'].map(function (r) {
+    const t = String(r['Tag'] || 'flat').toLowerCase();
+    const arrow = t === 'up' ? '\u25b2' : (t === 'down' ? '\u25bc' : '\u2022');
+    return '<div class="delta-item"><span class="arrow ' + esc(t) + '">' + arrow + '</span><span class="k">' + esc(r['Title']) + '</span><span class="v">' + esc(r['Detail']) + '</span></div>';
+  }).join(''));
+
+  if (S['top_priority']) setHTML('curTopPriorities', S['top_priority'].map(function (r, i) {
+    const lvl = String(r['Tag'] || (i < 2 ? 'high' : 'med')).toLowerCase();
+    return '<div class="todo-item"><div class="todo-priority p-' + esc(lvl) + '">' + (i + 1) + '</div><div class="todo-body"><div class="t-main">' + esc(r['Title']) + '</div><div class="t-sub">' + esc(r['Detail']) + '</div></div></div>';
+  }).join(''));
+
+  if (S['todo']) setHTML('curTodo', S['todo'].map(function (r) {
+    const tag = String(r['Tag'] || 'MED').toUpperCase();
+    const cls = tag === 'HIGH' ? 'p-high' : (tag === 'MED' ? 'p-med' : 'p-low');
+    return '<div class="todo-item"><div class="todo-priority ' + cls + '">' + esc(tag) + '</div><div class="todo-body"><div class="t-main">' + esc(r['Title']) + '</div><div class="t-sub">' + esc(r['Detail']) + '</div></div></div>';
+  }).join(''));
+
+  function blocks(list, withDesc) {
+    const order = []; const groups = {};
+    list.forEach(function (r) {
+      const g = String(r['Group'] || '').trim() || 'Other';
+      if (!groups[g]) { groups[g] = []; order.push(g); }
+      groups[g].push(r);
+    });
+    // Groups keep their sheet order; Order only sorts rows inside a group.
+    // (An Order of 0 in any group used to pull that whole group to the top.)
+    const first = function (g) { return Math.min.apply(null, groups[g].map(function (r) { return r.__i == null ? Infinity : r.__i; })); };
+    order.sort(function (a, b) { return first(a) - first(b); });
+    return order.map(function (g) {
+      return '<div class="stack-block"><div class="stack-time">' + esc(g) + '</div>' + groups[g].map(function (r) {
+        return '<div class="stack-item"><div class="si-name">' + esc(r['Title']) + '</div>' + (withDesc && r['Detail'] ? '<div class="si-desc">' + esc(r['Detail']) + '</div>' : '') + '</div>';
+      }).join('') + '</div>';
+    }).join('');
+  }
+  if (S['meal'])  setHTML('curMeals', blocks(S['meal'], false));
+  if (S['stack']) setHTML('curStack', blocks(S['stack'], true));
+
+  function kvRows(list) {
+    return list.map(function (r) {
+      const cls = { good: ' good', warn: ' warn', bad: ' bad' }[String(r['Tag'] || '').toLowerCase()] || '';
+      return '<div class="row"><span class="k">' + esc(r['Title']) + '</span><span class="v' + cls + '">' + esc(r['Detail']) + '</span></div>';
+    }).join('');
+  }
+  if (S['standing_rule']) setHTML('curRules', kvRows(S['standing_rule']));
+  if (S['restock'])       setHTML('curRestock', kvRows(S['restock']));
+  if (S['expected_effects'] && S['expected_effects'][0]) curSetText('curEffects', S['expected_effects'][0]['Detail']);
+
+  if (S['week_day']) setHTML('curWeekGrid', S['week_day'].map(function (r) {
+    const type = ['trained', 'hard'].indexOf(String(r['Tag'] || 'rest').trim().toLowerCase()) !== -1 ? 'trained' : 'rest';
+    return '<div class="day-tile ' + type + '"><div class="d-label">' + esc(r['Title']) + '</div><div class="d-act">' + esc(r['Detail']) + '</div></div>';
+  }).join(''));
+  if (S['week_badge'] && S['week_badge'][0]) curSetText('curWeekBadge', S['week_badge'][0]['Detail']);
+
+  if (S['physique_priority']) setHTML('curPhysique', S['physique_priority'].map(function (r, i) {
+    return '<div class="row"><span class="k">' + (i + 1) + '. ' + esc(r['Title']) + '</span><span class="v">' + esc(r['Detail']) + '</span></div>';
+  }).join(''));
+  if (S['programme_notes'] && S['programme_notes'][0]) curSetText('curProgramme', S['programme_notes'][0]['Detail']);
+  if (S['recovery_rules'] && S['recovery_rules'][0]) curSetText('curRecovery', S['recovery_rules'][0]['Detail']);
+
+  // ---- training: day sessions with shared/solo exercise split ----
+  // Group encodes both which day (1/2/3) and which sub-block (shared/solo),
+  // e.g. "1-shared" or "1-solo" — no new sheet columns needed, just a
+  // convention on the existing Group field. This is what makes the
+  // day-by-day training tab spreadsheet-editable, same as everything else.
+  if (S['session']) {
+    S['session'].forEach(function (r) {
+      const n = parseInt(r['Order'], 10);
+      if (!n || n < 1 || n > 3) return;
+      curSetText('curTrTab' + n, r['Title']);
+      const card = document.getElementById('curSession' + n);
+      if (!card) return;
+
+      const summaryRow = (S['day_summary'] || []).find(function (d) { return parseInt(d['Order'], 10) === n; });
+      const shared = (S['exercise'] || []).filter(function (e) { return String(e['Group']) === (n + '-shared'); });
+      const solo   = (S['exercise'] || []).filter(function (e) { return String(e['Group']) === (n + '-solo'); });
+
+      function exItem(e) {
+        let name = String(e['Title'] || '');
+        const star = name.charAt(0) === '*';
+        if (star) name = name.slice(1).trim();
+        return '<div class="ex-item"><div class="ex-name-block"><div class="ex-title">'
+          + (star ? '<span class="priority-star"></span>' : '') + esc(name) + '</div>'
+          + (e['Detail'] ? '<div class="ex-notes">' + esc(e['Detail']) + '</div>' : '') + '</div>'
+          + '<div class="ex-sets-block"><div class="ex-sets">' + esc(e['Tag'] || '') + '</div><div class="ex-rpe">' + esc(e['Extra'] || '') + '</div></div></div>';
+      }
+
+      let html = '<h2>' + esc(r['Title']) + (r['Detail'] ? ' <span class="tag">' + esc(r['Detail']) + '</span>' : '') + '</h2>';
+      if (summaryRow) html += '<div class="day-summary">' + esc(summaryRow['Detail']) + '</div>';
+      if (shared.length) {
+        html += '<div class="day-section-label">With friends</div>'
+          + '<div class="ex-group-header shared">Shared Compounds</div>'
+          + '<div class="ex-list shared">' + shared.map(exItem).join('') + '</div>';
+      }
+      if (solo.length) {
+        html += '<div class="day-section-label" style="margin-top:20px">Stay-back \u00b7 solo</div>'
+          + '<div class="ex-group-header solo">Priority Work</div>'
+          + '<div class="ex-list solo">' + solo.map(exItem).join('') + '</div>';
+      }
+      card.innerHTML = html;
+    });
+    // Newly-built exercise rows need their lift-log inputs attached.
+    // initLiftLogger() is idempotent (skips items that already have one),
+    // so re-running it here is always safe.
+    if (typeof initLiftLogger === 'function') initLiftLogger();
+  }
+
+  // ---- reviewed stamp: one row, Title = ISO date. Goes amber past 7 days ----
+  if (S['reviewed'] && S['reviewed'][0]) {
+    const iso = String(S['reviewed'][0]['Title'] || '').trim();
+    const d = new Date(iso + 'T00:00:00');
+    if (!isNaN(d.getTime())) {
+      const age = daysAgo(iso);
+      const label = 'Reviewed ' + d.getDate() + ' ' + d.toLocaleString('en', { month: 'short' }) + (age > 7 ? ' \u00b7 ' + age + 'd old' : '');
+      document.querySelectorAll('.reviewed-tag').forEach(function (el) { el.textContent = label; el.classList.toggle('stale', age > 7); });
+    }
+  }
+
+  // ---- protocol clock: Group = compound, Title = label, Detail = dose/cadence,
+  // Tag = start ISO, Extra = end ISO (empty = open-ended). Day counts computed here.
+  if (S['protocol'] && S['protocol'].length) {
+    const wrap = document.getElementById('protocolWrap');
+    const today = new Date(); today.setHours(0,0,0,0);
+    function toD(x) { const d = new Date(String(x || '').trim() + 'T00:00:00'); return isNaN(d.getTime()) ? null : d; }
+    function dd(a, b) { return Math.round((b - a) / 86400000); }
+    const html = S['protocol'].map(function (r) {
+      const start = toD(r['Tag']), end = toD(r['Extra']);
+      let clock = '', cls = '', bar = '';
+      const isOff = /\boff\b/i.test(String(r['Title'] || ''));
+      if (start && end) {
+        const total = Math.max(1, dd(start, end)), done = dd(start, today);
+        if (done < 0) { clock = 'starts in ' + (-done) + 'd'; cls = -done <= 3 ? ' soon' : ''; }
+        else if (done >= total) { clock = 'ends ' + (done === total ? 'today' : (done - total) + 'd ago'); cls = done === total ? ' today' : ' soon'; }
+        else { clock = 'day ' + (done + 1) + ' of ' + total + ' \u00b7 ' + (total - done) + ' left'; cls = (total - done) <= 3 ? ' soon' : ''; }
+        const pct = Math.max(0, Math.min(100, Math.round(100 * done / total)));
+        bar = '<div class="proto-bar"><i style="width:' + pct + '%"></i></div>';
+      } else if (start) {
+        const done = dd(start, today);
+        if (done < 0) { clock = 'starts in ' + (-done) + 'd'; cls = -done <= 3 ? ' soon' : ''; }
+        else if (done === 0) { clock = 'starts today'; cls = ' today'; }
+        else { clock = (isOff ? 'off for ' : 'day ') + (isOff ? done + 'd' : (done + 1)); cls = isOff ? ' off' : ''; }
+      }
+      return '<div class="proto-row"><div class="pr-name">' + esc(r['Group']) + '<small>' + esc(r['Title']) + '</small></div>'
+        + '<div class="pr-desc">' + esc(r['Detail'] || '') + '</div>'
+        + '<div class="pr-clock' + cls + '">' + esc(clock) + bar + '</div></div>';
+    }).join('');
+    setHTML('curProtocol', html);
+    if (wrap) wrap.hidden = false;
+    const tag = document.getElementById('protocolTag'); if (tag) tag.textContent = S['protocol'].length + ' items \u00b7 counts computed today';
+  }
+
+  if (S['bw_note']) S['bw_note'].forEach(function (r) {
+    const which = String(r['Title'] || '').toLowerCase();
+    if (which === 'summary') curSetText('curBwSummary', r['Detail']);
+    if (which === 'tag') curSetText('curBwTag', r['Detail']);
+    if (which === 'orderprep') setHTML('curBwOrderPrep', r['Detail']);
+  });
+  if (S['bw_marker']) {
+    const order = []; const groups = {};
+    S['bw_marker'].forEach(function (r) {
+      const g = String(r['Group'] || 'Markers').trim();
+      if (!groups[g]) { groups[g] = []; order.push(g); }
+      groups[g].push(r);
+    });
+    const grid = document.getElementById('curBloodworkGrid');
+    if (grid) {
+      const summaryCard = '<div class="col-12"><div class="card card-gold"><h2>Overall Trajectory <span class="tag" id="curBwTag2">' + esc((S['bw_note'] || []).filter(function(r){return String(r['Title']).toLowerCase()==='tag';}).map(function(r){return r['Detail'];})[0] || 'latest panel') + '</span></h2><div style="font-size:14px; line-height:1.6; color:var(--ink)">' + esc((S['bw_note'] || []).filter(function(r){return String(r['Title']).toLowerCase()==='summary';}).map(function(r){return r['Detail'];})[0] || '') + '</div></div></div>';
+      const markerCards = order.map(function (g) {
+        return '<div class="col-6"><div class="card"><h2>' + esc(g) + '</h2>' + groups[g].map(function (r) {
+          const vcls = { good: ' good', warn: ' warn', bad: ' bad' }[String((r['Extra'] || '').split('|')[1] || '').toLowerCase()] || '';
+          return '<div class="marker-row"><div class="m-name">' + esc(r['Title']) + '<div class="m-sub">' + esc(r['Detail']) + '</div></div><div class="m-val' + vcls + '">' + esc(r['Tag'] || '\u2014') + '</div><div class="m-trend">' + esc(String(r['Extra'] || '').split('|')[0]) + '</div></div>';
+        }).join('') + '</div></div>';
+      }).join('');
+      const drawCard = '<div class="col-12"><div class="card"><h2>Next Blood Draw <span class="tag">edit per client</span></h2><div class="note note-gold"><span id="curBwOrderPrep2">' + esc((S['bw_note'] || []).filter(function(r){return String(r['Title']).toLowerCase()==='orderprep';}).map(function(r){return r['Detail'];})[0] || '') + '</span></div></div></div>';
+      grid.innerHTML = summaryCard + markerCards + drawCard;
+    }
+  }
+}
+
 function renderStaticConfig() {
   const n = document.getElementById('userName'); if (n) n.textContent = CONFIG.name;
+  const wo = document.getElementById('weekOf');
+  if (wo) {
+    const t = new Date(); const dow = (t.getDay() + 6) % 7; // Monday = 0
+    const mon = new Date(t); mon.setDate(t.getDate() - dow);
+    wo.textContent = 'Week of ' + mon.getDate() + ' ' + mon.toLocaleString('en', { month: 'short' }) + ' ' + mon.getFullYear();
+  }
   const pills = document.getElementById('avoidPills');
   if (pills) pills.innerHTML = (CONFIG.avoidFoods || []).map(f => '<span class="flag-pill">' + f + '</span>').join('');
   const an = document.getElementById('avoidNote'); if (an) an.textContent = CONFIG.avoidNote || '';
@@ -1490,7 +1889,7 @@ function renderSteps() {
   if (!steps.length) return;
   const today = localISO();
   const todayRow = steps.find(s => s['Date'] === today);
-  const latest = todayRow || steps[0]; // cache.steps is sorted newest-first, so [0] is the most recent day on file
+  const latest = todayRow || steps[0];
   const count = latest ? parseInt(latest['Steps']) : null;
   if (count === null || isNaN(count)) return;
   setText('val-steps', count.toLocaleString());
@@ -1500,13 +1899,14 @@ function renderSteps() {
   if (tile) tile.className = 'vital-tile ' + (pct >= 1 ? 'tile-green' : pct >= 0.6 ? 'tile-amber' : 'tile-red');
   const whenLabel = todayRow ? 'today' : ('last: ' + (latest['Date'] || ''));
   setText('sub-steps', Math.round(pct * 100) + '% of ' + (goal/1000) + 'k \u00b7 ' + whenLabel);
-  // sparkline wants newest-first, same convention as every other spark call — renderSpark reverses internally for left-to-right chronological drawing
   const recent = steps.slice(0,14).map(s => parseInt(s['Steps'])).filter(v => !isNaN(v));
   renderSpark('spark-steps', recent, '#7EC5E8');
 }
 
 function renderVitals() {
-  const rec = cache.recovery, sleep = cache.sleep;
+  // Big three first (13 Sep 2026): recovery, sleep, strain, then HRV. RHR lives
+  // in the Health Monitor now. "Your normal" instead of "baseline".
+  const rec = cache.recovery, sl = cache.sleep, cyc = cache.cycles || [];
   if (rec.length) {
     const today = rec[0];
     const recVal = parseFloat(today['Recovery %']);
@@ -1514,24 +1914,27 @@ function renderVitals() {
     const tile = document.getElementById('tile-recovery');
     tile.className = 'vital-tile ' + (recVal>=67 ? 'tile-green' : recVal>=34 ? 'tile-amber' : 'tile-red');
     const delta = recVal - CONFIG.baseline.recovery;
-    setText('sub-recovery', (delta>=0?'▲ ':'▼ ') + Math.abs(Math.round(delta)) + ' vs baseline');
+    setText('sub-recovery', (delta>=0 ? '+' : '−') + Math.abs(Math.round(delta)) + ' vs your ' + CONFIG.baseline.recovery + '% normal');
     renderSpark('spark-recovery', rec.slice(0,14).map(r=>parseFloat(r['Recovery %'])), '#F5C13B');
 
-    const hrvVal = parseFloat(today['HRV (ms)']);
+    const hrvVal = parseFloat(today['HRV (ms)']), hd = hrvVal - CONFIG.baseline.hrv;
     setText('val-hrv', Math.round(hrvVal) + 'ms');
-    setText('sub-hrv', (hrvVal>=CONFIG.baseline.hrv?'▲ ':'▼ ') + 'vs ' + CONFIG.baseline.hrv + 'ms base');
-    renderSpark('spark-hrv', rec.slice(0,14).map(r=>parseFloat(r['HRV (ms)'])), '#7EC5E8');
-
-    const rhrVal = parseFloat(today['RHR (bpm)']);
-    setText('val-rhr', Math.round(rhrVal) + 'bpm');
-    setText('sub-rhr', (rhrVal>=CONFIG.baseline.rhr?'▲ ':'▼ ') + Math.abs(Math.round(rhrVal-CONFIG.baseline.rhr)) + ' vs ' + CONFIG.baseline.rhr + ' base');
-    renderSpark('spark-rhr', rec.slice(0,14).map(r=>parseFloat(r['RHR (bpm)'])), '#4FD1A5');
+    setText('sub-hrv', (hd>=0 ? '+' : '−') + Math.abs(Math.round(hd)) + ' vs your ' + CONFIG.baseline.hrv + ' normal');
+    renderSpark('spark-hrv', rec.slice(0,14).map(r=>parseFloat(r['HRV (ms)'])), '#4FD1A5');
   }
-  if (sleep.length) {
-    const hrs = (parseFloat(sleep[0]['Duration (min)']) / 60).toFixed(1);
-    setText('val-sleep', hrs + 'h');
-    setText('sub-sleep', 'perf ' + Math.round(parseFloat(sleep[0]['Performance %'])) + '%');
+  if (sl.length) {
+    // Time asleep (light + deep + REM, v25 columns), not time in bed.
+    const n = sl[0], asleep = numOrNull(n['Asleep (min)']), awake = numOrNull(n['Awake (min)']);
+    setText('val-sleep', asleep !== null ? fmtHM(asleep) : (parseFloat(n['Duration (min)']) / 60).toFixed(1) + 'h');
+    setText('sub-sleep', Math.round(parseFloat(n['Performance %'])) + '% perf' + (awake !== null ? ' · ' + Math.round(awake) + 'm awake' : ''));
+    renderSpark('spark-sleep', sl.slice(0,14).map(r => numOrNull(r['Asleep (min)']) || parseFloat(r['Duration (min)'])), '#B9A6FF');
   }
+  const t = cyc.find(function (c) { return daysAgo(c['Date']) === 0; });
+  const done = cyc.filter(function (c) { return daysAgo(c['Date']) >= 1; }).slice(0, 14);
+  const avgS = done.length ? avg(done.map(function (c) { return parseFloat(c['Day Strain']); })) : null;
+  setText('val-strain', t ? parseFloat(t['Day Strain']).toFixed(1) : '—');
+  setText('sub-strain', (t ? 'so far today' : 'none yet today') + (avgS !== null ? ' · avg ' + avgS.toFixed(1) : ''));
+  renderSpark('spark-strain', done.map(function (c) { return parseFloat(c['Day Strain']); }), '#7EC5E8');
 }
 
 function readinessScoreFor(row) {
@@ -1549,17 +1952,54 @@ function renderReadiness() {
 
   const last7 = rec.slice(0,7).map(r=>parseFloat(r['Recovery %']));
   const avg7 = avg(last7);
-  setText('readiness7d', Math.round(avg7) + '% · ' + (avg7 >= CONFIG.baseline.recovery - 5 ? 'holding' : 'below baseline'));
-  setText('readinessTrend', (avg7 >= CONFIG.baseline.recovery ? 'At/above baseline' : 'Below baseline (was ~' + CONFIG.baseline.recovery + '%)'));
+  // One statement about the week (13 Sep 2026): "Trend: below baseline" next to
+  // "Green light" read as a contradiction when today was fine.
+  const wkDiff = Math.round(avg7 - CONFIG.baseline.recovery);
+  setText('readiness7d', Math.round(avg7) + '% avg · ' + (Math.abs(wkDiff) <= 3 ? 'at your normal' : (wkDiff > 0 ? 'above' : 'under') + ' your usual ' + CONFIG.baseline.recovery + '%'));
+  const r7 = document.getElementById('readiness7d'); if (r7) r7.classList.toggle('warn', wkDiff < -3);
 
   let headline, why, chips, dstate;
   const last3 = rec.slice(0,3).map(r=>parseFloat(r['Recovery %']));
   const threeLowDays = last3.length===3 && last3.every(v => v < 50);
+  // Recovery alone said "push" on days with 90+ min of sleep debt. Fold in
+  // the two things his own WHOOP history says matter: accumulated debt and
+  // a hard day landing on top of another hard day.
+  const sl = cache.sleep || [];
+  const debtNow = sl.length ? parseFloat(sl[0]['Sleep Debt (min)']) : NaN;
+  const debtWeekAgo = sl.length >= 7 ? parseFloat(sl[6]['Sleep Debt (min)']) : NaN;
+  const debtHigh = !isNaN(debtNow) && debtNow >= 90;
+  const debtRising = !isNaN(debtNow) && !isNaN(debtWeekAgo) && (debtNow - debtWeekAgo) >= 30;
+  // Since v24 (13 Sep 2026) cycles are filed under the day he wakes into and
+  // keep updating all day, so the newest row is today's, still running.
+  // Before that, cyc[0] was a frozen ~0.1 and this branch could never fire.
+  const cyc = cache.cycles || [];
+  const yRow = cyc.find(function (c) { return daysAgo(c['Date']) === 1; });
+  const yStrain = yRow ? parseFloat(yRow['Day Strain']) : NaN;
+  const hardYesterday = !isNaN(yStrain) && yStrain >= 14;
+  // His WHOOP history: self-rated stress predicted recovery better than strain,
+  // and three high-stress days in a row is where it tips (Strategic Context).
+  const stressRun = highStressRun();
+  let strainCap = null;
   if (threeLowDays) {
     dstate = 'red';
     headline = 'Crash risk. Pull back now.';
     why = 'Three straight low-recovery days. This is your documented crash threshold, protect sleep and skip anything optional.';
     chips = ['Rest or walk only', 'Sleep by 10:30', 'Skip everything optional'];
+  } else if (stressRun >= 3) {
+    dstate = 'amber';
+    headline = 'Three high-stress days. Ease off.';
+    why = stressRun + ' days in a row at 4+ stress. In your WHOOP history stress predicted recovery better than training did, and three days in a row is where it drops. Train light and protect tonight, even if today looks green.';
+    chips = ['Train light', 'Walk outside', 'Bed by 10:30'];
+  } else if (todayScore >= 67 && (debtHigh || debtRising)) {
+    dstate = 'amber';
+    headline = 'Recovered. Sleep debt is not.';
+    why = 'Recovery ' + Math.round(todayScore) + '% says train, but sleep debt is ' + Math.round(debtNow) + ' min' + (debtRising ? ' and rising' : '') + '. In your data, debt is what moves libido and mood \u2014 train, then bank the sleep.';
+    chips = ['Train as planned', 'Bed 30 min earlier', 'No caffeine after 1pm'];
+  } else if (todayScore >= 67 && hardYesterday) {
+    dstate = 'green';
+    headline = 'Green light. Second hard day \u2014 watch Tuesday.';
+    why = 'Recovery ' + Math.round(todayScore) + '% after a strain-' + Math.round(yStrain) + ' day. Fine to go again; the crash in your history lands 48\u201372h after stacked hard days, so keep tomorrow lighter.';
+    chips = ['Hard session approved', 'Tomorrow lighter', 'Log your lifts'];
   } else if (todayScore >= 67) {
     dstate = 'green';
     headline = 'Green light. Push today.';
@@ -1570,6 +2010,7 @@ function renderReadiness() {
     headline = 'Moderate. Train smart.';
     why = 'Recovery ' + Math.round(todayScore) + '%. Cap strain at 12 and prioritise technique over intensity today.';
     chips = ['Cap strain at 12', 'Technique over intensity', 'No doubles'];
+    strainCap = 12;
   } else {
     dstate = 'red';
     headline = 'Low recovery. Protect today.';
@@ -1578,6 +2019,7 @@ function renderReadiness() {
   }
   setText('readinessHeadline', headline);
   document.getElementById('readinessWhy').textContent = why;
+  renderStrainToday(cyc, strainCap);
   const dicons = {
     red: '<svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L14.7 3.86a2 2 0 0 0-3.4 0z"/></svg>',
     amber: '<svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
@@ -1589,8 +2031,21 @@ function renderReadiness() {
   if (chipsEl) chipsEl.innerHTML = chips.map(c => '<span class="chip">' + c + '</span>').join('');
 }
 
+// Live day strain: today's cycle row updates at every hourly WHOOP sync (v24).
+function renderStrainToday(cyc, cap) {
+  const el = document.getElementById('strainToday');
+  if (!el) return;
+  const row = (cyc || []).find(function (c) { return daysAgo(c['Date']) === 0; });
+  const v = row ? parseFloat(row['Day Strain']) : NaN;
+  el.classList.remove('warn', 'bad');
+  if (isNaN(v)) { el.textContent = 'none yet today'; return; }
+  el.textContent = v.toFixed(1) + (cap ? ' of today\u2019s ' + cap + ' cap' : ' so far') + ' \u00b7 updates hourly';
+  if (cap && v >= cap) el.classList.add('bad'); else if (cap && v >= cap - 2) el.classList.add('warn');
+}
+
 function renderPerformance() {
-  const rec = cache.recovery.slice(0,14), sleep = cache.sleep.slice(0,14), cyc = cache.cycles.slice(0,14);
+  // Today's cycle is still running, so the strain average uses finished days only.
+  const rec = cache.recovery.slice(0,14), sleep = cache.sleep.slice(0,14), cyc = cache.cycles.filter(function (c) { return daysAgo(c['Date']) >= 1; }).slice(0,14);
   if (!rec.length) return;
   const recVals = rec.map(r=>parseFloat(r['Recovery %']));
   const hrvVals = rec.map(r=>parseFloat(r['HRV (ms)']));
@@ -1623,9 +2078,148 @@ function renderPerformance() {
   const recentAvg = avg(recVals.slice(0,7));
   const insight = recentAvg >= CONFIG.baseline.recovery
     ? 'Recovery is tracking at or above your ' + CONFIG.baseline.recovery + '% baseline over the last 7 days. Current window supports normal training load.'
-    : 'Recovery has averaged ' + Math.round(recentAvg) + '% over the last 7 days, below your ' + CONFIG.baseline.recovery + '% baseline. Rule for the window: don’t stack a hard session the day after a poor-recovery night, even if the score bounces back to green.';
+    : 'Recovery has averaged ' + Math.round(recentAvg) + '% over the last 7 days, below your ' + CONFIG.baseline.recovery + '% baseline. Rule for the window: don\u2019t stack a hard session the day after a poor-recovery night, even if the score bounces back to green.';
   setText('perfInsight', insight);
 }
+
+/* ============ 13 Sep 2026 refresh helpers ============ */
+function numOrNull(v) { const x = parseFloat(v); return isNaN(x) ? null : x; }
+function fmtHM(mins) { mins = Math.round(mins); return Math.floor(mins / 60) + 'h ' + String(mins % 60).padStart(2, '0') + 'm'; }
+function ymdLocal(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+// Mean and spread of the 30 days before today's reading: "your normal".
+function personalBand(rows, key) {
+  const v = rows.slice(1, 31).map(function (r) { return numOrNull(r[key]); }).filter(function (x) { return x !== null; });
+  if (v.length < 5) return null;
+  const m = v.reduce(function (a, b) { return a + b; }, 0) / v.length;
+  return { m: m, sd: Math.sqrt(v.reduce(function (a, b) { return a + (b - m) * (b - m); }, 0) / v.length) };
+}
+function jumpTo(tab, id) {
+  const b = document.querySelector('.tab[data-tab="' + tab + '"]'); if (b) b.click();
+  setTimeout(function () { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
+}
+
+// Last night, WHOOP-style, against his own last two weeks (v25 stage columns).
+function renderLastNight() {
+  const sl = (cache.sleep || []).filter(function (r) { return numOrNull(r['Asleep (min)']) !== null; });
+  if (!sl.length) return;
+  const n = sl[0], L = numOrNull(n['Light (min)']), D = numOrNull(n['Deep (min)']), R = numOrNull(n['REM (min)']), W = numOrNull(n['Awake (min)']) || 0;
+  const prior = sl.slice(1, 15);
+  const usual = function (k) { return avg(prior.map(function (r) { return numOrNull(r[k]); }).filter(function (x) { return x !== null; })); };
+  setText('lnDate', new Date(n['Date'] + 'T00:00:00').toLocaleDateString('en', { weekday: 'short', day: 'numeric', month: 'short' }) + ' night');
+  setText('lnAsleep', fmtHM(L + D + R));
+  setText('lnSub', 'asleep · ' + fmtHM(numOrNull(n['Duration (min)'])) + ' in bed · ' + Math.round(numOrNull(n['Efficiency %'])) + '% efficient · ' + (n['Disturbances'] || '—') + ' wake-ups');
+  setText('lnPerf', Math.round(numOrNull(n['Performance %'])) + '%');
+  const tot = L + D + R + W;
+  setHTML('lnBar', [['awake', W], ['light', L], ['deep', D], ['rem', R]].map(function (x) { return '<i class="st-' + x[0] + '" style="width:' + (100 * x[1] / tot).toFixed(1) + '%" title="' + x[0] + ' ' + fmtHM(x[1]) + '"></i>'; }).join(''));
+  let biggest = null;
+  setHTML('lnRows', [['Deep', D, 'Deep (min)', 'deep'], ['REM', R, 'REM (min)', 'rem'], ['Light', L, 'Light (min)', 'light'], ['Awake', W, 'Awake (min)', 'awake']].map(function (x) {
+    const diff = Math.round(x[1] - usual(x[2]));
+    if ((x[0] === 'Deep' || x[0] === 'REM') && (!biggest || Math.abs(diff) > Math.abs(biggest.diff))) biggest = { k: x[0], diff: diff };
+    const cls = x[0] === 'Awake' ? '' : (diff >= 10 ? ' up' : diff <= -10 ? ' down' : '');
+    return '<div class="sr"><div class="k"><b class="st-' + x[3] + '"></b>' + x[0] + '</div><div class="v">' + fmtHM(x[1]) + '</div><div class="d' + cls + '">' + (Math.abs(diff) < 5 ? 'your normal' : (diff > 0 ? '+' : '−') + Math.abs(diff) + 'm vs 2 wks') + '</div></div>';
+  }).join(''));
+  const asleep = L + D + R;
+  let read = 'Deep ' + Math.round(100 * D / asleep) + '% and REM ' + Math.round(100 * R / asleep) + '% of your sleep. ';
+  if (biggest && Math.abs(biggest.diff) >= 15) read += biggest.k + ' was ' + Math.abs(biggest.diff) + ' min ' + (biggest.diff > 0 ? 'above' : 'below') + ' your 2-week average' + (biggest.k === 'Deep' ? ' (deep is the physical repair stage).' : ' (REM is the mood and memory stage).');
+  else read += 'Both restorative stages were at your normal.';
+  const rd = document.getElementById('lnRead'); if (rd) { rd.textContent = read; rd.hidden = false; }
+  const wk = sl.slice(0, 7).reverse(), mx = Math.max.apply(null, wk.map(function (r) { return numOrNull(r['Asleep (min)']); }));
+  setHTML('lnNights', wk.map(function (r) {
+    const a = numOrNull(r['Asleep (min)']);
+    const seg = [['deep', 'Deep (min)'], ['rem', 'REM (min)'], ['light', 'Light (min)']].map(function (x) { return '<i class="st-' + x[0] + '" style="display:block;height:' + (100 * numOrNull(r[x[1]]) / a).toFixed(1) + '%"></i>'; }).join('');
+    return '<div class="nt" title="' + r['Date'] + ': ' + fmtHM(a) + ' asleep"><div class="h">' + (a / 60).toFixed(1) + '</div><div class="col" style="height:' + (100 * a / mx).toFixed(0) + '%">' + seg + '</div><div class="dl">' + new Date(r['Date'] + 'T00:00:00').toLocaleDateString('en', { weekday: 'short' }).slice(0, 2) + '</div></div>';
+  }).join(''));
+}
+
+// 14 days: recovery bars in zone colour, that day's strain as a dot (0-21 scale).
+function renderStrainRecovery() {
+  const rec = cache.recovery.slice(0, 14).slice().reverse(), cyc = cache.cycles || [];
+  if (!rec.length) return;
+  setHTML('rsChart', rec.map(function (r) {
+    const v = parseFloat(r['Recovery %']), col = v >= 67 ? 'var(--green)' : v >= 34 ? 'var(--gold)' : 'var(--red)';
+    const c = cyc.find(function (x) { return x['Date'] === r['Date']; });
+    const s = c ? parseFloat(c['Day Strain']) : null;
+    const dot = s === null || isNaN(s) ? '' : '<span class="dot" style="bottom:calc(' + (100 * s / 21).toFixed(1) + '% + 16px)"></span>';
+    return '<div class="dcol' + (daysAgo(r['Date']) === 0 ? ' today' : '') + '" title="' + r['Date'] + ': recovery ' + Math.round(v) + '%' + (s !== null ? ', strain ' + s.toFixed(1) + (daysAgo(r['Date']) === 0 ? ' so far' : '') : '') + '"><div class="bar" style="height:calc(' + v.toFixed(0) + '% - 16px);background:' + col + '"></div>' + dot + '<div class="dl">' + new Date(r['Date'] + 'T00:00:00').getDate() + '</div></div>';
+  }).join(''));
+}
+
+// Planned week vs what WHOOP recorded. Workout times are UTC; walks left out.
+function annotateWeek() {
+  const grid = document.getElementById('curWeekGrid'); if (!grid) return;
+  const now = new Date(), dow = (now.getDay() + 6) % 7;
+  const mon = new Date(now); mon.setHours(0, 0, 0, 0); mon.setDate(now.getDate() - dow);
+  const byDay = {};
+  (cache.workouts || []).forEach(function (w) {
+    if (/walk/i.test(w['Activity'] || '')) return;
+    const t = String(w['Time'] || '0:00').split(':');
+    const d = new Date(w['Date'] + 'T' + String(t[0]).padStart(2, '0') + ':' + String(t[1] || '00').padStart(2, '0') + ':00Z');
+    const i = Math.floor((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - mon) / 86400000);
+    if (i < 0 || i > 6) return;
+    (byDay[i] = byDay[i] || []).push(String(w['Activity']).replace(/weightlifting/i, 'gym') + ' ' + Math.round(parseFloat(w['Strain'])));
+  });
+  [...grid.querySelectorAll('.day-tile')].forEach(function (el, i) {
+    const old = el.querySelector('.d-done'); if (old) old.remove();
+    el.classList.toggle('today', i === dow);
+    el.style.opacity = byDay[i] ? '1' : '';
+    if (!byDay[i] && (i >= dow || el.classList.contains('rest'))) return;
+    const x = document.createElement('div');
+    x.className = 'd-done' + (byDay[i] ? '' : ' none');
+    x.textContent = byDay[i] ? '✓ ' + byDay[i].join(' · ') : 'nothing logged';
+    el.appendChild(x);
+  });
+}
+
+// Stress, 1 calm to 5 very stressed, one value per day in the Stress tab (server
+// v26). WHOOP doesn't share its stress score, and his own two-year data says how
+// stressed he feels predicts recovery better than strain. A tap before 4am
+// counts for the day before.
+function stressDate(back) { return ymdLocal(new Date(Date.now() - 4 * 3600000 - (back || 0) * 86400000)); }
+function stressOn(day) { const r = (cache.stress || []).find(function (x) { return x['Date'] === day; }); return r ? parseInt(r['Stress_1to5'], 10) || 0 : 0; }
+function highStressRun() {
+  let n = 0;
+  for (let i = stressOn(stressDate(0)) ? 0 : 1, end = i + 7; i < end; i++) { if (stressOn(stressDate(i)) >= 4) n++; else break; }
+  return n;
+}
+function renderStress(status) {
+  const v = stressOn(stressDate(0));
+  document.querySelectorAll('#stressBtns button').forEach(function (b) {
+    const on = +b.dataset.v === v; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  setText('stressAsk', v ? 'Today’s stress: ' + v + ' of 5' : 'How stressed were you today?');
+  setText('stressStatus', status || (v ? 'tap another number to change it' : '1 calm · 5 very stressed'));
+  const cells = [];
+  for (let i = 6; i >= 0; i--) { const d = stressDate(i), lv = stressOn(d); cells.push('<span class="sw' + (lv ? ' l' + lv : '') + '" title="' + d + (lv ? ': ' + lv + ' of 5' : ': not rated') + '">' + (lv || '·') + '</span>'); }
+  setHTML('stressWeek', cells.join(''));
+}
+function sendStress(level) {
+  const day = stressDate(0), before = (cache.stress || []).slice();
+  cache.stress = [{ Date: day, Time: '', Stress_1to5: String(level) }].concat(before.filter(function (r) { return r['Date'] !== day; }));
+  renderStress('Saving…'); renderReadiness();
+  // DEMO: the tap is real and the week strip updates, but nothing leaves the page.
+  if (CONFIG.demo) { renderStress('Saved'); renderReadiness(); return; }
+  const cb = '__rhStress' + Date.now(), s = document.createElement('script');
+  let settled = false;
+  function finish(msg, revert) {
+    if (settled) return; settled = true;
+    delete window[cb]; if (s.parentNode) s.parentNode.removeChild(s);
+    if (revert) cache.stress = before;
+    renderStress(msg); renderReadiness();
+  }
+  window[cb] = function (res) {
+    if (res && res.ok) finish('Saved');
+    else finish(res && res.error === 'unauthorized' ? 'Not saved: this device isn’t unlocked' : 'Not saved, tap again', true);
+  };
+  s.onerror = function () { finish('Not saved, tap again', true); };
+  // No reply isn't proof it failed; the server keeps one value a day, so tapping again is safe.
+  setTimeout(function () { finish('No reply yet. Tapping again is safe.'); }, 25000);
+  s.src = CONFIG.dataEndpoint + '?type=stress&level=' + level + '&date=' + day + '&token=' + encodeURIComponent(CONFIG.token) + '&callback=' + cb;
+  document.body.appendChild(s);
+}
+document.addEventListener('click', function (e) {
+  const b = e.target.closest && e.target.closest('#stressBtns button');
+  if (b) sendStress(+b.dataset.v);
+});
 
 function renderSessions() {
   const container = document.getElementById('sessionsLog');
@@ -1645,6 +2239,67 @@ function microStatus(val, target) {
   return 'bad';
 }
 
+/* Calorie bar by day (14 Sep 2026, Ehab's call). The bar used one number every
+   day. Now it uses the plan's rest or training number for today, with a short
+   note so nobody eats the training number and then skips the session.
+   - Numbers: target rows kcal_rest / kcal_training / kcal_hard. Their Detail is
+     prose ("~3,000 kcal on your rest day"), so the first 800-8000 number is used.
+   - Today's type: the week_day row for today's weekday (Title Mon..Sun, else
+     Order 1-7). Tag trained = training, rest = rest, hard = hard day (kcal_hard,
+     or kcal_training if there is no hard number).
+   - No rest AND training pair: the bar keeps the plain kcal row, no note.
+     No week_day row for today: rest number, no note. Never guess.
+   Same block in multi.html; keep the two in step. */
+function kcalNumber(s) {
+  const m = String(s == null ? '' : s).match(/\d[\d,]*(\.\d+)?/g) || [];
+  for (let i = 0; i < m.length; i++) {
+    const n = parseFloat(m[i].replace(/,/g, ''));
+    if (n >= 800 && n <= 8000) return Math.round(n);
+  }
+  return null;
+}
+function readDayTargets(S) {
+  const k = {};
+  (S['target'] || []).forEach(function (r) {
+    const key = String(r['Title'] || '').trim().replace(/^kcal_/, '');
+    if (['rest', 'training', 'hard'].indexOf(key) !== -1) { const n = kcalNumber(r['Detail']); if (n) k[key] = n; }
+  });
+  const DOW = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+  let plan = null;
+  (S['week_day'] || []).forEach(function (r) {
+    let i = DOW.indexOf(String(r['Title'] || '').trim().toLowerCase().slice(0, 3));
+    if (i === -1) i = parseInt(r['Order'], 10) - 1;
+    const tag = String(r['Tag'] || '').trim().toLowerCase();
+    if (!(i >= 0 && i <= 6) || ['trained', 'rest', 'hard'].indexOf(tag) === -1) return;
+    (plan = plan || [])[i] = tag;
+  });
+  CONFIG.kcalDay = k;
+  CONFIG.weekPlan = plan;
+}
+function kcalToday() {
+  const k = CONFIG.kcalDay || {};
+  if (!k.rest || !k.training) return { target: CONFIG.targets.kcal, kind: '' };
+  const kind = (CONFIG.weekPlan || [])[(new Date().getDay() + 6) % 7] || '';
+  if (kind === 'hard') return { target: k.hard || k.training, kind: k.hard ? 'hard' : 'trained', rest: k.rest };
+  if (kind === 'trained') return { target: k.training, kind: 'trained', rest: k.rest };
+  return { target: k.rest, kind: kind };
+}
+function renderKcalDay(t) {
+  const el = document.getElementById('mb-kcal-day');
+  if (!el) return;
+  const fmt = function (n) { return Math.round(n).toLocaleString('en-US'); };
+  let html = '';
+  if (t.kind === 'rest') html = '<b>Rest day</b>';
+  else if (t.kind) {
+    const extra = t.target - t.rest;
+    html = '<b>' + (t.kind === 'hard' ? 'Hard training day' : 'Training day') + '</b>'
+      + (extra > 0 ? '+' + fmt(extra) + ' kcal for your session. If you skip training, eat to ' + fmt(t.rest) + '.' : '');
+  }
+  if (el.innerHTML !== html) el.innerHTML = html;
+  el.className = 'kcal-day' + (t.kind && t.kind !== 'rest' ? ' train' : '');
+  el.hidden = !html;
+}
+
 function renderNutrition() {
   const food = cache.food, checkin = cache.checkin;
   const today = localISO();
@@ -1653,7 +2308,9 @@ function renderNutrition() {
   const sum = (key) => todayRows.reduce((a,r) => a + (parseFloat(r[key]) || 0), 0);
   const kcal = sum('Kcal'), p = sum('Protein'), c = sum('Carbs'), f = sum('Fat'), water = sum('Water_ml');
 
-  setText('mb-kcal-txt', Math.round(kcal) + ' / ' + CONFIG.targets.kcal); setWidth('mb-kcal', (kcal/CONFIG.targets.kcal)*100);
+  const kd = kcalToday();
+  setText('mb-kcal-txt', Math.round(kcal) + ' / ' + kd.target); setWidth('mb-kcal', (kcal/kd.target)*100);
+  renderKcalDay(kd);
   setText('mb-p-txt', Math.round(p) + 'g / ' + CONFIG.targets.protein + 'g'); setWidth('mb-p', (p/CONFIG.targets.protein)*100);
   document.getElementById('mb-p').style.background = p >= CONFIG.targets.protein ? 'var(--green)' : 'var(--gold)';
   setText('mb-c-txt', Math.round(c) + 'g'); setWidth('mb-c', Math.min(100,(c/300)*100));
@@ -1661,7 +2318,6 @@ function renderNutrition() {
   document.getElementById('mb-f').style.background = f > CONFIG.targets.fat ? 'var(--red)' : 'var(--gold)';
   setText('mb-water-txt', Math.round(water) + ' / ' + CONFIG.targets.water + 'ml'); setWidth('mb-water', (water/CONFIG.targets.water)*100);
 
-  // Meal timing strip
   const strip = document.getElementById('timingStrip');
   if (strip) {
     let dotsHtml = '';
@@ -1679,8 +2335,6 @@ function renderNutrition() {
     strip.innerHTML = dotsHtml || '<div class="note" style="margin:0;padding:8px">No meals logged today yet.</div>';
   }
 
-  // Micronutrients today
-  // Vit A intentionally excluded from display: fat-soluble, liver-stored for months, daily food tracking is noise not signal. Still accepted by the pipeline, just not shown.
   const micros = ['VitC','VitD','B12','Folate','Iron','Calcium','Magnesium','Potassium','Zinc','Omega3'];
   const microToday = document.getElementById('microToday');
   if (microToday) {
@@ -1690,7 +2344,6 @@ function renderNutrition() {
       return '<div class="micro-cell ' + status + '"><div class="mc-label">' + m + '</div><div class="mc-dot"></div></div>';
     }).join('');
   }
-  // 7-day pattern
   const micro7d = document.getElementById('micro7d');
   if (micro7d) {
     const last7Rows = food.filter(r => { const d = daysAgo(r['Date']); return d>=0 && d<7; });
@@ -1710,7 +2363,6 @@ function renderNutrition() {
     }
   }
 
-  // Weight trend
   if (checkin.length) {
     const withWeight = checkin.filter(c => c['Weight_kg'] && !isNaN(parseFloat(c['Weight_kg'])));
     if (withWeight.length) {
@@ -1725,46 +2377,66 @@ function renderNutrition() {
       } else {
         setText('wt-trend', 'need more data');
       }
+      const vw = document.getElementById('val-weight');
+      if (vw) vw.innerHTML = latest.toFixed(1) + '<span class="u">kg</span>';
+      const age = daysAgo(withWeight[0]['Date']);
+      setText('sub-weight', age <= 1 ? 'logged today' : age + ' days ago');
+    } else {
+      setText('wt-latest', 'no weigh-in logged');
+      setText('wt-avg', '\u2014');
+      setText('wt-trend', 'log one at the gym');
+      setText('sub-weight', 'no weigh-in on record');
     }
+  } else {
+    setText('wt-latest', 'no weigh-in logged');
+    setText('sub-weight', 'no weigh-in on record');
   }
 }
 
 function renderNervousSystem() {
-  const rec = cache.recovery, sleep = cache.sleep, checkin = cache.checkin;
+  // Health Monitor (13 Sep 2026): the "Regulated" verdict stays; under it the
+  // five signals WHOOP's own Health Monitor uses, each against his last 30 days.
+  // Two outside at once is how illness or overreaching usually shows first.
+  const rec = cache.recovery, sl = cache.sleep;
+  renderStress();
   if (!rec.length) return;
-  const hrvVals = rec.slice(0,7).map(r=>parseFloat(r['HRV (ms)']));
-  const hrvAvg7 = avg(hrvVals);
-  const hrvDelta = hrvAvg7 - CONFIG.baseline.hrv;
-  setText('nsHrv', (hrvDelta>=0?'+':'') + Math.round(hrvDelta) + 'ms vs baseline');
-
-  let consStreak = 0;
-  for (const s of sleep) { if (parseFloat(s['Consistency %']) >= 70) consStreak++; else break; }
-  setText('nsSleepStreak', consStreak + ' days ≥70%');
-
   let lowStreak = 0;
   for (const r of rec) { if (parseFloat(r['Recovery %']) < 50) lowStreak++; else break; }
-  setText('nsCrashDays', lowStreak + ' consecutive');
+  const hrvDelta = avg(rec.slice(0,7).map(r=>parseFloat(r['HRV (ms)']))) - CONFIG.baseline.hrv;
+  const signals = [
+    { k: 'Resting heart rate', key: 'RHR (bpm)', src: rec, u: ' bpm', dp: 0, bad: 'high', floor: 2 },
+    { k: 'HRV', key: 'HRV (ms)', src: rec, u: ' ms', dp: 0, bad: 'low', floor: 6 },
+    { k: 'Blood oxygen', key: 'SpO2', src: rec, u: '%', dp: 1, bad: 'low', floor: 0.8 },
+    // A drop is usually air-con; only a rise is worth a flag.
+    { k: 'Skin temperature', key: 'Skin Temp C', src: rec, u: '°', dp: 1, bad: 'high', floor: 0.4, rel: true },
+    { k: 'Breathing rate', key: 'Respiratory Rate', src: sl, u: ' /min', dp: 1, bad: 'high', floor: 0.5 }
+  ];
+  const off = [];
+  setHTML('hmRows', signals.map(function (g) {
+    if (!g.src.length) return '';
+    const v = numOrNull(g.src[0][g.key]), bd = personalBand(g.src, g.key);
+    if (v === null || !bd) return '';
+    const w = Math.max(1.5 * bd.sd, g.floor), lo = bd.m - w, hi = bd.m + w;
+    const isOff = (g.bad !== 'low' && v > hi) || (g.bad !== 'high' && v < lo);
+    if (isOff) off.push(g.k.toLowerCase() + (v > hi ? ' up' : ' down'));
+    const shown = g.rel ? ((v - bd.m >= 0 ? '+' : '−') + Math.abs(v - bd.m).toFixed(1) + '°') : v.toFixed(g.dp) + g.u;
+    const range = g.rel ? 'normal ±' + w.toFixed(1) + '°' : 'normal ' + lo.toFixed(g.dp) + '–' + hi.toFixed(g.dp);
+    return '<div class="hm-row' + (isOff ? ' off' : '') + '"><span class="k">' + g.k + '</span><span class="v">' + shown + '</span><span class="r">' + range + '</span></div>';
+  }).join(''));
+  setText('hmVerdict', off.length ? off.length + ' of 5 outside your normal: ' + off.join(', ') : 'All 5 signals inside your normal range');
 
-  const stateEl = document.getElementById('nsState');
+  const stateEl = document.getElementById('nsState'), whyEl = document.getElementById('nsWhy');
   if (lowStreak >= 3) {
     stateEl.textContent = 'Crash risk'; stateEl.className = 'ns-state crash';
-    document.getElementById('nsWhy').textContent = '3+ consecutive low-recovery days. This is your documented crash threshold, protect sleep tonight and skip anything optional.';
-  } else if (hrvDelta < -8 || lowStreak === 2) {
+    whyEl.textContent = '3+ consecutive low-recovery days. This is your documented crash threshold, protect sleep tonight and skip anything optional.';
+  } else if (off.length >= 2 || hrvDelta < -8 || lowStreak === 2) {
     stateEl.textContent = 'Loading, protect tonight'; stateEl.className = 'ns-state loading';
-    document.getElementById('nsWhy').textContent = 'HRV running below baseline. Not yet a crash pattern, but worth protecting the evening routine.';
+    whyEl.textContent = off.length >= 2
+      ? 'Two signals outside your normal at once (' + off.join(', ') + '). That is how illness or overreaching usually shows up first.'
+      : 'HRV running below your normal. Not yet a crash pattern, but worth protecting the evening routine.';
   } else {
     stateEl.textContent = 'Regulated'; stateEl.className = 'ns-state regulated';
-    document.getElementById('nsWhy').textContent = 'HRV and recovery are holding near baseline. No red flags in the nervous-system pattern right now.';
-  }
-
-  const checkinList = document.getElementById('checkinList');
-  if (checkinList && checkin.length) {
-    checkinList.innerHTML = checkin.slice(0,5).map(c => {
-      const reg = parseInt(c['Regulation_1to5']) || 0;
-      let dots = '';
-      for (let i=1;i<=5;i++) dots += '<span style="background:' + (i<=reg?'var(--gold)':'rgba(255,255,255,0.1)') + '"></span>';
-      return '<div class="checkin-row"><span>' + c['Date'] + '</span><div class="checkin-dots">' + dots + '</div></div>';
-    }).join('');
+    whyEl.textContent = 'HRV and recovery are holding at your normal. No red flags in the nervous-system pattern right now.';
   }
 }
 
@@ -1778,17 +2450,21 @@ function renderSyncStamp() {
   const now = new Date();
   const timeStr = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
   const staleHours = CONFIG.staleAfterHours || 48;
-  if (usingSnapshot) {
-    stamp.textContent = 'Snapshot 19 Aug \u00b7 live sync pending hosting';
+  const dead = Object.keys(sourceLive).filter(function (k) { return !sourceLive[k]; });
+  if (dead.length === Object.keys(sourceLive).length) {
+    stamp.textContent = 'Offline \u00b7 showing last known data';
+    stamp.classList.add('stale');
+    return;
+  }
+  if (dead.length) {
+    stamp.textContent = 'Partial sync \u00b7 cached: ' + dead.join(', ') + ' \u00b7 checked ' + timeStr;
     stamp.classList.add('stale');
     return;
   }
   if (daysBack * 24 >= staleHours) {
-    // Genuinely stale: multiple days with nothing landing. Probably a broken pipeline.
     stamp.textContent = 'Last WHOOP data ' + latestDate + ' \u00b7 check sync';
     stamp.classList.add('stale');
   } else if (daysBack >= 1) {
-    // No data today yet, but recent. Normal for a rest day off the strap or before WHOOP scores the morning. Quiet, not alarming.
     stamp.textContent = 'Last WHOOP data ' + latestDate + ' \u00b7 checked ' + timeStr;
     stamp.classList.remove('stale');
   } else {
@@ -1797,7 +2473,6 @@ function renderSyncStamp() {
   }
 }
 
-/* ---- tab / subtab switching ---- */
 const tabs = document.querySelectorAll('.tab');
 const panels = document.querySelectorAll('.panel');
 tabs.forEach(t => {
@@ -1807,8 +2482,16 @@ tabs.forEach(t => {
     t.classList.add('active');
     document.querySelector(`.panel[data-panel="${t.dataset.tab}"]`).classList.add('active');
     window.scrollTo({top:0, behavior:'smooth'});
+    if (t.scrollIntoView) t.scrollIntoView({ inline: 'center', block: 'nearest' });
   });
 });
+(function () {
+  const tb = document.querySelector('.tabbar'); if (!tb) return;
+  function hint() { tb.classList.toggle('more-right', tb.scrollLeft + tb.clientWidth < tb.scrollWidth - 4); }
+  tb.addEventListener('scroll', hint, { passive: true });
+  window.addEventListener('resize', hint);
+  hint();
+})();
 document.querySelectorAll('.subtab').forEach(st => {
   st.addEventListener('click', () => {
     const parent = st.closest('.panel');
@@ -1823,6 +2506,7 @@ document.querySelectorAll('.subtab').forEach(st => {
 const LIFT_ENDPOINT = ''; // DEMO: no write endpoint attached
 function initLiftLogger() {
   document.querySelectorAll('.ex-item').forEach(item => {
+    if (item.querySelector('.ex-log')) return;
     const titleEl = item.querySelector('.ex-title');
     if (!titleEl) return;
     const ex = titleEl.textContent.trim();
@@ -1848,6 +2532,65 @@ function initLiftLogger() {
   });
 }
 
+/* DEMO: the sample month is re-dated on every load, so the page always reads as
+   today — "Strain today", "Last Night", this week's plan against what was done.
+   Only the dates move, by one offset applied across every tab, so the numbers
+   and the story they tell stay exactly as written. */
+function rhDemoReDate() {
+  if (!CONFIG.demo || !SNAPSHOT.recovery) return;
+  const found = SNAPSHOT.recovery.match(/\d{4}-\d{2}-\d{2}/g);
+  if (!found) return;
+  const newest = found.slice().sort().pop();
+  const off = Math.round((new Date(localISO() + 'T00:00:00') - new Date(newest + 'T00:00:00')) / 86400000);
+  if (!off) return;
+  const move = function (text, by) {
+    return text.replace(/(\d{4})-(\d{2})-(\d{2})/g, function (_, y, mo, d) {
+      return localISO(new Date(+y, +mo - 1, +d + by));
+    });
+  };
+  Object.keys(SNAPSHOT).forEach(function (k) {
+    if (SNAPSHOT[k]) SNAPSHOT[k] = move(SNAPSHOT[k], k === 'sleep' ? off - 1 : off);
+  });
+  // Sessions land on the days the plan actually asks for (Mon/Tue/Thu/Fri/Sat),
+  // so "planned vs done" on the week grid reads the way a real client's does.
+  // Walks fill the off days instead of eating a training slot.
+  const planned = [1, 2, 4, 5, 6], slots = { plan: [], off: [] };
+  const plannedAs = { 1: 'weightlifting', 2: 'cycling', 4: 'weightlifting', 5: 'weightlifting', 6: 'swimming' };
+  for (let i = 0; i < 40 && (slots.plan.length < 20 || slots.off.length < 20); i++) {
+    const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - i);
+    if (i === 0 && new Date().getHours() < 9) continue; // nothing logged yet this morning
+    slots[planned.indexOf(d.getDay()) !== -1 ? 'plan' : 'off'].push(localISO(d));
+  }
+  const wl = SNAPSHOT.workouts.split('\n'), wHdr = wl[0];
+  let pi = 0, oi = 0;
+  SNAPSHOT.workouts = [wHdr].concat(wl.slice(1).filter(function (l) { return l.trim(); }).map(function (l) {
+    const c = l.split(','), walk = /walk/i.test(c[3] || '');
+    const day = walk ? slots.off[oi++] : slots.plan[pi++];
+    if (!day) return '';
+    c[1] = day;
+    if (!walk) c[3] = plannedAs[new Date(day + 'T00:00:00').getDay()] || c[3];
+    return c.join(',');
+  }).filter(Boolean)).join('\n');
+
+  // Today's meals stop at the current hour, so the calorie bar reads like a day
+  // that is still in progress rather than one already closed out.
+  const mins = new Date().getHours() * 60 + new Date().getMinutes(), today = localISO();
+  SNAPSHOT.food = SNAPSHOT.food.split('\n').filter(function (l, i) {
+    if (i === 0 || l.indexOf(today + ',') !== 0) return true;
+    const t = String(l.split(',')[1] || '0:00').split(':');
+    return (+t[0] * 60 + +t[1]) <= mins;
+  }).join('\n');
+}
+
+rhDemoReDate();
+// Curated sections are reviewed weekly: date them to the most recent Sunday.
+if (CONFIG.demo) {
+  const sun = new Date(); sun.setDate(sun.getDate() - sun.getDay());
+  const label = 'Reviewed ' + sun.toLocaleDateString('en', { day: 'numeric', month: 'short' });
+  ['curReviewed1', 'curReviewed2'].forEach(function (id) {
+    const el = document.getElementById(id); if (el) el.textContent = label;
+  });
+}
 renderStaticConfig();
 initLiftLogger();
 refreshAll();
