@@ -286,6 +286,24 @@
     .proto-row .pr-clock { text-align: left; }
   }
 
+  /* ---- 19 Sep 2026: peptides, the injectable half of the stack ---- */
+  .pep-row { display: grid; grid-template-columns: 175px 145px 1fr 178px; gap: 14px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line-soft); }
+  .pep-row:last-child { border-bottom: none; }
+  .pep-row.skip { opacity: 0.45; }
+  .pep-name { font-weight: 600; font-size: 13.5px; color: var(--ink); }
+  .pep-name small { display: block; font-weight: 400; font-size: 10.5px; color: var(--ink-3); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+  .pep-dose { font-family: var(--mono); font-size: 16px; font-weight: 500; color: var(--gold); line-height: 1.25; }
+  .pep-row.skip .pep-dose { color: var(--ink-2); }
+  .pep-desc { font-size: 12px; color: var(--ink-2); line-height: 1.45; }
+  .pep-clock { font-family: var(--mono); font-size: 11.5px; color: var(--ink); text-align: right; }
+  .pep-clock.soon { color: var(--amber); } .pep-clock.today { color: var(--gold); font-weight: 700; }
+  .pep-clock small { display: block; color: var(--ink-3); font-size: 10.5px; margin-top: 2px; white-space: nowrap; }
+  .pep-due { display: inline-block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; margin-bottom: 5px; }
+  .pep-due.yes { background: rgba(79,209,165,0.16); color: var(--green); border: 1px solid rgba(79,209,165,0.34); }
+  .pep-due.no { background: rgba(255,255,255,0.06); color: var(--ink-3); border: 1px solid var(--line); }
+  @media (max-width: 900px) { .pep-row { grid-template-columns: 1fr 1fr; } .pep-clock { text-align: left; } }
+  @media (max-width: 560px) { .pep-row { grid-template-columns: 1fr; gap: 6px; } .pep-dose { font-size: 15px; } }
+
   /* ---- 13 Sep 2026 refresh: big three, last night, health monitor, stress, plan vs done ---- */
   .vital-tile.tap { cursor: pointer; } .vital-tile.tap:hover { border-color: rgba(245,193,59,0.45); }
   .vital-tile.tap:focus-visible, .stress-btns button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
@@ -854,8 +872,15 @@
 <!-- ============ STACK ============ -->
 <div class="panel" data-panel="stack">
   <div class="grid">
-    <div class="col-12" id="protocolWrap" hidden>
+    <div class="col-12" id="peptideWrap" hidden>
       <div class="card card-gold">
+        <h2>Peptides <span class="tag" id="peptideTag">today</span></h2>
+        <div id="curPeptides"></div>
+        <div class="hm-foot" style="margin-top:12px">Doses are what to draw on a U100 syringe. Cadence, dates and everything else here come from the Curated tab.</div>
+      </div>
+    </div>
+    <div class="col-12" id="protocolWrap" hidden>
+      <div class="card">
         <h2>Protocol Clock <span class="tag" id="protocolTag">from the Curated tab</span></h2>
         <div id="curProtocol"></div>
       </div>
@@ -1336,6 +1361,58 @@ function applyCurated(rows) {
 
   // ---- protocol clock: Group = compound, Title = label, Detail = dose/cadence,
   // Tag = start ISO, Extra = end ISO (empty = open-ended). Day counts computed here.
+  // ---- peptides (19 Sep 2026) ----
+  // The injectable half of the stack, which is the part that is easy to get
+  // wrong: what to draw today, whether today is even a dosing day, and how far
+  // through the cycle it is. Tag carries the cadence ("daily", or weekday names
+  // like "Tue,Sat"); Extra carries "start -> end" as plain text, so Sheets can't
+  // turn it into a locale date the way it did to the protocol rows in Sep.
+  if (S['peptide'] && S['peptide'].length) {
+    const wrap = document.getElementById('peptideWrap');
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const dayName = today.toLocaleDateString('en', { weekday: 'short' }).slice(0, 3).toLowerCase();
+    const toD = function (x) { const d = new Date(String(x || '').trim() + 'T00:00:00'); return isNaN(d.getTime()) ? null : d; };
+    const dd = function (a, b) { return Math.round((b - a) / 86400000); };
+    let dueCount = 0;
+
+    const html = S['peptide'].map(function (r) {
+      const cadence = String(r['Tag'] || 'daily').trim();
+      const daily = /^daily$/i.test(cadence);
+      const days = daily ? [] : cadence.toLowerCase().split(/[,/]/).map(function (x) { return x.trim().slice(0, 3); }).filter(Boolean);
+      const parts = String(r['Extra'] || '').split(/\s*(?:->|\u2192|\u2013|\u2014)\s*/);
+      const start = toD(parts[0]), end = toD(parts[1]);
+
+      // Outside its dates a compound is never "due", however the cadence reads.
+      const running = !start || (dd(start, today) >= 0 && (!end || dd(today, end) >= 0));
+      const due = running && (daily || days.indexOf(dayName) !== -1);
+      if (due) dueCount++;
+
+      let clock = '', cls = '', bar = '', ends = '';
+      if (start && end) {
+        const total = Math.max(1, dd(start, end)), done = dd(start, today);
+        if (done < 0) { clock = 'starts in ' + (-done) + 'd'; cls = ' soon'; }
+        else if (done >= total) { clock = done === total ? 'last day' : 'finished'; cls = ' today'; }
+        else { clock = 'day ' + (done + 1) + ' of ' + total; cls = (total - done) <= 5 ? ' soon' : ''; ends = (total - done) + ' days left \u00b7 ends ' + end.toLocaleDateString('en', { day: 'numeric', month: 'short' }); }
+        bar = '<div class="proto-bar"><i style="width:' + Math.max(0, Math.min(100, Math.round(100 * done / total))) + '%"></i></div>';
+      } else if (start) {
+        const done = dd(start, today);
+        clock = done < 0 ? 'starts in ' + (-done) + 'd' : 'day ' + (done + 1);
+      }
+
+      return '<div class="pep-row' + (due ? '' : ' skip') + '">'
+        + '<div class="pep-name">' + esc(r['Group']) + '<small>' + esc(daily ? 'every day' : cadence) + '</small></div>'
+        + '<div><span class="pep-due ' + (due ? 'yes">draw today' : 'no">' + (running ? 'not today' : 'not running')) + '</span>'
+        + '<div class="pep-dose">' + esc(r['Title']) + '</div></div>'
+        + '<div class="pep-desc">' + esc(r['Detail'] || '') + '</div>'
+        + '<div class="pep-clock' + cls + '">' + esc(clock) + (ends ? '<small>' + esc(ends) + '</small>' : '') + bar + '</div>'
+        + '</div>';
+    }).join('');
+
+    setHTML('curPeptides', html);
+    if (wrap) wrap.hidden = false;
+    curSetText('peptideTag', dueCount ? dueCount + ' to draw today' : 'nothing due today');
+  }
+
   if (S['protocol'] && S['protocol'].length) {
     const wrap = document.getElementById('protocolWrap');
     const today = new Date(); today.setHours(0,0,0,0);
