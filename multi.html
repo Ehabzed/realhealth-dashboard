@@ -289,6 +289,63 @@
     .proto-row { grid-template-columns: 1fr; gap: 4px; }
     .proto-row .pr-clock { text-align: left; }
   }
+  /* ---- 13 Sep 2026 refresh, ported to clients 19 Sep 2026: big three, last night, health monitor, stress, plan vs done ---- */
+  /* `hidden` must beat the display rules below (.stress-row is display:flex),
+     or a card hidden by script stays on screen. */
+  [hidden] { display: none !important; }
+  .vital-tile.tap { cursor: pointer; } .vital-tile.tap:hover { border-color: rgba(245,193,59,0.45); }
+  .vital-tile.tap:focus-visible, .stress-btns button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .tap-hint { color: var(--gold); letter-spacing: 0.06em; }
+  .ln-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; margin: 4px 0 14px; }
+  .ln-big { font-size: 34px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
+  .ln-sub { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-top: 8px; }
+  .ln-perf { text-align: right; } .ln-perf .n { font-size: 26px; font-weight: 700; color: var(--gold); line-height: 1; } .ln-perf .l { font-family: var(--mono); font-size: 9px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+  .stage-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; gap: 2px; }
+  .stage-bar i { display: block; height: 100%; }
+  .st-awake { background: rgba(255,255,255,0.35); } .st-light { background: #7EC5E8; } .st-deep { background: #E86FB6; } .st-rem { background: #B9A6FF; }
+  .stage-rows { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
+  .stage-rows .sr { background: var(--glass); border: 1px solid var(--line-soft); border-radius: 8px; padding: 8px 10px; }
+  .stage-rows .sr .k { font-family: var(--mono); font-size: 9px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px; }
+  .stage-rows .sr .k b, .stage-key b { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+  .stage-rows .sr .v { font-size: 16px; font-weight: 700; margin-top: 4px; font-variant-numeric: tabular-nums; } .stage-rows .sr .d { font-family: var(--mono); font-size: 10px; color: var(--ink-3); margin-top: 2px; }
+  .stage-rows .sr .d.up { color: var(--green); } .stage-rows .sr .d.down { color: var(--gold); }
+  .stage-key { display: flex; gap: 14px; margin-top: 12px; font-family: var(--mono); font-size: 10px; color: var(--ink-3); } .stage-key span { display: flex; align-items: center; gap: 6px; }
+  .nights { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; align-items: end; height: 170px; padding-top: 8px; }
+  .nights .nt { display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; }
+  .nights .col { width: 100%; max-width: 28px; display: flex; flex-direction: column-reverse; border-radius: 5px; overflow: hidden; gap: 1px; }
+  .nights .h { font-family: var(--mono); font-size: 10px; color: var(--ink-2); margin-bottom: 4px; } .nights .dl { font-family: var(--mono); font-size: 9px; color: var(--ink-3); margin-top: 6px; text-transform: uppercase; }
+  .rs-chart { position: relative; display: grid; grid-template-columns: repeat(14, 1fr); gap: 6px; align-items: end; height: 170px; }
+  .rs-chart .dcol { position: relative; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+  .rs-chart .bar { width: 100%; max-width: 26px; border-radius: 4px 4px 0 0; opacity: 0.85; }
+  .rs-chart .dot { position: absolute; width: 9px; height: 9px; border-radius: 50%; background: #7EC5E8; border: 2px solid #0A1646; transform: translateY(50%); }
+  .rs-chart .dl { font-family: var(--mono); font-size: 9px; color: var(--ink-3); margin-top: 6px; }
+  .rs-chart .today .dot { background: #fff; }
+  .hm-row { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--line-soft); font-size: 13px; }
+  .hm-row .k { color: var(--ink-2); } .hm-row .v { font-family: var(--mono); font-weight: 600; font-variant-numeric: tabular-nums; } .hm-row .r { font-family: var(--mono); font-size: 11px; color: var(--ink-3); min-width: 108px; text-align: right; }
+  .hm-row .v::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--green); margin-right: 8px; vertical-align: 1px; }
+  .hm-row.off .v::before { background: var(--gold); } .hm-row.off .v { color: var(--gold); }
+  .hm-verdict { margin-top: 10px; font-size: 13px; color: var(--ink); font-weight: 600; }
+  .hm-foot { font-family: var(--mono); font-size: 10px; color: var(--ink-3); margin-top: 10px; }
+  .stress-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 0 4px; flex-wrap: wrap; }
+  .stress-row .k { font-size: 13px; color: var(--ink); font-weight: 600; } .stress-status { font-family: var(--mono); font-size: 10px; color: var(--ink-3); margin-top: 3px; }
+  .stress-btns { display: flex; gap: 6px; }
+  .stress-btns button { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--line); background: var(--glass); color: var(--ink); font: 600 13px var(--mono); cursor: pointer; }
+  .stress-btns button:hover { border-color: rgba(245,193,59,0.5); }
+  .stress-btns button.on { background: var(--gold); color: #1a1a1a; border-color: var(--gold); }
+  .stress-week { display: flex; align-items: center; gap: 10px; margin-top: 8px; } .stress-week .lbl { font-family: var(--mono); font-size: 9px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.1em; }
+  .stress-week #stressWeek { display: flex; gap: 4px; }
+  .sw { width: 20px; height: 20px; border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; font: 600 10px var(--mono); background: var(--glass); color: var(--ink-3); border: 1px solid var(--line-soft); }
+  .sw.l1, .sw.l2 { background: rgba(79,209,165,0.22); color: var(--green); } .sw.l3 { color: var(--ink); } .sw.l4 { background: rgba(245,193,59,0.25); color: var(--gold); } .sw.l5 { background: rgba(255,107,107,0.25); color: var(--red); }
+  .day-tile .d-done { margin-top: 6px; font-family: var(--mono); font-size: 9.5px; color: var(--green); line-height: 1.3; }
+  .day-tile .d-done.none { color: var(--ink-3); }
+  .day-tile.today { outline: 1px solid var(--gold); }
+  @media (max-width: 900px) { .stage-rows { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) {
+    .top-meta > div:nth-child(2) { display: none; }
+    .perf-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .rs-chart { gap: 3px; } .rs-chart .dl { font-size: 8px; }
+    .hm-row .r { min-width: 0; }
+  }
 </style>
 </head>
 <body>
@@ -320,11 +377,11 @@
 <div class="panel active" data-panel="week">
   <div class="vitals-ribbon" id="vitalsRibbon">
     <div class="vital-tile" id="tile-recovery"><div class="v-label"><span>Recovery</span><span data-src="recovery" class="live-tag" style="margin:0;padding:1px 5px;font-size:8px">LIVE</span></div><div class="v-val" id="val-recovery">—</div><div class="v-sub" id="sub-recovery">loading</div><svg class="spark" id="spark-recovery"></svg></div>
+    <div class="vital-tile tap" id="tile-sleep" role="button" tabindex="0" aria-label="Sleep: open last night" onclick="jumpTo('perf', 'lastNightCard')" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); jumpTo('perf', 'lastNightCard'); }"><div class="v-label"><span>Sleep</span><span class="tap-hint">last night ›</span></div><div class="v-val" id="val-sleep">—</div><div class="v-sub" id="sub-sleep">loading</div><svg class="spark" id="spark-sleep"></svg></div>
+    <div class="vital-tile" id="tile-strain"><div class="v-label"><span>Strain</span><span data-src="cycles" class="live-tag" style="margin:0;padding:1px 5px;font-size:8px">LIVE</span></div><div class="v-val" id="val-strain">—</div><div class="v-sub" id="sub-strain">loading</div><svg class="spark" id="spark-strain"></svg></div>
     <div class="vital-tile" id="tile-hrv"><div class="v-label"><span>HRV</span></div><div class="v-val" id="val-hrv">—</div><div class="v-sub" id="sub-hrv">loading</div><svg class="spark" id="spark-hrv"></svg></div>
-    <div class="vital-tile" id="tile-rhr"><div class="v-label"><span>RHR</span></div><div class="v-val" id="val-rhr">—</div><div class="v-sub" id="sub-rhr">loading</div><svg class="spark" id="spark-rhr"></svg></div>
-    <div class="vital-tile" id="tile-sleep"><div class="v-label"><span>Sleep</span></div><div class="v-val" id="val-sleep">—</div><div class="v-sub" id="sub-sleep">loading</div></div>
-    <div class="vital-tile" id="tile-weight"><div class="v-label"><span>Weight</span></div><div class="v-val" id="val-weight">—<span class="u">kg</span></div><div class="v-sub">no data yet</div></div>
     <div class="vital-tile" id="tile-steps"><div class="v-label"><span>Steps</span><span data-src="steps" class="live-tag" style="margin:0;padding:1px 5px;font-size:8px">LIVE</span></div><div class="v-val" id="val-steps">—</div><div class="v-sub" id="sub-steps">loading</div><svg class="spark" id="spark-steps"></svg></div>
+    <div class="vital-tile" id="tile-weight"><div class="v-label"><span>Weight</span></div><div class="v-val" id="val-weight">—<span class="u">kg</span></div><div class="v-sub">no data yet</div></div>
   </div>
 
   <div class="grid">
@@ -382,18 +439,25 @@
 
     <div class="col-12">
       <div class="card">
-        <h2>Nervous System <span data-src="recovery" class="live-tag">● LIVE</span></h2>
+        <h2>Health Monitor <span class="tag">today vs your normal</span></h2>
         <div class="grid">
           <div class="col-4">
             <div class="ns-state" id="nsState">Loading…</div>
-            <div class="note" id="nsWhy" style="margin-top:8px">Computed from HRV trend, sleep consistency, and your crash-threshold rule.</div>
+            <div class="note" id="nsWhy" style="margin-top:8px">Computed from your HRV, recovery and the five signals against your own last 30 days.</div>
+            <div class="hm-verdict" id="hmVerdict"></div>
           </div>
-          <div class="col-4">
-            <div class="row"><span class="k">HRV vs baseline</span><span class="v" id="nsHrv">—</span></div>
-            <div class="row"><span class="k">Sleep consistency streak</span><span class="v" id="nsSleepStreak">—</span></div>
-            <div class="row"><span class="k">Consecutive low-recovery days</span><span class="v" id="nsCrashDays">—</span></div>
+          <div class="col-5">
+            <div id="hmRows"></div>
+            <div class="stress-row">
+              <div><div class="k" id="stressAsk">How stressed were you today?</div><div class="stress-status" id="stressStatus">1 calm · 5 very stressed</div></div>
+              <div class="stress-btns" id="stressBtns" role="group" aria-label="Today's stress, 1 calm to 5 very stressed">
+                <button type="button" data-v="1" aria-pressed="false">1</button><button type="button" data-v="2" aria-pressed="false">2</button><button type="button" data-v="3" aria-pressed="false">3</button><button type="button" data-v="4" aria-pressed="false">4</button><button type="button" data-v="5" aria-pressed="false">5</button>
+              </div>
+            </div>
+            <div class="stress-week"><span class="lbl">last 7 days</span><span id="stressWeek"></span></div>
+            <div class="hm-foot">Normal = your own last 30 days. Stress is yours to rate; WHOOP doesn't share its stress score.</div>
           </div>
-          <div class="col-4">
+          <div class="col-3">
             <div class="row" style="border:none; padding-bottom:6px"><span class="k" style="font-weight:600;color:var(--ink)">Recent check-ins</span></div>
             <div id="checkinList"><div class="note">No check-ins logged yet.</div></div>
           </div>
@@ -406,6 +470,28 @@
 <!-- ============ PERFORMANCE ============ -->
 <div class="panel" data-panel="perf">
   <div class="grid">
+    <div class="col-7" id="lastNightCard">
+      <div class="card">
+        <h2>Last Night <span class="tag" id="lnDate">—</span></h2>
+        <div class="ln-top"><div><div class="ln-big" id="lnAsleep">—</div><div class="ln-sub" id="lnSub">waiting for sleep data</div></div><div class="ln-perf"><div class="n" id="lnPerf">—</div><div class="l">sleep<br>performance</div></div></div>
+        <div class="stage-bar" id="lnBar"></div>
+        <div class="stage-rows" id="lnRows"></div>
+        <div class="note" id="lnRead" style="margin-top:12px" hidden></div>
+      </div>
+    </div>
+    <div class="col-5" id="lastNightsCard">
+      <div class="card">
+        <h2>Last 7 Nights <span class="tag">hours asleep</span></h2>
+        <div class="nights" id="lnNights"></div>
+        <div class="stage-key"><span><b class="st-deep"></b>deep</span><span><b class="st-rem"></b>REM</span><span><b class="st-light"></b>light</span></div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card">
+        <h2>Recovery &amp; Strain · 14 Days <span class="tag">bar = recovery · dot = strain, 0–21</span></h2>
+        <div class="rs-chart" id="rsChart"></div>
+      </div>
+    </div>
     <div class="col-12">
       <div class="card">
         <h2>WHOOP · 14-Day Averages <span data-src="recovery" class="live-tag">● LIVE</span></h2>
@@ -954,7 +1040,7 @@ const SNAPSHOT = {
   // honest result is an empty/no-data state, never someone else's real
   // numbers (this file previously leaked Ehab's own personal WHOOP data
   // here by copy-paste — fixed).
-  recovery: '', sleep: '', workouts: '', cycles: '', food: '', checkin: '', steps: ''
+  recovery: '', sleep: '', workouts: '', cycles: '', food: '', checkin: '', steps: '', stress: ''
 };
 
 let lastValues = {};
@@ -964,8 +1050,13 @@ let usingSnapshot = false;
    reported itself fully live while quietly serving stale data for the failed
    source, with no visible signal anywhere. Each source now tracks its own
    state and its badge reflects it. */
-const sourceLive = { recovery:false, sleep:false, workouts:false, cycles:false, food:false, checkin:false, steps:false };
-let cache = { recovery:[], sleep:[], workouts:[], cycles:[], food:[], checkin:[], steps:[] };
+const sourceLive = { recovery:false, sleep:false, workouts:false, cycles:false, food:false, checkin:false, steps:false, stress:false };
+let cache = { recovery:[], sleep:[], workouts:[], cycles:[], food:[], checkin:[], steps:[], stress:[] };
+/* The stress tap needs the server's type=stress endpoint. The bundle from a
+   server that predates it has no `stress` key at all (an updated server sends
+   the key even when the tab is empty), so the control stays hidden until the
+   Apps Script is updated rather than failing under the client's finger. */
+let stressSupported = false;
 
 /* ---- CSV parsing (handles quoted fields, e.g. gviz output and meal names with commas) ---- */
 function parseCSVLine(line) {
@@ -1145,6 +1236,7 @@ async function refreshAll() {
   const food    = bundle ? parseCSV(bundle.food)      : null;
   const checkin = bundle ? parseCSV(bundle.checkin)   : null;
   const steps   = bundle ? parseCSV(bundle.steps)     : null;
+  const stress  = bundle ? parseCSV(bundle.stress || '') : null;  // old server sends no `stress` key
   const curated = bundle && bundle.curated ? parseCSV(bundle.curated) : (saved && saved.curated ? parseCSV(saved.curated) : null);
   cache.recovery = sortByDateDesc(rec || (cache.recovery.length ? cache.recovery : parseCSV(SNAPSHOT.recovery)));
   cache.sleep    = sortByDateDesc(sleep || (cache.sleep.length ? cache.sleep : parseCSV(SNAPSHOT.sleep)));
@@ -1153,6 +1245,7 @@ async function refreshAll() {
   cache.food     = food || (cache.food.length ? cache.food : parseCSV(SNAPSHOT.food)); // filter()-based, not [0]-based — order doesn't matter here
   cache.checkin  = sortByDateDesc(checkin || (cache.checkin.length ? cache.checkin : parseCSV(SNAPSHOT.checkin))).filter(isRealCheckin);
   cache.steps    = sortByDateDesc(steps || (cache.steps.length ? cache.steps : parseCSV(SNAPSHOT.steps)));
+  cache.stress   = sortByDateDesc(stress || (cache.stress.length ? cache.stress : parseCSV(SNAPSHOT.stress)));
   sourceLive.recovery = !!rec;
   sourceLive.sleep    = !!sleep;
   sourceLive.workouts = !!work;
@@ -1160,6 +1253,8 @@ async function refreshAll() {
   sourceLive.food     = !!food;
   sourceLive.checkin  = !!checkin;
   sourceLive.steps    = !!steps;
+  sourceLive.stress   = !!stress;
+  if (bundle) stressSupported = Object.prototype.hasOwnProperty.call(bundle, 'stress');
   usingSnapshot = !rec;
   renderLiveBadges();
 
@@ -1173,6 +1268,9 @@ async function refreshAll() {
   renderSessions();
   renderNutrition();
   renderNervousSystem();
+  renderLastNight();
+  renderStrainRecovery();
+  annotateWeek();
   hideEmptyTiles();
   renderSyncStamp();
 }
@@ -1537,7 +1635,10 @@ function renderSteps() {
 }
 
 function renderVitals() {
-  const rec = cache.recovery, sleep = cache.sleep;
+  // Big three first (Ehab's 13 Sep build, ported 19 Sep 2026): recovery, sleep,
+  // strain, then HRV. RHR lives in the Health Monitor now. "Your normal"
+  // instead of "baseline" — CONFIG.baseline is this client's own 30-day mean.
+  const rec = cache.recovery, sl = cache.sleep, cyc = cache.cycles || [];
   if (rec.length) {
     const today = rec[0];
     const recVal = parseFloat(today['Recovery %']);
@@ -1545,25 +1646,28 @@ function renderVitals() {
     const tile = document.getElementById('tile-recovery');
     tile.className = 'vital-tile ' + (recVal>=67 ? 'tile-green' : recVal>=34 ? 'tile-amber' : 'tile-red');
     const delta = recVal - CONFIG.baseline.recovery;
-    setText('sub-recovery', (delta>=0?'▲ ':'▼ ') + Math.abs(Math.round(delta)) + ' vs baseline');
+    setText('sub-recovery', (delta>=0 ? '+' : '\u2212') + Math.abs(Math.round(delta)) + ' vs your ' + CONFIG.baseline.recovery + '% normal');
     renderSpark('spark-recovery', rec.slice(0,14).map(r=>parseFloat(r['Recovery %'])), '#F5C13B');
 
-    const hrvVal = parseFloat(today['HRV (ms)']);
+    const hrvVal = parseFloat(today['HRV (ms)']), hd = hrvVal - CONFIG.baseline.hrv;
     setText('val-hrv', Math.round(hrvVal) + 'ms');
-    setText('sub-hrv', (hrvVal>=CONFIG.baseline.hrv?'▲ ':'▼ ') + 'vs ' + CONFIG.baseline.hrv + 'ms base');
-    renderSpark('spark-hrv', rec.slice(0,14).map(r=>parseFloat(r['HRV (ms)'])), '#7EC5E8');
-
-    const rhrVal = parseFloat(today['RHR (bpm)']);
-    setText('val-rhr', Math.round(rhrVal) + 'bpm');
-    const rhrDiff = Math.round(rhrVal - CONFIG.baseline.rhr);
-    setText('sub-rhr', rhrDiff === 0 ? 'at your ' + CONFIG.baseline.rhr + ' base' : (rhrDiff > 0 ? '▲ ' : '▼ ') + Math.abs(rhrDiff) + ' vs ' + CONFIG.baseline.rhr + ' base');
-    renderSpark('spark-rhr', rec.slice(0,14).map(r=>parseFloat(r['RHR (bpm)'])), '#4FD1A5');
+    setText('sub-hrv', (hd>=0 ? '+' : '\u2212') + Math.abs(Math.round(hd)) + ' vs your ' + CONFIG.baseline.hrv + ' normal');
+    renderSpark('spark-hrv', rec.slice(0,14).map(r=>parseFloat(r['HRV (ms)'])), '#4FD1A5');
   }
-  if (sleep.length) {
-    const hrs = (parseFloat(sleep[0]['Duration (min)']) / 60).toFixed(1);
-    setText('val-sleep', hrs + 'h');
-    setText('sub-sleep', 'perf ' + Math.round(parseFloat(sleep[0]['Performance %'])) + '%');
+  if (sl.length) {
+    // Time asleep (light + deep + REM, the stage columns), not time in bed.
+    // Falls back to time in bed until this client's stage backfill has run.
+    const n = sl[0], asleep = numOrNull(n['Asleep (min)']), awake = numOrNull(n['Awake (min)']);
+    setText('val-sleep', asleep !== null ? fmtHM(asleep) : (parseFloat(n['Duration (min)']) / 60).toFixed(1) + 'h');
+    setText('sub-sleep', Math.round(parseFloat(n['Performance %'])) + '% perf' + (awake !== null ? ' \u00b7 ' + Math.round(awake) + 'm awake' : ''));
+    renderSpark('spark-sleep', sl.slice(0,14).map(r => numOrNull(r['Asleep (min)']) || parseFloat(r['Duration (min)'])), '#B9A6FF');
   }
+  const t = cyc.find(function (c) { return daysAgo(c['Date']) === 0; });
+  const done = cyc.filter(function (c) { return daysAgo(c['Date']) >= 1; }).slice(0, 14);
+  const avgS = done.length ? avg(done.map(function (c) { return parseFloat(c['Day Strain']); })) : null;
+  setText('val-strain', t ? parseFloat(t['Day Strain']).toFixed(1) : '\u2014');
+  setText('sub-strain', (t ? 'so far today' : 'none yet today') + (avgS !== null ? ' \u00b7 avg ' + avgS.toFixed(1) : ''));
+  renderSpark('spark-strain', done.map(function (c) { return parseFloat(c['Day Strain']); }), '#7EC5E8');
 }
 
 function readinessScoreFor(row) {
@@ -1613,6 +1717,13 @@ function renderReadiness() {
     headline = 'Crash risk. Pull back now.';
     why = 'Three straight low-recovery days. This is your documented crash threshold, protect sleep and skip anything optional.';
     chips = ['Rest or walk only', 'Sleep by 10:30', 'Skip everything optional'];
+  } else if (highStressRun() >= 3) {
+    // Three high-stress days in a row is where recovery tips, even when today
+    // still looks green. Client wording: no reference to anyone else's history.
+    dstate = 'amber';
+    headline = 'Three high-stress days. Ease off.';
+    why = highStressRun() + ' days in a row you rated 4+ for stress. Stress moves recovery as much as training does, and three days in a row is where it usually drops. Train light and protect tonight, even if today looks green.';
+    chips = ['Train light', 'Walk outside', 'Bed 30 min earlier'];
   } else if (todayScore >= 67 && debtJump) {
     dstate = 'amber';
     headline = 'Recovered. Sleep debt is not.';
@@ -1882,45 +1993,217 @@ function renderNutrition() {
   }
 }
 
-function renderNervousSystem() {
-  const rec = cache.recovery, sleep = cache.sleep, checkin = cache.checkin;
-  // Recovery-derived content (HRV delta, crash-streak state) is genuinely
-  // gated on recovery data. But the check-in list further down is NOT — a
-  // client can log check-ins before ever connecting WHOOP. The old early
-  // return here blocked BOTH behind one guard; this is exactly the bug the
-  // practice run found on Test Client A (real check-in data, zero recovery
-  // data, list stuck on "No check-ins logged yet."). Wrapping only the
-  // recovery-dependent block fixes it without changing anything else.
-  if (rec.length) {
-  const hrvVals = rec.slice(0,7).map(r=>parseFloat(r['HRV (ms)']));
-  const hrvAvg7 = avg(hrvVals);
-  const hrvDelta = hrvAvg7 - CONFIG.baseline.hrv;
-  setText('nsHrv', (hrvDelta>=0?'+':'') + Math.round(hrvDelta) + 'ms vs baseline');
+/* ---- Ported from Ehab's dashboard 19 Sep 2026 (his 13 Sep refresh) ----------
+   Last Night + stages, last 7 nights, 14-day recovery/strain, planned vs done,
+   and the nightly stress tap. Every threshold is read from THIS client's own
+   data, never a number tuned on Ehab. ------------------------------------- */
+function numOrNull(v) { const x = parseFloat(v); return isNaN(x) ? null : x; }
+function fmtHM(mins) { mins = Math.round(mins); return Math.floor(mins / 60) + 'h ' + String(mins % 60).padStart(2, '0') + 'm'; }
+function ymdLocal(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+// Mean and spread of the 30 days before today's reading: "your normal".
+function personalBand(rows, key) {
+  const v = rows.slice(1, 31).map(function (r) { return numOrNull(r[key]); }).filter(function (x) { return x !== null; });
+  if (v.length < 5) return null;
+  const m = v.reduce(function (a, b) { return a + b; }, 0) / v.length;
+  return { m: m, sd: Math.sqrt(v.reduce(function (a, b) { return a + (b - m) * (b - m); }, 0) / v.length) };
+}
+function jumpTo(tab, id) {
+  const b = document.querySelector('.tab[data-tab="' + tab + '"]'); if (b) b.click();
+  setTimeout(function () { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
+}
 
-  let consStreak = 0;
-  for (const s of sleep) { if (parseFloat(s['Consistency %']) >= 70) consStreak++; else break; }
-  setText('nsSleepStreak', consStreak + ' days ≥70%');
+// Last night, WHOOP-style, against this client's own last two weeks. Silent
+// until their stage backfill has run, so it never shows a half-empty card.
+function renderLastNight() {
+  const sl = (cache.sleep || []).filter(function (r) { return numOrNull(r['Asleep (min)']) !== null; });
+  // Both cards stay hidden until this client's Sheet actually has stage
+  // columns, so the page can ship before the server update without showing
+  // two dead cards. They appear by themselves once the backfill has run.
+  const cards = [document.getElementById('lastNightCard'), document.getElementById('lastNightsCard')];
+  cards.forEach(function (c) { if (c) c.hidden = !sl.length; });
+  if (!sl.length) return;
+  const n = sl[0], L = numOrNull(n['Light (min)']), D = numOrNull(n['Deep (min)']), R = numOrNull(n['REM (min)']), W = numOrNull(n['Awake (min)']) || 0;
+  const prior = sl.slice(1, 15);
+  const usual = function (k) { return avg(prior.map(function (r) { return numOrNull(r[k]); }).filter(function (x) { return x !== null; })); };
+  setText('lnDate', new Date(n['Date'] + 'T00:00:00').toLocaleDateString('en', { weekday: 'short', day: 'numeric', month: 'short' }) + ' night');
+  setText('lnAsleep', fmtHM(L + D + R));
+  setText('lnSub', 'asleep \u00b7 ' + fmtHM(numOrNull(n['Duration (min)'])) + ' in bed \u00b7 ' + Math.round(numOrNull(n['Efficiency %'])) + '% efficient \u00b7 ' + (n['Disturbances'] || '\u2014') + ' wake-ups');
+  setText('lnPerf', Math.round(numOrNull(n['Performance %'])) + '%');
+  const tot = L + D + R + W;
+  setHTML('lnBar', [['awake', W], ['light', L], ['deep', D], ['rem', R]].map(function (x) { return '<i class="st-' + x[0] + '" style="width:' + (100 * x[1] / tot).toFixed(1) + '%" title="' + x[0] + ' ' + fmtHM(x[1]) + '"></i>'; }).join(''));
+  let biggest = null;
+  setHTML('lnRows', [['Deep', D, 'Deep (min)', 'deep'], ['REM', R, 'REM (min)', 'rem'], ['Light', L, 'Light (min)', 'light'], ['Awake', W, 'Awake (min)', 'awake']].map(function (x) {
+    const diff = Math.round(x[1] - usual(x[2]));
+    if ((x[0] === 'Deep' || x[0] === 'REM') && (!biggest || Math.abs(diff) > Math.abs(biggest.diff))) biggest = { k: x[0], diff: diff };
+    const cls = x[0] === 'Awake' ? '' : (diff >= 10 ? ' up' : diff <= -10 ? ' down' : '');
+    return '<div class="sr"><div class="k"><b class="st-' + x[3] + '"></b>' + x[0] + '</div><div class="v">' + fmtHM(x[1]) + '</div><div class="d' + cls + '">' + (Math.abs(diff) < 5 ? 'your normal' : (diff > 0 ? '+' : '\u2212') + Math.abs(diff) + 'm vs 2 wks') + '</div></div>';
+  }).join(''));
+  const asleep = L + D + R;
+  let read = 'Deep ' + Math.round(100 * D / asleep) + '% and REM ' + Math.round(100 * R / asleep) + '% of your sleep. ';
+  if (biggest && Math.abs(biggest.diff) >= 15) read += biggest.k + ' was ' + Math.abs(biggest.diff) + ' min ' + (biggest.diff > 0 ? 'above' : 'below') + ' your 2-week average' + (biggest.k === 'Deep' ? ' (deep is the physical repair stage).' : ' (REM is the mood and memory stage).');
+  else read += 'Both restorative stages were at your normal.';
+  const rd = document.getElementById('lnRead'); if (rd) { rd.textContent = read; rd.hidden = false; }
+  const wk = sl.slice(0, 7).reverse(), mx = Math.max.apply(null, wk.map(function (r) { return numOrNull(r['Asleep (min)']); }));
+  setHTML('lnNights', wk.map(function (r) {
+    const a = numOrNull(r['Asleep (min)']);
+    const seg = [['deep', 'Deep (min)'], ['rem', 'REM (min)'], ['light', 'Light (min)']].map(function (x) { return '<i class="st-' + x[0] + '" style="display:block;height:' + (100 * numOrNull(r[x[1]]) / a).toFixed(1) + '%"></i>'; }).join('');
+    return '<div class="nt" title="' + r['Date'] + ': ' + fmtHM(a) + ' asleep"><div class="h">' + (a / 60).toFixed(1) + '</div><div class="col" style="height:' + (100 * a / mx).toFixed(0) + '%">' + seg + '</div><div class="dl">' + new Date(r['Date'] + 'T00:00:00').toLocaleDateString('en', { weekday: 'short' }).slice(0, 2) + '</div></div>';
+  }).join(''));
+}
 
-  let lowStreak = 0;
-  for (const r of rec) { if (parseFloat(r['Recovery %']) < 50) lowStreak++; else break; }
-  setText('nsCrashDays', lowStreak + ' consecutive');
+// 14 days: recovery bars in zone colour, that day's strain as a dot (0-21 scale).
+function renderStrainRecovery() {
+  const rec = cache.recovery.slice(0, 14).slice().reverse(), cyc = cache.cycles || [];
+  if (!rec.length) return;
+  setHTML('rsChart', rec.map(function (r) {
+    const v = parseFloat(r['Recovery %']), col = v >= 67 ? 'var(--green)' : v >= 34 ? 'var(--gold)' : 'var(--red)';
+    const c = cyc.find(function (x) { return x['Date'] === r['Date']; });
+    const s = c ? parseFloat(c['Day Strain']) : null;
+    const dot = s === null || isNaN(s) ? '' : '<span class="dot" style="bottom:calc(' + (100 * s / 21).toFixed(1) + '% + 16px)"></span>';
+    return '<div class="dcol' + (daysAgo(r['Date']) === 0 ? ' today' : '') + '" title="' + r['Date'] + ': recovery ' + Math.round(v) + '%' + (s !== null ? ', strain ' + s.toFixed(1) + (daysAgo(r['Date']) === 0 ? ' so far' : '') : '') + '"><div class="bar" style="height:calc(' + v.toFixed(0) + '% - 16px);background:' + col + '"></div>' + dot + '<div class="dl">' + new Date(r['Date'] + 'T00:00:00').getDate() + '</div></div>';
+  }).join(''));
+}
 
-  const stateEl = document.getElementById('nsState');
-  if (lowStreak >= 3) {
-    stateEl.textContent = 'Crash risk'; stateEl.className = 'ns-state crash';
-    document.getElementById('nsWhy').textContent = '3+ consecutive low-recovery days. This is your documented crash threshold, protect sleep tonight and skip anything optional.';
-  } else if (hrvDelta < -8 || lowStreak === 2) {
-    stateEl.textContent = 'Loading, protect tonight'; stateEl.className = 'ns-state loading';
-    document.getElementById('nsWhy').textContent = 'HRV running below baseline. Not yet a crash pattern, but worth protecting the evening routine.';
-  } else {
-    stateEl.textContent = 'Regulated'; stateEl.className = 'ns-state regulated';
-    document.getElementById('nsWhy').textContent = 'HRV and recovery are holding near baseline. No red flags in the nervous-system pattern right now.';
+// Planned week vs what WHOOP recorded. Workout times are UTC; walks left out.
+// The plan comes from this client's own week_day Curated rows.
+function annotateWeek() {
+  const grid = document.getElementById('curWeekGrid'); if (!grid) return;
+  const now = new Date(), dow = (now.getDay() + 6) % 7;
+  const mon = new Date(now); mon.setHours(0, 0, 0, 0); mon.setDate(now.getDate() - dow);
+  const byDay = {};
+  (cache.workouts || []).forEach(function (w) {
+    if (/walk/i.test(w['Activity'] || '')) return;
+    const t = String(w['Time'] || '0:00').split(':');
+    const d = new Date(w['Date'] + 'T' + String(t[0]).padStart(2, '0') + ':' + String(t[1] || '00').padStart(2, '0') + ':00Z');
+    const i = Math.floor((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - mon) / 86400000);
+    if (i < 0 || i > 6) return;
+    (byDay[i] = byDay[i] || []).push(String(w['Activity']).replace(/weightlifting/i, 'gym') + ' ' + Math.round(parseFloat(w['Strain'])));
+  });
+  [...grid.querySelectorAll('.day-tile')].forEach(function (el, i) {
+    const old = el.querySelector('.d-done'); if (old) old.remove();
+    el.classList.toggle('today', i === dow);
+    el.style.opacity = byDay[i] ? '1' : '';
+    if (!byDay[i] && (i >= dow || el.classList.contains('rest'))) return;
+    const x = document.createElement('div');
+    x.className = 'd-done' + (byDay[i] ? '' : ' none');
+    x.textContent = byDay[i] ? '\u2713 ' + byDay[i].join(' \u00b7 ') : 'nothing logged';
+    el.appendChild(x);
+  });
+}
+
+// Stress, 1 calm to 5 very stressed, one value per day in the Stress tab.
+// WHOOP doesn't share its stress score. A tap before 4am counts for the day
+// before. This is the one piece that asks the client to do something daily.
+function stressDate(back) { return ymdLocal(new Date(Date.now() - 4 * 3600000 - (back || 0) * 86400000)); }
+function stressOn(day) { const r = (cache.stress || []).find(function (x) { return x['Date'] === day; }); return r ? parseInt(r['Stress_1to5'], 10) || 0 : 0; }
+function highStressRun() {
+  let n = 0;
+  for (let i = stressOn(stressDate(0)) ? 0 : 1, end = i + 7; i < end; i++) { if (stressOn(stressDate(i)) >= 4) n++; else break; }
+  return n;
+}
+function renderStress(status) {
+  const row = document.querySelector('.stress-row'), wk = document.querySelector('.stress-week');
+  if (row) row.hidden = !stressSupported;
+  if (wk) wk.hidden = !stressSupported;
+  if (!stressSupported) return;
+  const v = stressOn(stressDate(0));
+  document.querySelectorAll('#stressBtns button').forEach(function (b) {
+    const on = +b.dataset.v === v; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  setText('stressAsk', v ? 'Today\u2019s stress: ' + v + ' of 5' : 'How stressed were you today?');
+  setText('stressStatus', status || (v ? 'tap another number to change it' : '1 calm \u00b7 5 very stressed'));
+  const cells = [];
+  for (let i = 6; i >= 0; i--) { const d = stressDate(i), lv = stressOn(d); cells.push('<span class="sw' + (lv ? ' l' + lv : '') + '" title="' + d + (lv ? ': ' + lv + ' of 5' : ': not rated') + '">' + (lv || '\u00b7') + '</span>'); }
+  setHTML('stressWeek', cells.join(''));
+}
+function sendStress(level) {
+  const day = stressDate(0), before = (cache.stress || []).slice();
+  cache.stress = [{ Date: day, Time: '', Stress_1to5: String(level) }].concat(before.filter(function (r) { return r['Date'] !== day; }));
+  renderStress('Saving\u2026'); renderReadiness();
+  const cb = '__rhStress' + Date.now(), s = document.createElement('script');
+  let settled = false;
+  function finish(msg, revert) {
+    if (settled) return; settled = true;
+    delete window[cb]; if (s.parentNode) s.parentNode.removeChild(s);
+    if (revert) cache.stress = before;
+    renderStress(msg); renderReadiness();
   }
+  window[cb] = function (res) {
+    if (res && res.ok) finish('Saved');
+    else finish(res && res.error === 'unauthorized' ? 'Not saved: this device isn\u2019t unlocked' : 'Not saved, tap again', true);
+  };
+  s.onerror = function () { finish('Not saved, tap again', true); };
+  // No reply isn't proof it failed; the server keeps one value a day, so tapping again is safe.
+  setTimeout(function () { finish('No reply yet. Tapping again is safe.'); }, 25000);
+  s.src = CONFIG.dataEndpoint + '?type=stress&level=' + level + '&date=' + day + '&token=' + encodeURIComponent(CONFIG.token) + '&callback=' + cb;
+  document.body.appendChild(s);
+}
+document.addEventListener('click', function (e) {
+  const b = e.target.closest && e.target.closest('#stressBtns button');
+  if (b) sendStress(+b.dataset.v);
+});
+
+function renderNervousSystem() {
+  // Health Monitor (Ehab's 13 Sep build, ported 19 Sep 2026). The "Regulated"
+  // verdict stays; under it the five signals WHOOP's own Health Monitor uses,
+  // each against THIS client's own last 30 days. Two outside at once is how
+  // illness or overreaching usually shows up first.
+  //
+  // Two client-only behaviours are kept from the old card and must not be
+  // dropped: the no-recovery-data state (a client can log check-ins before
+  // ever connecting WHOOP \u2014 the Test Client A bug), and the check-in list,
+  // which is never gated on recovery data.
+  const rec = cache.recovery, sl = cache.sleep, checkin = cache.checkin;
+  renderStress();
+  const stateEl = document.getElementById('nsState'), whyEl = document.getElementById('nsWhy');
+
+  if (rec.length) {
+    let lowStreak = 0;
+    for (const r of rec) { if (parseFloat(r['Recovery %']) < 50) lowStreak++; else break; }
+    const hrvDelta = avg(rec.slice(0,7).map(r=>parseFloat(r['HRV (ms)']))) - CONFIG.baseline.hrv;
+    const signals = [
+      { k: 'Resting heart rate', key: 'RHR (bpm)', src: rec, u: ' bpm', dp: 0, bad: 'high', floor: 2 },
+      { k: 'HRV', key: 'HRV (ms)', src: rec, u: ' ms', dp: 0, bad: 'low', floor: 6 },
+      { k: 'Blood oxygen', key: 'SpO2', src: rec, u: '%', dp: 1, bad: 'low', floor: 0.8 },
+      // A drop is usually air-con; only a rise is worth a flag.
+      { k: 'Skin temperature', key: 'Skin Temp C', src: rec, u: '\u00b0', dp: 1, bad: 'high', floor: 0.4, rel: true },
+      { k: 'Breathing rate', key: 'Respiratory Rate', src: sl, u: ' /min', dp: 1, bad: 'high', floor: 0.5 }
+    ];
+    const off = [];
+    setHTML('hmRows', signals.map(function (g) {
+      if (!g.src.length) return '';
+      const v = numOrNull(g.src[0][g.key]), bd = personalBand(g.src, g.key);
+      if (v === null || !bd) return '';
+      const w = Math.max(1.5 * bd.sd, g.floor), lo = bd.m - w, hi = bd.m + w;
+      const isOff = (g.bad !== 'low' && v > hi) || (g.bad !== 'high' && v < lo);
+      if (isOff) off.push(g.k.toLowerCase() + (v > hi ? ' up' : ' down'));
+      const shown = g.rel ? ((v - bd.m >= 0 ? '+' : '\u2212') + Math.abs(v - bd.m).toFixed(1) + '\u00b0') : v.toFixed(g.dp) + g.u;
+      const range = g.rel ? 'normal \u00b1' + w.toFixed(1) + '\u00b0' : 'normal ' + lo.toFixed(g.dp) + '\u2013' + hi.toFixed(g.dp);
+      return '<div class="hm-row' + (isOff ? ' off' : '') + '"><span class="k">' + g.k + '</span><span class="v">' + shown + '</span><span class="r">' + range + '</span></div>';
+    }).join(''));
+    // Signals with no band yet render as '' above, so say how many were read.
+    const shownCount = (document.getElementById('hmRows') || { children: [] }).children.length;
+    setText('hmVerdict', off.length
+      ? off.length + ' of ' + shownCount + ' outside your normal: ' + off.join(', ')
+      : (shownCount ? 'All ' + shownCount + ' signals inside your normal range' : 'Not enough history yet to know your normal'));
+
+    if (lowStreak >= 3) {
+      stateEl.textContent = 'Crash risk'; stateEl.className = 'ns-state crash';
+      whyEl.textContent = '3+ consecutive low-recovery days. Protect sleep tonight and skip anything optional.';
+    } else if (off.length >= 2 || hrvDelta < -8 || lowStreak === 2) {
+      stateEl.textContent = 'Loading, protect tonight'; stateEl.className = 'ns-state loading';
+      whyEl.textContent = off.length >= 2
+        ? 'Two signals outside your normal at once (' + off.join(', ') + '). That is how illness or overreaching usually shows up first.'
+        : 'HRV running below your normal. Not yet a crash pattern, but worth protecting the evening routine.';
+    } else {
+      stateEl.textContent = 'Regulated'; stateEl.className = 'ns-state regulated';
+      whyEl.textContent = 'HRV and recovery are holding at your normal. No red flags in the nervous-system pattern right now.';
+    }
   } else {
-    const stateEl = document.getElementById('nsState');
+    setHTML('hmRows', '');
+    setText('hmVerdict', '');
     if (stateEl) { stateEl.textContent = 'No recovery data yet'; stateEl.className = 'ns-state loading'; }
-    const whyEl = document.getElementById('nsWhy');
-    if (whyEl) whyEl.textContent = 'Connect WHOOP to see nervous-system state here.';
+    if (whyEl) whyEl.textContent = 'Connect WHOOP to see your health signals here.';
   }
 
   const checkinList = document.getElementById('checkinList');
