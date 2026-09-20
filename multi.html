@@ -286,6 +286,9 @@
   .checkin-row:last-child { border-bottom: none; }
   .checkin-dots { display: flex; gap: 3px; } .checkin-dots span { width: 8px; height: 8px; border-radius: 50%; }
 
+  .quick-links { margin-top: 32px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .quick-links .ql { padding: 11px 18px; border-radius: 999px; background: var(--gold); color: #1a1a1a; font-size: 13px; font-weight: 600; text-decoration: none; }
+  .quick-links .ql-ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
   .foot { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 10px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.12em; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
 
   @media (max-width: 960px) {
@@ -1056,6 +1059,13 @@
 </div>
 
 
+<!-- Quick links between the three places a client lives: this dashboard, the
+     Telegram log, and Ehab on WhatsApp (20 Sep 2026). WhatsApp shows once CONFIG.whatsapp is set. -->
+<div class="quick-links">
+  <a class="ql" href="https://t.me/realhealthassistantbot" target="_blank" rel="noopener">Log a meal or note on Telegram</a>
+  <a class="ql ql-ghost" id="qlWhatsapp" href="#" target="_blank" rel="noopener" hidden>Message Ehab on WhatsApp</a>
+</div>
+
 <div class="foot">
   <span>RealHealth Systems · Personal Health OS · Not Medical Advice</span>
   <span id="footSync">Live data via WHOOP + Apps Script</span>
@@ -1100,6 +1110,7 @@ const CONFIG = {
   microTargets: { VitC:90, VitA:900, VitD:15, B12:2.4, Folate:400, Iron:8, Calcium:1000, Magnesium:400, Potassium:3500, Zinc:11, Omega3:1.1 },
   avoidFoods: [],
   avoidNote: '',
+  whatsapp: '',   // Ehab's WhatsApp number, digits only with country code; the footer button stays hidden while empty
   staleAfterHours: 48,
   refreshMs: 30000
 };
@@ -1126,6 +1137,7 @@ let cache = { recovery:[], sleep:[], workouts:[], cycles:[], food:[], checkin:[]
    server that predates it has no `stress` key at all (an updated server sends
    the key even when the tab is empty), so the control stays hidden until the
    Apps Script is updated rather than failing under the client's finger. */
+(function () { const a = document.getElementById('qlWhatsapp'); if (a && CONFIG.whatsapp) { a.href = 'https://wa.me/' + CONFIG.whatsapp; a.hidden = false; } })();
 let stressSupported = false;
 let notesSupported = false;   // server sends a `notes` key once ClientBot.gs is deployed (20 Sep 2026)
 let lastCuratedRows = null;   // kept so the Questions card can re-render after a new answer lands
