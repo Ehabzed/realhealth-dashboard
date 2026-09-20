@@ -264,6 +264,24 @@
   /* NERVOUS SYSTEM */
   .ns-state { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
   .ns-state.regulated { color: var(--green); } .ns-state.loading { color: var(--gold); } .ns-state.crash { color: var(--red); }
+  /* Compliance strip (20 Sep 2026). Slim, above the fold, every visit. It is
+     the scoreboard behind the guarantee, so a client is never surprised by a
+     number they have been looking at for twelve weeks. */
+  .cstrip { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin: 0 0 14px;
+            padding: 11px 14px; border: 1px solid var(--line-soft); border-radius: 12px; background: var(--card); }
+  .cstrip-head { display: flex; align-items: baseline; gap: 8px; }
+  .cstrip-week { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+  .cstrip-score { font-size: 17px; font-weight: 700; color: var(--ink); }
+  .cstrip-verdict { font-size: 12.5px; font-weight: 600; }
+  .cstrip-verdict.ok { color: var(--green); }
+  .cstrip-verdict.warn { color: var(--amber); }
+  .cstrip-items { display: flex; flex-wrap: wrap; gap: 6px; }
+  .cstrip-item { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 999px;
+                 border: 1px solid var(--line-soft); font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+  .cstrip-item.met { border-color: color-mix(in srgb, var(--green) 40%, transparent); color: var(--green); }
+  .cstrip-item.short { border-color: color-mix(in srgb, var(--amber) 40%, transparent); color: var(--amber); }
+  .cstrip-tally { margin-left: auto; font-size: 12px; color: var(--ink-3); }
+  @media (max-width: 560px) { .cstrip-tally { margin-left: 0; width: 100%; } }
   .checkin-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line-soft); font-size: 12.5px; }
   .checkin-row:last-child { border-bottom: none; }
   .checkin-dots { display: flex; gap: 3px; } .checkin-dots span { width: 8px; height: 8px; border-radius: 50%; }
@@ -400,6 +418,16 @@
     <div class="vital-tile" id="tile-hrv"><div class="v-label"><span>HRV</span></div><div class="v-val" id="val-hrv">—</div><div class="v-sub" id="sub-hrv">loading</div><svg class="spark" id="spark-hrv"></svg></div>
     <div class="vital-tile" id="tile-steps"><div class="v-label"><span>Steps</span><span data-src="steps" class="live-tag" style="margin:0;padding:1px 5px;font-size:8px">LIVE</span></div><div class="v-val" id="val-steps">—</div><div class="v-sub" id="sub-steps">loading</div><svg class="spark" id="spark-steps"></svg></div>
     <div class="vital-tile" id="tile-weight"><div class="v-label"><span>Weight</span></div><div class="v-val" id="val-weight">—<span class="u">kg</span></div><div class="v-sub">no data yet</div></div>
+  </div>
+
+  <div class="cstrip" id="complianceStrip" hidden>
+    <div class="cstrip-head">
+      <span class="cstrip-week" id="csWeek">This week</span>
+      <span class="cstrip-score" id="csScore">—</span>
+      <span class="cstrip-verdict" id="csVerdict"></span>
+    </div>
+    <div class="cstrip-items" id="csItems"></div>
+    <div class="cstrip-tally" id="csTally"></div>
   </div>
 
   <div class="grid">
@@ -1314,6 +1342,7 @@ async function refreshAll() {
   renderReadiness();
   renderPerformance();
   renderSessions();
+  renderCompliance();
   renderNutrition();
   renderNervousSystem();
   renderLastNight();
@@ -1955,6 +1984,119 @@ function renderKcalDay(t) {
   if (el.innerHTML !== html) el.innerHTML = html;
   el.className = 'kcal-day' + (t.kind && t.kind !== 'rest' ? ' train' : '');
   el.hidden = !html;
+}
+
+/* ================================================================
+   COMPLIANCE STRIP (20 Sep 2026)
+
+   The scoreboard behind the Tier 1 guarantee. The guarantee only pays out
+   when the dashboard shows the work was done, and that clause is worthless
+   if week 12 is the first time anyone mentions it. So the number lives above
+   the fold from week one: nobody can be ambushed by a figure they have been
+   looking at for three months, and Ehab never has to raise it.
+
+   Three signals, because three are all the data can honestly prove. The
+   weekly call is deliberately NOT here -- attendance lives in Calendly and
+   WhatsApp, not in the Sheet, and a number that cannot be verified would
+   wreck the one thing this strip is for.
+
+   A week counts at 2 of 3, not 3 of 3. Reezuan's WHOOP went dark on 1 Sep
+   because his membership payment lapsed, not because he stopped wearing it;
+   a bar where a billing failure alone fails the week is a bar that will be
+   wrong about someone. The threshold is meant to be generous -- it should
+   only ever fail a client who genuinely checked out.
+   ================================================================ */
+const CS_PASS = 2, CS_NEEDED = 10, CS_TOTAL = 12;
+
+function csWeekStart(d) {            // Monday 00:00 local
+  const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  x.setDate(x.getDate() - ((x.getDay() + 6) % 7));
+  return x;
+}
+function csYmd(d) {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+/* Distinct dates, not rows: two meals logged on one day is one day of logging. */
+function csDays(rows, start) {
+  const end = new Date(start); end.setDate(end.getDate() + 7);
+  const a = csYmd(start), b = csYmd(end), seen = {};
+  (rows || []).forEach(function (r) {
+    const d = String(r['Date'] || '').slice(0, 10);
+    if (d >= a && d < b) seen[d] = true;
+  });
+  return Object.keys(seen).length;
+}
+function csSignals(start) {
+  return [
+    { label: 'Weigh-in',  need: 1, got: csDays(cache.checkin, start) },
+    { label: 'Food',      need: 5, got: csDays(cache.food, start) },
+    { label: 'Wearable',  need: 5, got: csDays(cache.sleep, start) }
+  ];
+}
+function csMet(start) {
+  return csSignals(start).filter(function (x) { return x.got >= x.need; }).length;
+}
+/* The programme start, if the Sheet carries one: a `program` Curated row
+   titled `start` with a YYYY-MM-DD in Detail. Without it the strip still
+   works, it just counts back from today instead of naming a week number --
+   the same forward-compatible shape as the sleep-stage cards, so this can
+   ship before anyone has added the row. */
+function csStart(curatedRows) {
+  const rows = bySection(curatedRows || [])['program'] || [];
+  let out = null;
+  rows.forEach(function (r) {
+    if (String(r['Title'] || '').trim().toLowerCase() !== 'start') return;
+    const d = String(r['Detail'] || '').trim().slice(0, 10);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(d)) out = new Date(d + 'T00:00:00');
+  });
+  return out;
+}
+
+function renderCompliance() {
+  const strip = document.getElementById('complianceStrip');
+  if (!strip) return;
+
+  const today = new Date(), thisWeek = csWeekStart(today);
+  const now = csSignals(thisWeek);
+  const anyData = (cache.checkin || []).length || (cache.food || []).length || (cache.sleep || []).length;
+  strip.hidden = !anyData;                      // a brand-new client sees nothing, not zeros
+  if (!anyData) return;
+
+  // Days left AFTER today, so a target is never called impossible while it is
+  // still reachable, and today's logging is never counted twice.
+  const left = 6 - ((today.getDay() + 6) % 7);
+  const items = now.map(function (x) {
+    const met = x.got >= x.need;
+    const reachable = x.got + left >= x.need;
+    const cls = met ? 'met' : (reachable ? '' : 'short');
+    const text = met ? x.label : x.label + ' ' + x.got + '/' + x.need;
+    return '<span class="cstrip-item ' + cls + '">' + (met ? '✓ ' : '') + esc(text) + '</span>';
+  }).join('');
+  setHTML('csItems', items);
+
+  const metNow = now.filter(function (x) { return x.got >= x.need; }).length;
+  curSetText('csScore', metNow + ' of 3');
+
+  const verdict = document.getElementById('csVerdict');
+  if (verdict) {
+    const onTrack = metNow >= CS_PASS;
+    verdict.className = 'cstrip-verdict ' + (onTrack ? 'ok' : 'warn');
+    verdict.textContent = onTrack ? 'This week counts' : 'Needs one more to count';
+  }
+
+  // Completed weeks only. A week still running has not passed or failed yet.
+  const start = csStart(lastCuratedRows);
+  let cursor = start ? csWeekStart(start) : null;
+  if (!cursor) { cursor = new Date(thisWeek); cursor.setDate(cursor.getDate() - 7 * CS_TOTAL); }
+  let counted = 0, elapsed = 0;
+  for (let w = new Date(cursor); w < thisWeek && elapsed < CS_TOTAL; w.setDate(w.getDate() + 7)) {
+    elapsed++;
+    if (csMet(new Date(w)) >= CS_PASS) counted++;
+  }
+  curSetText('csWeek', start ? 'Week ' + (elapsed + 1) : 'This week');
+  curSetText('csTally', elapsed === 0
+    ? 'Your first week. ' + CS_NEEDED + ' of ' + CS_TOTAL + ' weeks keeps the guarantee live.'
+    : counted + ' of ' + elapsed + ' weeks so far' + (start ? ' · ' + CS_NEEDED + ' of ' + CS_TOTAL + ' needed' : ''));
 }
 
 function renderNutrition() {
