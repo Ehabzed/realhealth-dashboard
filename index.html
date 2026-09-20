@@ -208,6 +208,42 @@
   .ex-item:last-child { border-bottom: none; }
   .ex-name-block .ex-title { font-size: 13.5px; font-weight: 600; color: var(--ink); line-height: 1.3; margin-bottom: 4px; }
   .ex-name-block .ex-title .priority-star { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin-right: 8px; vertical-align: middle; position: relative; top: -1px; }
+  /* Two-way pieces (20 Sep 2026): tick a to-do, reply to a priority, rate the day */
+  .todo-check { flex: 0 0 24px; width: 24px; height: 24px; margin-top: 1px; border-radius: 7px; border: 1.5px solid var(--ink-3); background: transparent; color: #1a1a1a; font-size: 15px; font-weight: 800; line-height: 1; cursor: pointer; padding: 0; }
+  .todo-check.on { background: var(--gold); border-color: var(--gold); }
+  .todo-item.is-done .t-main { text-decoration: line-through; opacity: .55; }
+  .todo-item.is-done .t-sub { opacity: .4; }
+  .t-link { margin-top: 8px; padding: 0; border: none; background: none; color: var(--gold); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .t-reply { margin-top: 8px; font-size: 13px; color: var(--ink-2); line-height: 1.45; }
+  .t-reply b { color: var(--ink); }
+  .t-replybox { display: flex; gap: 8px; margin-top: 8px; }
+  .t-replybox input { flex: 1; min-width: 0; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--ink); font: inherit; font-size: 13px; }
+  .t-replybox button { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--gold); background: var(--gold); color: #1a1a1a; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .rate-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; margin: 4px 0 14px; }
+  .rate-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .rate-row .rl { font-size: 12px; color: var(--ink-2); }
+  .rate-row .rb { display: flex; gap: 4px; }
+  .rate-row .rb button { width: 26px; height: 26px; border-radius: 7px; border: 1px solid var(--line); background: transparent; color: var(--ink-2); font: inherit; font-size: 12px; cursor: pointer; padding: 0; }
+  .rate-row .rb button.on { background: var(--gold); border-color: var(--gold); color: #1a1a1a; font-weight: 700; }
+  @media (max-width: 560px) { .rate-grid { grid-template-columns: 1fr; } }
+  /* Notes + questions cards (20 Sep 2026) */
+  .note-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13px; line-height: 1.45; }
+  .note-item:last-child { border-bottom: none; }
+  .note-item .when { flex: 0 0 74px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); padding-top: 2px; }
+  .note-item .kind { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 4px; font-size: 10px; text-transform: uppercase; letter-spacing: .04em; background: var(--surface-2, rgba(255,255,255,.06)); color: var(--ink-2); }
+  .note-item .kind.for_ehab, .note-item .kind.urgent { background: var(--gold); color: #1a1a1a; }
+  .note-compose { display: flex; gap: 8px; margin-top: 12px; }
+  .note-compose input { flex: 1; min-width: 0; padding: 9px 10px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--ink); font: inherit; font-size: 13px; }
+  .note-compose button, .q-answer button { padding: 9px 14px; border-radius: 8px; border: 1px solid var(--gold); background: var(--gold); color: #1a1a1a; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .note-compose button[disabled], .q-answer button[disabled] { opacity: .5; cursor: default; }
+  .note-status { font-size: 11px; color: var(--ink-3); margin-top: 6px; min-height: 14px; }
+  .q-item { padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .q-item:last-child { border-bottom: none; }
+  .q-text { font-size: 14px; line-height: 1.45; margin-bottom: 8px; }
+  .q-answered { font-size: 13px; color: var(--ink-2); }
+  .q-answered b { color: var(--ink); }
+  .q-answer { display: flex; gap: 8px; }
+  .q-answer input { flex: 1; min-width: 0; padding: 9px 10px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--ink); font: inherit; font-size: 13px; }
   .ex-name-block .ex-notes { font-size: 12px; color: var(--ink-2); line-height: 1.45; }
   .ex-sets-block { text-align: right; flex-shrink: 0; }
   .ex-sets-block .ex-sets { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--gold); white-space: nowrap; }
@@ -436,6 +472,31 @@
       <div class="card">
         <h2>Top Priorities <span class="reviewed-tag" id="curReviewed2">Reviewed 24 Aug</span></h2>
         <div id="curTopPriorities"></div>
+      </div>
+    </div>
+
+    <!-- Questions from Ehab: Curated `question` rows (Group = id, Title = the question,
+         Tag = open|closed). Answers are Notes rows Kind=answer with that QuestionId,
+         written by the Telegram bot or the box here. Hidden when there are none. -->
+    <div class="col-6" id="questionCol" hidden>
+      <div class="card">
+        <h2>Questions <span class="tag" id="questionTag">from your coach self</span></h2>
+        <div id="curQuestions"></div>
+      </div>
+    </div>
+
+    <!-- Your Notes: the last few Notes rows (Telegram bot or dashboard). Hidden until
+         the server sends a `notes` key, so an older server never shows an empty card. -->
+    <div class="col-6" id="notesCol" hidden>
+      <div class="card">
+        <h2>Your Notes <span class="tag">bot + dashboard</span></h2>
+        <div class="rate-grid" id="rateGrid"></div>
+        <div id="notesList"></div>
+        <div class="note-compose">
+          <input type="text" id="noteInput" maxlength="1000" placeholder="Add a note about today…" aria-label="Add a note">
+          <button type="button" id="noteSend">Save</button>
+        </div>
+        <div class="note-status" id="noteStatus"></div>
       </div>
     </div>
 
@@ -992,7 +1053,9 @@ function rhSavedBundle() {
 let lastValues = {};
 let usingSnapshot = false;
 const sourceLive = { recovery:false, sleep:false, workouts:false, cycles:false, food:false, checkin:false, steps:false };
-let cache = { recovery:[], sleep:[], workouts:[], cycles:[], food:[], checkin:[], steps:[], stress:[] };
+let notesSupported = false;   // the server sends a `notes` key from script v27
+let lastCuratedRows = null;
+let cache = { recovery:[], sleep:[], workouts:[], cycles:[], food:[], checkin:[], steps:[], stress:[], notes:[], ratings:[] };
 
 function parseCSVLine(line) {
   const out = []; let cur = ''; let inQ = false;
@@ -1146,6 +1209,8 @@ async function refreshAll() {
   const checkin = bundle ? parseCSV(bundle.checkin)   : null;
   const steps   = bundle ? parseCSV(bundle.steps)     : null;
   const stress  = bundle && bundle.stress ? parseCSV(bundle.stress) : null;
+  if (bundle && Object.prototype.hasOwnProperty.call(bundle, 'notes')) { cache.notes = parseCSV(bundle.notes || ''); notesSupported = true; }
+  if (bundle && bundle.ratings) cache.ratings = parseCSV(bundle.ratings);
   const curated = bundle && bundle.curated ? parseCSV(bundle.curated) : (saved && saved.curated ? parseCSV(saved.curated) : null);
   cache.recovery = sortByDateDesc(rec || (cache.recovery.length ? cache.recovery : parseCSV(SNAPSHOT.recovery)));
   cache.sleep    = sortByDateDesc(sleep || (cache.sleep.length ? cache.sleep : parseCSV(SNAPSHOT.sleep)));
@@ -1166,6 +1231,7 @@ async function refreshAll() {
   renderLiveBadges();
 
   if (curated) applyCurated(curated);
+  renderNotes();
 
   renderVitals();
   renderSteps();
@@ -1250,13 +1316,21 @@ function applyCurated(rows) {
 
   if (S['top_priority']) setHTML('curTopPriorities', S['top_priority'].map(function (r, i) {
     const lvl = String(r['Tag'] || (i < 2 ? 'high' : 'med')).toLowerCase();
-    return '<div class="todo-item"><div class="todo-priority p-' + esc(lvl) + '">' + (i + 1) + '</div><div class="todo-body"><div class="t-main">' + esc(r['Title']) + '</div><div class="t-sub">' + esc(r['Detail']) + '</div></div></div>';
+    const key = rhKey('prio', r['Title']), a = notesSupported ? rhAnswer(key) : null;
+    const talk = !notesSupported ? '' : (a && a.text
+      ? '<div class="t-reply"><b>You:</b> ' + esc(a.text.replace(/\s*\(re: [^)]*\)\s*$/, '')) + ' <button type="button" class="t-link" data-act="reply">reply again</button></div>'
+      : '<button type="button" class="t-link" data-act="reply">Reply to Ehab about this</button>');
+    return '<div class="todo-item" data-key="' + esc(key) + '" data-title="' + esc(r['Title']) + '"><div class="todo-priority p-' + esc(lvl) + '">' + (i + 1) + '</div><div class="todo-body"><div class="t-main">' + esc(r['Title']) + '</div><div class="t-sub">' + esc(r['Detail']) + '</div>' + talk + '</div></div>';
   }).join(''));
 
+  lastCuratedRows = rows;
+  renderQuestions(S['question'] || []);
   if (S['todo']) setHTML('curTodo', S['todo'].map(function (r) {
     const tag = String(r['Tag'] || 'MED').toUpperCase();
     const cls = tag === 'HIGH' ? 'p-high' : (tag === 'MED' ? 'p-med' : 'p-low');
-    return '<div class="todo-item"><div class="todo-priority ' + cls + '">' + esc(tag) + '</div><div class="todo-body"><div class="t-main">' + esc(r['Title']) + '</div><div class="t-sub">' + esc(r['Detail']) + '</div></div></div>';
+    const key = rhKey('todo', r['Title']), a = notesSupported ? rhAnswer(key) : null, done = !!(a && /^done\b/i.test(a.text));
+    const box = notesSupported ? '<button type="button" class="todo-check' + (done ? ' on' : '') + '" data-act="tick" aria-pressed="' + done + '" aria-label="' + (done ? 'Mark as not done' : 'Mark as done') + '">' + (done ? '\u2713' : '') + '</button>' : '';
+    return '<div class="todo-item' + (done ? ' is-done' : '') + '" data-key="' + esc(key) + '" data-title="' + esc(r['Title']) + '">' + box + '<div class="todo-priority ' + cls + '">' + esc(tag) + '</div><div class="todo-body"><div class="t-main">' + esc(r['Title']) + '</div><div class="t-sub">' + esc(r['Detail']) + '</div></div></div>';
   }).join(''));
 
   function blocks(list, withDesc) {
@@ -1793,6 +1867,180 @@ function renderStress(status) {
   for (let i = 6; i >= 0; i--) { const d = stressDate(i), lv = stressOn(d); cells.push('<span class="sw' + (lv ? ' l' + lv : '') + '" title="' + d + (lv ? ': ' + lv + ' of 5' : ': not rated') + '">' + (lv || '·') + '</span>'); }
   setHTML('stressWeek', cells.join(''));
 }
+/* ---- Notes + Questions (20 Sep 2026) ----
+   Notes rows: Date, Time, Kind, Text, QuestionId, Source. Written by the Telegram
+   bot (ClientBot.gs) or the box on this card (type=note). Questions are Curated
+   `question` rows; an answer is a Notes row Kind=answer carrying the QuestionId. */
+function renderNotes() {
+  const col = document.getElementById('notesCol');
+  if (!col) return;
+  col.hidden = !notesSupported;
+  if (!notesSupported) return;
+  renderRatings();
+  const list = (cache.notes || []).filter(function (r) { return String(r['Text'] || '').trim() && String(r['Kind'] || '') !== 'answer'; })
+    .sort(function (a, b) { return (String(b['Date']) + String(b['Time'])).localeCompare(String(a['Date']) + String(a['Time'])); }).slice(0, 6);
+  const el = document.getElementById('notesList');
+  if (!list.length) { el.innerHTML = '<div class="note">Nothing yet. Notes you send the Telegram assistant, or type here, show up in this list and in Ehab\u2019s weekly review.</div>'; return; }
+  el.innerHTML = list.map(function (r) {
+    const d = String(r['Date'] || ''), t = String(r['Time'] || '').slice(0, 5);
+    const when = d ? (function () { const m = d.match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? (parseInt(m[3], 10) + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(m[2], 10) - 1]) : d; })() : '';
+    const kind = String(r['Kind'] || 'note');
+    const badge = kind === 'for_ehab' ? '<span class="kind for_ehab">to Ehab</span>' : kind === 'urgent' ? '<span class="kind urgent">urgent</span>' : '';
+    return '<div class="note-item"><div class="when">' + esc(when + (t ? ' ' + t : '')) + '</div><div>' + badge + esc(r['Text']) + '</div></div>';
+  }).join('');
+}
+
+function renderQuestions(qrows) {
+  const col = document.getElementById('questionCol');
+  if (!col) return;
+  const open = qrows.filter(function (r) { return String(r['Title'] || '').trim() && !/^closed$/i.test(String(r['Tag'] || '').trim()); })
+    .sort(function (a, b) { return (parseFloat(a['Order']) || 0) - (parseFloat(b['Order']) || 0); });
+  col.hidden = !open.length;
+  if (!open.length) return;
+  const answers = {};
+  (cache.notes || []).forEach(function (r) { if (String(r['Kind']) === 'answer' && String(r['QuestionId'] || '').trim()) answers[String(r['QuestionId']).trim()] = r; });
+  const el = document.getElementById('curQuestions');
+  el.innerHTML = open.map(function (r, i) {
+    const id = String(r['Group'] || ('q' + i)).trim();
+    const a = answers[id];
+    return '<div class="q-item" data-qid="' + esc(id) + '"><div class="q-text">' + esc(r['Title']) + '</div>'
+      + (a ? '<div class="q-answered"><b>You:</b> ' + esc(a['Text']) + ' <span style="color:var(--ink-3)">\u00b7 ' + esc(String(a['Date'])) + '</span></div>'
+           : '<div class="q-answer"><input type="text" maxlength="1000" placeholder="Your answer\u2026" aria-label="Answer"><button type="button">Send</button></div>')
+      + '</div>';
+  }).join('');
+  const n = open.filter(function (r, i) { return !answers[String(r['Group'] || ('q' + i)).trim()]; }).length;
+  curSetText('questionTag', n ? n + ' waiting for you' : 'all answered');
+}
+
+/* Stable key for a Curated row, so a tick or a reply finds its row again after Ehab re-orders the list. */
+function rhKey(prefix, title) {
+  let h = 5381; const t = String(title || '').trim().toLowerCase();
+  for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) >>> 0;
+  return prefix + ':' + h.toString(36);
+}
+const rhLocalAnswers = {};   // what this device just sent, before the next refresh brings it back
+function rhAnswer(key) {
+  if (rhLocalAnswers[key]) return rhLocalAnswers[key];
+  let best = null;
+  (cache.notes || []).forEach(function (r) {
+    if (String(r['Kind']) !== 'answer' || String(r['QuestionId'] || '').trim() !== key) return;
+    const stamp = String(r['Date']) + ' ' + String(r['Time']);
+    if (!best || stamp >= best.stamp) best = { stamp: stamp, text: String(r['Text'] || '') };
+  });
+  return best;
+}
+function rhRerenderCurated() { if (lastCuratedRows) applyCurated(lastCuratedRows); }
+
+const RH_RATE = [['sleep', 'Sleep'], ['energy', 'Energy'], ['mood', 'Mood'], ['digestion', 'Digestion']];
+function rhToday() { const n = new Date(); return n.getFullYear() + '-' + String(n.getMonth() + 1).padStart(2, '0') + '-' + String(n.getDate()).padStart(2, '0'); }
+function renderRatings() {
+  const el = document.getElementById('rateGrid'); if (!el) return;
+  const day = rhToday(), cur = {};
+  (cache.ratings || []).forEach(function (r) { if (String(r['Date']) === day) cur[String(r['What']).toLowerCase()] = parseInt(r['Score_1to5'], 10); });
+  el.innerHTML = RH_RATE.map(function (p) {
+    return '<div class="rate-row" data-what="' + p[0] + '"><span class="rl">' + p[1] + ' today</span><span class="rb">'
+      + [1, 2, 3, 4, 5].map(function (v) { return '<button type="button" data-v="' + v + '" class="' + (cur[p[0]] === v ? 'on' : '') + '" aria-label="' + p[1] + ' ' + v + ' of 5">' + v + '</button>'; }).join('') + '</span></div>';
+  }).join('');
+}
+function sendRating(what, score, done) {
+  const cb = '__rhRate' + Date.now(), sc = document.createElement('script');
+  let settled = false;
+  function finish(ok) { if (settled) return; settled = true; delete window[cb]; if (sc.parentNode) sc.parentNode.removeChild(sc); done(ok); }
+  window[cb] = function (res) { finish(!!(res && res.ok)); };
+  sc.onerror = function () { finish(false); };
+  setTimeout(function () { finish(false); }, 25000);
+  sc.src = CONFIG.dataEndpoint + '?type=rating&what=' + encodeURIComponent(what) + '&score=' + score + '&token=' + encodeURIComponent(CONFIG.token) + '&callback=' + cb;
+  document.body.appendChild(sc);
+}
+document.addEventListener('click', function (e) {
+  const t = e.target;
+  const rb = t.closest && t.closest('#rateGrid .rb button');
+  if (rb) {
+    const what = rb.closest('.rate-row').dataset.what, v = +rb.dataset.v, before = (cache.ratings || []).slice();
+    cache.ratings = (cache.ratings || []).filter(function (r) { return !(String(r['Date']) === rhToday() && String(r['What']).toLowerCase() === what); }).concat([{ Date: rhToday(), Time: '', What: what, Score_1to5: String(v), Source: 'dashboard' }]);
+    renderRatings();
+    sendRating(what, v, function (ok) { if (!ok) { cache.ratings = before; renderRatings(); } });
+    return;
+  }
+  const tick = t.closest && t.closest('.todo-check');
+  if (tick) {
+    const item = tick.closest('.todo-item'), key = item.dataset.key, title = item.dataset.title, on = !tick.classList.contains('on');
+    const prev = rhLocalAnswers[key];
+    rhLocalAnswers[key] = { text: (on ? 'done: ' : 'not done: ') + title };
+    rhRerenderCurated();
+    sendNote((on ? 'done: ' : 'not done: ') + title, 'answer', key, function (ok) { if (!ok) { if (prev) rhLocalAnswers[key] = prev; else delete rhLocalAnswers[key]; rhRerenderCurated(); } });
+    return;
+  }
+  const link = t.closest && t.closest('.t-link[data-act="reply"]');
+  if (link) {
+    const body = link.closest('.todo-body');
+    if (body.querySelector('.t-replybox')) return;
+    const box = document.createElement('div'); box.className = 't-replybox';
+    box.innerHTML = '<input type="text" maxlength="900" placeholder="Your reply to Ehab\u2026" aria-label="Reply"><button type="button">Send</button>';
+    body.appendChild(box); box.querySelector('input').focus();
+    return;
+  }
+  const rsend = t.closest && t.closest('.t-replybox button');
+  if (rsend) {
+    const item = rsend.closest('.todo-item'), input = item.querySelector('.t-replybox input'), text = String(input.value || '').trim();
+    if (!text) return;
+    rsend.disabled = true; rsend.textContent = 'Sending\u2026';
+    const key = item.dataset.key, title = item.dataset.title;
+    sendNote(text + ' (re: ' + title + ')', 'answer', key, function (ok, msg) {
+      if (!ok) { rsend.disabled = false; rsend.textContent = 'Send'; input.value = ''; input.placeholder = msg; return; }
+      rhLocalAnswers[key] = { text: text }; rhRerenderCurated();
+    });
+  }
+});
+
+/* JSONP write like the stress tap: no reply is not proof of failure. */
+function sendNote(text, kind, qid, done) {
+  const cb = '__rhNote' + Date.now(), s = document.createElement('script');
+  let settled = false;
+  function finish(ok, msg) { if (settled) return; settled = true; delete window[cb]; if (s.parentNode) s.parentNode.removeChild(s); done(ok, msg); }
+  window[cb] = function (res) {
+    if (res && res.ok) finish(true, 'Saved');
+    else finish(false, res && res.error === 'unauthorized' ? 'Not saved: this device isn\u2019t unlocked' : 'Not saved, try again');
+  };
+  s.onerror = function () { finish(false, 'Not saved, try again'); };
+  setTimeout(function () { finish(false, 'No reply yet. Sending again is safe.'); }, 25000);
+  s.src = CONFIG.dataEndpoint + '?type=note&kind=' + encodeURIComponent(kind) + (qid ? '&qid=' + encodeURIComponent(qid) : '') + '&text=' + encodeURIComponent(text)
+    + '&token=' + encodeURIComponent(CONFIG.token) + '&callback=' + cb;
+  document.body.appendChild(s);
+}
+document.addEventListener('click', function (e) {
+  const sendBtn = e.target.closest && e.target.closest('#noteSend');
+  if (sendBtn) {
+    const input = document.getElementById('noteInput'), status = document.getElementById('noteStatus');
+    const text = String(input.value || '').trim();
+    if (!text) return;
+    sendBtn.disabled = true; status.textContent = 'Saving\u2026';
+    sendNote(text, 'note', '', function (ok, msg) {
+      sendBtn.disabled = false; status.textContent = msg;
+      if (ok) {
+        input.value = '';
+        const now = new Date(), d = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+        cache.notes = [{ Date: d, Time: String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0'), Kind: 'note', Text: text, QuestionId: '', Source: 'dashboard' }].concat(cache.notes || []);
+        renderNotes();
+      }
+    });
+    return;
+  }
+  const qBtn = e.target.closest && e.target.closest('#curQuestions .q-answer button');
+  if (qBtn) {
+    const item = qBtn.closest('.q-item'), input = item.querySelector('input');
+    const text = String(input.value || '').trim(), qid = item.dataset.qid;
+    if (!text) return;
+    qBtn.disabled = true; qBtn.textContent = 'Saving\u2026';
+    sendNote(text, 'answer', qid, function (ok, msg) {
+      if (!ok) { qBtn.disabled = false; qBtn.textContent = 'Send'; input.placeholder = msg; return; }
+      const now = new Date(), d = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+      cache.notes = [{ Date: d, Time: '', Kind: 'answer', Text: text, QuestionId: qid, Source: 'dashboard' }].concat(cache.notes || []);
+      if (lastCuratedRows) renderQuestions(bySection(lastCuratedRows)['question'] || []);
+    });
+  }
+});
+
 function sendStress(level) {
   const day = stressDate(0), before = (cache.stress || []).slice();
   cache.stress = [{ Date: day, Time: '', Stress_1to5: String(level) }].concat(before.filter(function (r) { return r['Date'] !== day; }));
