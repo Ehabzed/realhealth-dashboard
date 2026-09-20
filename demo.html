@@ -211,6 +211,42 @@
   .ex-item:last-child { border-bottom: none; }
   .ex-name-block .ex-title { font-size: 13.5px; font-weight: 600; color: var(--ink); line-height: 1.3; margin-bottom: 4px; }
   .ex-name-block .ex-title .priority-star { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin-right: 8px; vertical-align: middle; position: relative; top: -1px; }
+  /* Two-way pieces (20 Sep 2026): tick a to-do, reply to a priority, rate the day */
+  .todo-check { flex: 0 0 24px; width: 24px; height: 24px; margin-top: 1px; border-radius: 7px; border: 1.5px solid var(--ink-3); background: transparent; color: #1a1a1a; font-size: 15px; font-weight: 800; line-height: 1; cursor: pointer; padding: 0; }
+  .todo-check.on { background: var(--gold); border-color: var(--gold); }
+  .todo-item.is-done .t-main { text-decoration: line-through; opacity: .55; }
+  .todo-item.is-done .t-sub { opacity: .4; }
+  .t-link { margin-top: 8px; padding: 0; border: none; background: none; color: var(--gold); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .t-reply { margin-top: 8px; font-size: 13px; color: var(--ink-2); line-height: 1.45; }
+  .t-reply b { color: var(--ink); }
+  .t-replybox { display: flex; gap: 8px; margin-top: 8px; }
+  .t-replybox input { flex: 1; min-width: 0; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--ink); font: inherit; font-size: 13px; }
+  .t-replybox button { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--gold); background: var(--gold); color: #1a1a1a; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .rate-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; margin: 4px 0 14px; }
+  .rate-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .rate-row .rl { font-size: 12px; color: var(--ink-2); }
+  .rate-row .rb { display: flex; gap: 4px; }
+  .rate-row .rb button { width: 26px; height: 26px; border-radius: 7px; border: 1px solid var(--line); background: transparent; color: var(--ink-2); font: inherit; font-size: 12px; cursor: pointer; padding: 0; }
+  .rate-row .rb button.on { background: var(--gold); border-color: var(--gold); color: #1a1a1a; font-weight: 700; }
+  @media (max-width: 560px) { .rate-grid { grid-template-columns: 1fr; } }
+  /* Notes + questions cards (20 Sep 2026) */
+  .note-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13px; line-height: 1.45; }
+  .note-item:last-child { border-bottom: none; }
+  .note-item .when { flex: 0 0 74px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); padding-top: 2px; }
+  .note-item .kind { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 4px; font-size: 10px; text-transform: uppercase; letter-spacing: .04em; background: var(--surface-2, rgba(255,255,255,.06)); color: var(--ink-2); }
+  .note-item .kind.for_ehab, .note-item .kind.urgent { background: var(--gold); color: #1a1a1a; }
+  .note-compose { display: flex; gap: 8px; margin-top: 12px; }
+  .note-compose input { flex: 1; min-width: 0; padding: 9px 10px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--ink); font: inherit; font-size: 13px; }
+  .note-compose button, .q-answer button { padding: 9px 14px; border-radius: 8px; border: 1px solid var(--gold); background: var(--gold); color: #1a1a1a; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .note-compose button[disabled], .q-answer button[disabled] { opacity: .5; cursor: default; }
+  .note-status { font-size: 11px; color: var(--ink-3); margin-top: 6px; min-height: 14px; }
+  .q-item { padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .q-item:last-child { border-bottom: none; }
+  .q-text { font-size: 14px; line-height: 1.45; margin-bottom: 8px; }
+  .q-answered { font-size: 13px; color: var(--ink-2); }
+  .q-answered b { color: var(--ink); }
+  .q-answer { display: flex; gap: 8px; }
+  .q-answer input { flex: 1; min-width: 0; padding: 9px 10px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--ink); font: inherit; font-size: 13px; }
   .ex-name-block .ex-notes { font-size: 12px; color: var(--ink-2); line-height: 1.45; }
   .ex-sets-block { text-align: right; flex-shrink: 0; }
   .ex-sets-block .ex-sets { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--gold); white-space: nowrap; }
@@ -251,6 +287,11 @@
   .checkin-row:last-child { border-bottom: none; }
   .checkin-dots { display: flex; gap: 3px; } .checkin-dots span { width: 8px; height: 8px; border-radius: 50%; }
 
+  .quick-links { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin: 0 0 14px; }
+  .quick-links .ql-label { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin-right: 4px; }
+  .quick-links .ql { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px; background: var(--gold); color: #1a1a1a; font-size: 12.5px; font-weight: 700; text-decoration: none; line-height: 1; }
+  .quick-links .ql-ghost { background: rgba(255,255,255,.07); color: var(--ink); border: 1px solid var(--line); font-weight: 600; }
+  @media (max-width: 640px) { .quick-links { justify-content: stretch; } .quick-links .ql-label { display: none; } .quick-links .ql { flex: 1; justify-content: center; padding: 11px 10px; font-size: 13px; } }
   .foot { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 10px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.12em; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
 
   @media (max-width: 960px) {
@@ -361,6 +402,14 @@
   </div>
 </div>
 
+<!-- The three places a client lives, one tap apart (20 Sep 2026): this dashboard,
+     the Telegram log, and Ehab on WhatsApp. -->
+<div class="quick-links">
+  <span class="ql-label">Log it or ask</span>
+  <a class="ql" href="https://t.me/realhealthassistantbot" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M21.9 4.3 18.7 19.6c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9.1-8.2c.4-.4-.1-.6-.6-.2L6.200 13.300l-4.800-1.500c-1-.3-1.100-1 .2-1.500l18.800-7.300c.9-.3 1.700.2 1.500 1.300z"/></svg>Log on Telegram</a>
+  <a class="ql ql-ghost" id="qlWhatsapp" href="https://wa.me/61403453751" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.600 15.100L2 22l5-1.300A10 10 0 1 0 12 2zm0 18.200a8.200 8.200 0 0 1-4.200-1.100l-.300-.200-3 .800.800-2.900-.200-.300A8.200 8.200 0 1 1 12 20.200zm4.500-6.100c-.200-.100-1.500-.700-1.700-.800-.200-.100-.400-.100-.600.100l-.800 1c-.100.200-.300.200-.500.100a6.700 6.700 0 0 1-3.300-2.900c-.200-.400.200-.400.700-1.300.100-.200 0-.300 0-.500l-.800-1.800c-.200-.500-.400-.400-.600-.400h-.500c-.200 0-.500.100-.700.300-.900.900-1 2.100-.300 3.400a11 11 0 0 0 4.300 4.100c1.600.700 2.200.700 3 .600.500-.100 1.500-.600 1.700-1.200.200-.600.200-1.100.100-1.200 0-.200-.200-.200-.400-.300z"/></svg>Message Ehab</a>
+</div>
+
 <div class="tabbar" role="tablist">
   <button class="tab active" data-tab="week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Today</button>
   <button class="tab" data-tab="perf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Performance</button>
@@ -430,6 +479,31 @@
         <div class="todo-item"><div class="todo-priority p-med">3</div><div class="todo-body"><div class="t-main">Protein floor: 180g, no exceptions</div><div class="t-sub">you hit it 4/7 days last week — the 3 misses were all travel days</div></div></div>
         <div class="todo-item"><div class="todo-priority p-med">4</div><div class="todo-body"><div class="t-main">Add one Zone 2 session</div><div class="t-sub">45min easy, non-negotiable pace cap — builds the aerobic base without adding strain</div></div></div>
         <div class="todo-item"><div class="todo-priority p-med">5</div><div class="todo-body"><div class="t-main">Caffeine cutoff 12pm</div><div class="t-sub">still drifting to 2-3pm on hard days — it's costing you deep sleep</div></div></div>
+      </div>
+    </div>
+
+    <!-- Questions from Ehab: Curated `question` rows (Group = id, Title = the question,
+         Tag = open|closed). Answers are Notes rows Kind=answer with that QuestionId,
+         written by the Telegram bot or the box here. Hidden when there are none. -->
+    <div class="col-6" id="questionCol" hidden>
+      <div class="card">
+        <h2>Questions from Ehab <span class="tag" id="questionTag">answer here or on Telegram</span></h2>
+        <div id="curQuestions"></div>
+      </div>
+    </div>
+
+    <!-- Your Notes: the last few Notes rows (Telegram bot or dashboard). Hidden until
+         the server sends a `notes` key, so an older server never shows an empty card. -->
+    <div class="col-6" id="notesCol" hidden>
+      <div class="card">
+        <h2>Your Notes <span class="tag">Telegram + dashboard</span></h2>
+        <div class="rate-grid" id="rateGrid"></div>
+        <div id="notesList"></div>
+        <div class="note-compose">
+          <input type="text" id="noteInput" maxlength="1000" placeholder="Add a note about today…" aria-label="Add a note">
+          <button type="button" id="noteSend">Save</button>
+        </div>
+        <div class="note-status" id="noteStatus"></div>
       </div>
     </div>
 
@@ -1438,7 +1512,7 @@ stress: `Date,Time,Stress_1to5
 let lastValues = {};
 let usingSnapshot = false;
 const sourceLive = { recovery:false, sleep:false, workouts:false, cycles:false, food:false, checkin:false, steps:false };
-let cache = { recovery:[], sleep:[], workouts:[], cycles:[], food:[], checkin:[], steps:[], stress:[] };
+let cache = { recovery:[], sleep:[], workouts:[], cycles:[], food:[], checkin:[], steps:[], stress:[], notes:[], ratings:[] };
 
 function parseCSVLine(line) {
   const out = []; let cur = ''; let inQ = false;
@@ -1617,6 +1691,8 @@ async function refreshAll() {
   renderLiveBadges();
 
   if (curated) applyCurated(curated);
+  rhDemoTwoWay();
+  renderNotes();
 
   renderVitals();
   renderSteps();
@@ -2192,6 +2268,235 @@ function renderStress(status) {
   for (let i = 6; i >= 0; i--) { const d = stressDate(i), lv = stressOn(d); cells.push('<span class="sw' + (lv ? ' l' + lv : '') + '" title="' + d + (lv ? ': ' + lv + ' of 5' : ': not rated') + '">' + (lv || '·') + '</span>'); }
   setHTML('stressWeek', cells.join(''));
 }
+
+/* ---- DEMO: the two-way pieces work on the snapshot only. Nothing is sent anywhere. ---- */
+let notesSupported = true, lastCuratedRows = null;
+/* ---- Notes + Questions (20 Sep 2026) ----
+   Notes rows: Date, Time, Kind, Text, QuestionId, Source. Written by the Telegram
+   bot (ClientBot.gs) or the box on this card (type=note). Questions are Curated
+   `question` rows; an answer is a Notes row Kind=answer carrying the QuestionId. */
+function renderNotes() {
+  const col = document.getElementById('notesCol');
+  if (!col) return;
+  col.hidden = !notesSupported;
+  if (!notesSupported) return;
+  renderRatings();
+  const list = (cache.notes || []).filter(function (r) { return String(r['Text'] || '').trim() && String(r['Kind'] || '') !== 'answer'; })
+    .sort(function (a, b) { return (String(b['Date']) + String(b['Time'])).localeCompare(String(a['Date']) + String(a['Time'])); }).slice(0, 6);
+  const el = document.getElementById('notesList');
+  if (!list.length) { el.innerHTML = '<div class="note">Nothing yet. Notes you send the Telegram assistant, or type here, show up in this list and in Ehab\u2019s weekly review.</div>'; return; }
+  el.innerHTML = list.map(function (r) {
+    const d = String(r['Date'] || ''), t = String(r['Time'] || '').slice(0, 5);
+    const when = d ? (function () { const m = d.match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? (parseInt(m[3], 10) + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(m[2], 10) - 1]) : d; })() : '';
+    const kind = String(r['Kind'] || 'note');
+    const badge = kind === 'for_ehab' ? '<span class="kind for_ehab">to Ehab</span>' : kind === 'urgent' ? '<span class="kind urgent">urgent</span>' : '';
+    return '<div class="note-item"><div class="when">' + esc(when + (t ? ' ' + t : '')) + '</div><div>' + badge + esc(r['Text']) + '</div></div>';
+  }).join('');
+}
+
+function renderQuestions(qrows) {
+  const col = document.getElementById('questionCol');
+  if (!col) return;
+  const open = qrows.filter(function (r) { return String(r['Title'] || '').trim() && !/^closed$/i.test(String(r['Tag'] || '').trim()); })
+    .sort(function (a, b) { return (parseFloat(a['Order']) || 0) - (parseFloat(b['Order']) || 0); });
+  col.hidden = !open.length;
+  if (!open.length) return;
+  const answers = {};
+  (cache.notes || []).forEach(function (r) { if (String(r['Kind']) === 'answer' && String(r['QuestionId'] || '').trim()) answers[String(r['QuestionId']).trim()] = r; });
+  const el = document.getElementById('curQuestions');
+  el.innerHTML = open.map(function (r, i) {
+    const id = String(r['Group'] || ('q' + i)).trim();
+    const a = answers[id];
+    return '<div class="q-item" data-qid="' + esc(id) + '"><div class="q-text">' + esc(r['Title']) + '</div>'
+      + (a ? '<div class="q-answered"><b>You:</b> ' + esc(a['Text']) + ' <span style="color:var(--ink-3)">\u00b7 ' + esc(String(a['Date'])) + '</span></div>'
+           : '<div class="q-answer"><input type="text" maxlength="1000" placeholder="Your answer\u2026" aria-label="Answer"><button type="button">Send</button></div>')
+      + '</div>';
+  }).join('');
+  const n = open.filter(function (r, i) { return !answers[String(r['Group'] || ('q' + i)).trim()]; }).length;
+  curSetText('questionTag', n ? n + ' waiting for you' : 'all answered');
+}
+
+/* Stable key for a Curated row, so a tick or a reply finds its row again after Ehab re-orders the list. */
+function rhKey(prefix, title) {
+  let h = 5381; const t = String(title || '').trim().toLowerCase();
+  for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) >>> 0;
+  return prefix + ':' + h.toString(36);
+}
+const rhLocalAnswers = {};   // what this device just sent, before the next refresh brings it back
+function rhAnswer(key) {
+  if (rhLocalAnswers[key]) return rhLocalAnswers[key];
+  let best = null;
+  (cache.notes || []).forEach(function (r) {
+    if (String(r['Kind']) !== 'answer' || String(r['QuestionId'] || '').trim() !== key) return;
+    const stamp = String(r['Date']) + ' ' + String(r['Time']);
+    if (!best || stamp >= best.stamp) best = { stamp: stamp, text: String(r['Text'] || '') };
+  });
+  return best;
+}
+function rhRerenderCurated() { if (lastCuratedRows) applyCurated(lastCuratedRows); }
+
+const RH_RATE = [['sleep', 'Sleep'], ['energy', 'Energy'], ['mood', 'Mood'], ['digestion', 'Digestion']];
+function rhToday() { const n = new Date(); return n.getFullYear() + '-' + String(n.getMonth() + 1).padStart(2, '0') + '-' + String(n.getDate()).padStart(2, '0'); }
+function renderRatings() {
+  const el = document.getElementById('rateGrid'); if (!el) return;
+  const day = rhToday(), cur = {};
+  (cache.ratings || []).forEach(function (r) { if (String(r['Date']) === day) cur[String(r['What']).toLowerCase()] = parseInt(r['Score_1to5'], 10); });
+  el.innerHTML = RH_RATE.map(function (p) {
+    return '<div class="rate-row" data-what="' + p[0] + '"><span class="rl">' + p[1] + ' today</span><span class="rb">'
+      + [1, 2, 3, 4, 5].map(function (v) { return '<button type="button" data-v="' + v + '" class="' + (cur[p[0]] === v ? 'on' : '') + '" aria-label="' + p[1] + ' ' + v + ' of 5">' + v + '</button>'; }).join('') + '</span></div>';
+  }).join('');
+}
+function sendRating(what, score, done) {
+  const cb = '__rhRate' + Date.now(), sc = document.createElement('script');
+  let settled = false;
+  function finish(ok) { if (settled) return; settled = true; delete window[cb]; if (sc.parentNode) sc.parentNode.removeChild(sc); done(ok); }
+  window[cb] = function (res) { finish(!!(res && res.ok)); };
+  sc.onerror = function () { finish(false); };
+  setTimeout(function () { finish(false); }, 25000);
+  sc.src = CONFIG.dataEndpoint + '?type=rating&what=' + encodeURIComponent(what) + '&score=' + score + '&cid=' + encodeURIComponent(CONFIG.clientId) + '&token=' + encodeURIComponent(CONFIG.token) + '&callback=' + cb;
+  document.body.appendChild(sc);
+}
+document.addEventListener('click', function (e) {
+  const t = e.target;
+  const rb = t.closest && t.closest('#rateGrid .rb button');
+  if (rb) {
+    const what = rb.closest('.rate-row').dataset.what, v = +rb.dataset.v, before = (cache.ratings || []).slice();
+    cache.ratings = (cache.ratings || []).filter(function (r) { return !(String(r['Date']) === rhToday() && String(r['What']).toLowerCase() === what); }).concat([{ Date: rhToday(), Time: '', What: what, Score_1to5: String(v), Source: 'dashboard' }]);
+    renderRatings();
+    sendRating(what, v, function (ok) { if (!ok) { cache.ratings = before; renderRatings(); } });
+    return;
+  }
+  const tick = t.closest && t.closest('.todo-check');
+  if (tick) {
+    const item = tick.closest('.todo-item'), key = item.dataset.key, title = item.dataset.title, on = !tick.classList.contains('on');
+    const prev = rhLocalAnswers[key];
+    rhLocalAnswers[key] = { text: (on ? 'done: ' : 'not done: ') + title };
+    rhRerenderCurated();
+    sendNote((on ? 'done: ' : 'not done: ') + title, 'answer', key, function (ok) { if (!ok) { if (prev) rhLocalAnswers[key] = prev; else delete rhLocalAnswers[key]; rhRerenderCurated(); } });
+    return;
+  }
+  const link = t.closest && t.closest('.t-link[data-act="reply"]');
+  if (link) {
+    const body = link.closest('.todo-body');
+    if (body.querySelector('.t-replybox')) return;
+    const box = document.createElement('div'); box.className = 't-replybox';
+    box.innerHTML = '<input type="text" maxlength="900" placeholder="Your reply to Ehab\u2026" aria-label="Reply"><button type="button">Send</button>';
+    body.appendChild(box); box.querySelector('input').focus();
+    return;
+  }
+  const rsend = t.closest && t.closest('.t-replybox button');
+  if (rsend) {
+    const item = rsend.closest('.todo-item'), input = item.querySelector('.t-replybox input'), text = String(input.value || '').trim();
+    if (!text) return;
+    rsend.disabled = true; rsend.textContent = 'Sending\u2026';
+    const key = item.dataset.key, title = item.dataset.title;
+    sendNote(text + ' (re: ' + title + ')', 'answer', key, function (ok, msg) {
+      if (!ok) { rsend.disabled = false; rsend.textContent = 'Send'; input.value = ''; input.placeholder = msg; return; }
+      rhLocalAnswers[key] = { text: text }; rhRerenderCurated();
+    });
+  }
+});
+
+/* JSONP write like the stress tap: no reply is not proof of failure. */
+function sendNote(text, kind, qid, done) {
+  const cb = '__rhNote' + Date.now(), s = document.createElement('script');
+  let settled = false;
+  function finish(ok, msg) { if (settled) return; settled = true; delete window[cb]; if (s.parentNode) s.parentNode.removeChild(s); done(ok, msg); }
+  window[cb] = function (res) {
+    if (res && res.ok) finish(true, 'Saved');
+    else finish(false, res && res.error === 'unauthorized' ? 'Not saved: this device isn\u2019t unlocked' : 'Not saved, try again');
+  };
+  s.onerror = function () { finish(false, 'Not saved, try again'); };
+  setTimeout(function () { finish(false, 'No reply yet. Sending again is safe.'); }, 25000);
+  s.src = CONFIG.dataEndpoint + '?type=note&kind=' + encodeURIComponent(kind) + (qid ? '&qid=' + encodeURIComponent(qid) : '') + '&text=' + encodeURIComponent(text)
+    + '&cid=' + encodeURIComponent(CONFIG.clientId) + '&token=' + encodeURIComponent(CONFIG.token) + '&callback=' + cb;
+  document.body.appendChild(s);
+}
+document.addEventListener('click', function (e) {
+  const sendBtn = e.target.closest && e.target.closest('#noteSend');
+  if (sendBtn) {
+    const input = document.getElementById('noteInput'), status = document.getElementById('noteStatus');
+    const text = String(input.value || '').trim();
+    if (!text) return;
+    sendBtn.disabled = true; status.textContent = 'Saving\u2026';
+    sendNote(text, 'note', '', function (ok, msg) {
+      sendBtn.disabled = false; status.textContent = msg;
+      if (ok) {
+        input.value = '';
+        const now = new Date(), d = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+        cache.notes = [{ Date: d, Time: String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0'), Kind: 'note', Text: text, QuestionId: '', Source: 'dashboard' }].concat(cache.notes || []);
+        renderNotes();
+      }
+    });
+    return;
+  }
+  const qBtn = e.target.closest && e.target.closest('#curQuestions .q-answer button');
+  if (qBtn) {
+    const item = qBtn.closest('.q-item'), input = item.querySelector('input');
+    const text = String(input.value || '').trim(), qid = item.dataset.qid;
+    if (!text) return;
+    qBtn.disabled = true; qBtn.textContent = 'Saving\u2026';
+    sendNote(text, 'answer', qid, function (ok, msg) {
+      if (!ok) { qBtn.disabled = false; qBtn.textContent = 'Send'; input.placeholder = msg; return; }
+      const now = new Date(), d = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+      cache.notes = [{ Date: d, Time: '', Kind: 'answer', Text: text, QuestionId: qid, Source: 'dashboard' }].concat(cache.notes || []);
+      if (lastCuratedRows) renderQuestions(bySection(lastCuratedRows)['question'] || []);
+    });
+  }
+});
+
+
+sendNote = function (text, kind, qid, done) { setTimeout(function () { done(true, 'Saved'); }, 350); };
+sendRating = function (what, score, done) { setTimeout(function () { done(true); }, 200); };
+const RH_DEMO_QUESTIONS = [
+  { Group: 'q1', Order: '1', Title: 'How many nights this week were you in bed by 10:30?', Tag: 'open' },
+  { Group: 'q2', Order: '2', Title: 'What got in the way of the 3pm meal on your busiest day?', Tag: 'open' }
+];
+function rhDemoDay(off) { const n = new Date(Date.now() - off * 864e5); return n.getFullYear() + '-' + String(n.getMonth() + 1).padStart(2, '0') + '-' + String(n.getDate()).padStart(2, '0'); }
+function rhDemoTwoWay() {
+  if (!cache.notes.length) {
+    cache.notes = [
+      { Date: rhDemoDay(0), Time: '07:40', Kind: 'note', Text: 'Slept about six hours, up twice. Legs still heavy from Thursday.', QuestionId: '', Source: 'telegram' },
+      { Date: rhDemoDay(0), Time: '12:55', Kind: 'for_ehab', Text: 'Asked whether to swap rice for potatoes on training days.', QuestionId: '', Source: 'telegram' },
+      { Date: rhDemoDay(1), Time: '21:10', Kind: 'note', Text: 'Client dinner ran late. Two glasses of red, skipped dessert.', QuestionId: '', Source: 'telegram' },
+      { Date: rhDemoDay(1), Time: '18:30', Kind: 'answer', Text: 'Four nights. Tuesday and Friday I was still on calls at eleven.', QuestionId: 'q1', Source: 'telegram' }
+    ];
+    cache.ratings = [{ Date: rhDemoDay(0), Time: '07:41', What: 'sleep', Score_1to5: '2', Source: 'telegram' }, { Date: rhDemoDay(0), Time: '07:41', What: 'energy', Score_1to5: '3', Source: 'telegram' }];
+  }
+  if (!rhLocalAnswers.__seeded) {
+    rhLocalAnswers.__seeded = { text: '' };
+    rhLocalAnswers[rhKey('prio', 'Protein floor: 180g, no exceptions')] = { text: 'Travel days are the problem. Can we plan an airport option?' };
+    const firstTodo = document.querySelector('#curTodo .todo-item .t-main');
+    if (firstTodo) rhLocalAnswers[rhKey('todo', firstTodo.textContent)] = { text: 'done: ' + firstTodo.textContent };
+  }
+  renderQuestions(RH_DEMO_QUESTIONS);
+  rhDemoDecorate();
+}
+/* The demo's priorities and to-dos are static markup, so the ticks and reply links are added onto it. */
+function rhDemoDecorate() {
+  document.querySelectorAll('#curTodo .todo-item').forEach(function (item) {
+    const title = (item.querySelector('.t-main') || {}).textContent || ''; const key = rhKey('todo', title);
+    item.dataset.key = key; item.dataset.title = title;
+    const a = rhAnswer(key), done = !!(a && /^done\b/i.test(a.text));
+    let box = item.querySelector('.todo-check');
+    if (!box) { box = document.createElement('button'); box.type = 'button'; box.className = 'todo-check'; box.dataset.act = 'tick'; item.insertBefore(box, item.firstChild); }
+    box.classList.toggle('on', done); box.textContent = done ? '✓' : ''; box.setAttribute('aria-pressed', done); box.setAttribute('aria-label', done ? 'Mark as not done' : 'Mark as done');
+    item.classList.toggle('is-done', done);
+  });
+  const prioCard = (document.getElementById('curReviewed2') || document.body).closest('.card');
+  (prioCard ? prioCard.querySelectorAll('.todo-item') : []).forEach(function (item) {
+    const title = (item.querySelector('.t-main') || {}).textContent || ''; const key = rhKey('prio', title);
+    item.dataset.key = key; item.dataset.title = title;
+    const body = item.querySelector('.todo-body'); if (!body) return;
+    body.querySelectorAll('.t-link, .t-reply, .t-replybox').forEach(function (el) { el.remove(); });
+    const a = rhAnswer(key), holder = document.createElement('div');
+    holder.innerHTML = a && a.text ? '<div class="t-reply"><b>You:</b> ' + esc(a.text) + ' <button type="button" class="t-link" data-act="reply">reply again</button></div>'
+      : '<button type="button" class="t-link" data-act="reply">Reply to Ehab about this</button>';
+    body.appendChild(holder.firstChild);
+  });
+}
+rhRerenderCurated = function () { rhDemoDecorate(); };
+
 function sendStress(level) {
   const day = stressDate(0), before = (cache.stress || []).slice();
   cache.stress = [{ Date: day, Time: '', Stress_1to5: String(level) }].concat(before.filter(function (r) { return r['Date'] !== day; }));
