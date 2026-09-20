@@ -209,6 +209,24 @@
   .ex-name-block .ex-title { font-size: 13.5px; font-weight: 600; color: var(--ink); line-height: 1.3; margin-bottom: 4px; }
   .ex-name-block .ex-title .priority-star { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin-right: 8px; vertical-align: middle; position: relative; top: -1px; }
   .ex-name-block .ex-notes { font-size: 12px; color: var(--ink-2); line-height: 1.45; }
+  /* Two-way pieces (20 Sep 2026): tick a to-do, reply to a priority, rate the day */
+  .todo-check { flex: 0 0 24px; width: 24px; height: 24px; margin-top: 1px; border-radius: 7px; border: 1.5px solid var(--ink-3); background: transparent; color: #1a1a1a; font-size: 15px; font-weight: 800; line-height: 1; cursor: pointer; padding: 0; }
+  .todo-check.on { background: var(--gold); border-color: var(--gold); }
+  .todo-item.is-done .t-main { text-decoration: line-through; opacity: .55; }
+  .todo-item.is-done .t-sub { opacity: .4; }
+  .t-link { margin-top: 8px; padding: 0; border: none; background: none; color: var(--gold); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .t-reply { margin-top: 8px; font-size: 13px; color: var(--ink-2); line-height: 1.45; }
+  .t-reply b { color: var(--ink); }
+  .t-replybox { display: flex; gap: 8px; margin-top: 8px; }
+  .t-replybox input { flex: 1; min-width: 0; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--ink); font: inherit; font-size: 13px; }
+  .t-replybox button { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--gold); background: var(--gold); color: #1a1a1a; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .rate-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; margin: 4px 0 14px; }
+  .rate-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .rate-row .rl { font-size: 12px; color: var(--ink-2); }
+  .rate-row .rb { display: flex; gap: 4px; }
+  .rate-row .rb button { width: 26px; height: 26px; border-radius: 7px; border: 1px solid var(--line); background: transparent; color: var(--ink-2); font: inherit; font-size: 12px; cursor: pointer; padding: 0; }
+  .rate-row .rb button.on { background: var(--gold); border-color: var(--gold); color: #1a1a1a; font-weight: 700; }
+  @media (max-width: 560px) { .rate-grid { grid-template-columns: 1fr; } }
   /* Notes + questions cards (20 Sep 2026) */
   .note-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13px; line-height: 1.45; }
   .note-item:last-child { border-bottom: none; }
@@ -501,6 +519,7 @@
     <div class="col-6" id="notesCol" hidden>
       <div class="card">
         <h2>Your Notes <span data-src="notes" class="live-tag">● LIVE</span></h2>
+        <div class="rate-grid" id="rateGrid"></div>
         <div id="notesList"></div>
         <div class="note-compose">
           <input type="text" id="noteInput" maxlength="1000" placeholder="Add a note about today…" aria-label="Add a note">
@@ -1132,7 +1151,7 @@ let usingSnapshot = false;
    source, with no visible signal anywhere. Each source now tracks its own
    state and its badge reflects it. */
 const sourceLive = { recovery:false, sleep:false, workouts:false, cycles:false, food:false, checkin:false, steps:false, stress:false, notes:false };
-let cache = { recovery:[], sleep:[], workouts:[], cycles:[], food:[], checkin:[], steps:[], stress:[], notes:[] };
+let cache = { recovery:[], sleep:[], workouts:[], cycles:[], food:[], checkin:[], steps:[], stress:[], notes:[], ratings:[] };
 /* The stress tap needs the server's type=stress endpoint. The bundle from a
    server that predates it has no `stress` key at all (an updated server sends
    the key even when the tab is empty), so the control stays hidden until the
@@ -1342,6 +1361,7 @@ async function refreshAll() {
   sourceLive.notes    = !!notes;
   if (bundle) stressSupported = Object.prototype.hasOwnProperty.call(bundle, 'stress');
   if (notes) { cache.notes = notes; notesSupported = true; }
+  if (bundle && bundle.ratings) cache.ratings = parseCSV(bundle.ratings);
   usingSnapshot = !rec;
   renderLiveBadges();
 
@@ -1530,14 +1550,20 @@ function applyCurated(rows) {
   // ---- top priorities (Today card) ----
   if (S['top_priority']) setHTML('curTopPriorities', S['top_priority'].map(function (r, i) {
     const lvl = String(r['Tag'] || (i < 2 ? 'high' : 'med')).toLowerCase();
-    return '<div class="todo-item"><div class="todo-priority p-' + esc(lvl) + '">' + (i + 1) + '</div><div class="todo-body"><div class="t-main">' + esc(r['Title']) + '</div><div class="t-sub">' + esc(r['Detail']) + '</div></div></div>';
+    const key = rhKey('prio', r['Title']), a = notesSupported ? rhAnswer(key) : null;
+    const talk = !notesSupported ? '' : (a && a.text
+      ? '<div class="t-reply"><b>You:</b> ' + esc(a.text.replace(/\s*\(re: [^)]*\)\s*$/, '')) + ' <button type="button" class="t-link" data-act="reply">reply again</button></div>'
+      : '<button type="button" class="t-link" data-act="reply">Reply to Ehab about this</button>');
+    return '<div class="todo-item" data-key="' + esc(key) + '" data-title="' + esc(r['Title']) + '"><div class="todo-priority p-' + esc(lvl) + '">' + (i + 1) + '</div><div class="todo-body"><div class="t-main">' + esc(r['Title']) + '</div><div class="t-sub">' + esc(r['Detail']) + '</div>' + talk + '</div></div>';
   }).join(''));
 
   // ---- to-do tab ----
   if (S['todo']) setHTML('curTodo', S['todo'].map(function (r) {
     const tag = String(r['Tag'] || 'MED').toUpperCase();
     const cls = tag === 'HIGH' ? 'p-high' : (tag === 'MED' ? 'p-med' : 'p-low');
-    return '<div class="todo-item"><div class="todo-priority ' + cls + '">' + esc(tag) + '</div><div class="todo-body"><div class="t-main">' + esc(r['Title']) + '</div><div class="t-sub">' + esc(r['Detail']) + '</div></div></div>';
+    const key = rhKey('todo', r['Title']), a = notesSupported ? rhAnswer(key) : null, done = !!(a && /^done\b/i.test(a.text));
+    const box = notesSupported ? '<button type="button" class="todo-check' + (done ? ' on' : '') + '" data-act="tick" aria-pressed="' + done + '" aria-label="' + (done ? 'Mark as not done' : 'Mark as done') + '">' + (done ? '\u2713' : '') + '</button>' : '';
+    return '<div class="todo-item' + (done ? ' is-done' : '') + '" data-key="' + esc(key) + '" data-title="' + esc(r['Title']) + '">' + box + '<div class="todo-priority ' + cls + '">' + esc(tag) + '</div><div class="todo-body"><div class="t-main">' + esc(r['Title']) + '</div><div class="t-sub">' + esc(r['Detail']) + '</div></div></div>';
   }).join(''));
 
   // ---- meals + stack share one shape: blocks of grouped items ----
@@ -2329,6 +2355,7 @@ function renderNotes() {
   if (!col) return;
   col.hidden = !notesSupported;
   if (!notesSupported) return;
+  renderRatings();
   const list = (cache.notes || []).filter(function (r) { return String(r['Text'] || '').trim() && String(r['Kind'] || '') !== 'answer'; })
     .sort(function (a, b) { return (String(b['Date']) + String(b['Time'])).localeCompare(String(a['Date']) + String(a['Time'])); }).slice(0, 6);
   const el = document.getElementById('notesList');
@@ -2363,6 +2390,87 @@ function renderQuestions(qrows) {
   const n = open.filter(function (r, i) { return !answers[String(r['Group'] || ('q' + i)).trim()]; }).length;
   curSetText('questionTag', n ? n + ' waiting for you' : 'all answered');
 }
+
+/* Stable key for a Curated row, so a tick or a reply finds its row again after Ehab re-orders the list. */
+function rhKey(prefix, title) {
+  let h = 5381; const t = String(title || '').trim().toLowerCase();
+  for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) >>> 0;
+  return prefix + ':' + h.toString(36);
+}
+const rhLocalAnswers = {};   // what this device just sent, before the next refresh brings it back
+function rhAnswer(key) {
+  if (rhLocalAnswers[key]) return rhLocalAnswers[key];
+  let best = null;
+  (cache.notes || []).forEach(function (r) {
+    if (String(r['Kind']) !== 'answer' || String(r['QuestionId'] || '').trim() !== key) return;
+    const stamp = String(r['Date']) + ' ' + String(r['Time']);
+    if (!best || stamp >= best.stamp) best = { stamp: stamp, text: String(r['Text'] || '') };
+  });
+  return best;
+}
+function rhRerenderCurated() { if (lastCuratedRows) applyCurated(lastCuratedRows); }
+
+const RH_RATE = [['sleep', 'Sleep'], ['energy', 'Energy'], ['mood', 'Mood'], ['digestion', 'Digestion']];
+function rhToday() { const n = new Date(); return n.getFullYear() + '-' + String(n.getMonth() + 1).padStart(2, '0') + '-' + String(n.getDate()).padStart(2, '0'); }
+function renderRatings() {
+  const el = document.getElementById('rateGrid'); if (!el) return;
+  const day = rhToday(), cur = {};
+  (cache.ratings || []).forEach(function (r) { if (String(r['Date']) === day) cur[String(r['What']).toLowerCase()] = parseInt(r['Score_1to5'], 10); });
+  el.innerHTML = RH_RATE.map(function (p) {
+    return '<div class="rate-row" data-what="' + p[0] + '"><span class="rl">' + p[1] + ' today</span><span class="rb">'
+      + [1, 2, 3, 4, 5].map(function (v) { return '<button type="button" data-v="' + v + '" class="' + (cur[p[0]] === v ? 'on' : '') + '" aria-label="' + p[1] + ' ' + v + ' of 5">' + v + '</button>'; }).join('') + '</span></div>';
+  }).join('');
+}
+function sendRating(what, score, done) {
+  const cb = '__rhRate' + Date.now(), sc = document.createElement('script');
+  let settled = false;
+  function finish(ok) { if (settled) return; settled = true; delete window[cb]; if (sc.parentNode) sc.parentNode.removeChild(sc); done(ok); }
+  window[cb] = function (res) { finish(!!(res && res.ok)); };
+  sc.onerror = function () { finish(false); };
+  setTimeout(function () { finish(false); }, 25000);
+  sc.src = CONFIG.dataEndpoint + '?type=rating&what=' + encodeURIComponent(what) + '&score=' + score + '&cid=' + encodeURIComponent(CONFIG.clientId) + '&token=' + encodeURIComponent(CONFIG.token) + '&callback=' + cb;
+  document.body.appendChild(sc);
+}
+document.addEventListener('click', function (e) {
+  const t = e.target;
+  const rb = t.closest && t.closest('#rateGrid .rb button');
+  if (rb) {
+    const what = rb.closest('.rate-row').dataset.what, v = +rb.dataset.v, before = (cache.ratings || []).slice();
+    cache.ratings = (cache.ratings || []).filter(function (r) { return !(String(r['Date']) === rhToday() && String(r['What']).toLowerCase() === what); }).concat([{ Date: rhToday(), Time: '', What: what, Score_1to5: String(v), Source: 'dashboard' }]);
+    renderRatings();
+    sendRating(what, v, function (ok) { if (!ok) { cache.ratings = before; renderRatings(); } });
+    return;
+  }
+  const tick = t.closest && t.closest('.todo-check');
+  if (tick) {
+    const item = tick.closest('.todo-item'), key = item.dataset.key, title = item.dataset.title, on = !tick.classList.contains('on');
+    const prev = rhLocalAnswers[key];
+    rhLocalAnswers[key] = { text: (on ? 'done: ' : 'not done: ') + title };
+    rhRerenderCurated();
+    sendNote((on ? 'done: ' : 'not done: ') + title, 'answer', key, function (ok) { if (!ok) { if (prev) rhLocalAnswers[key] = prev; else delete rhLocalAnswers[key]; rhRerenderCurated(); } });
+    return;
+  }
+  const link = t.closest && t.closest('.t-link[data-act="reply"]');
+  if (link) {
+    const body = link.closest('.todo-body');
+    if (body.querySelector('.t-replybox')) return;
+    const box = document.createElement('div'); box.className = 't-replybox';
+    box.innerHTML = '<input type="text" maxlength="900" placeholder="Your reply to Ehab\u2026" aria-label="Reply"><button type="button">Send</button>';
+    body.appendChild(box); box.querySelector('input').focus();
+    return;
+  }
+  const rsend = t.closest && t.closest('.t-replybox button');
+  if (rsend) {
+    const item = rsend.closest('.todo-item'), input = item.querySelector('.t-replybox input'), text = String(input.value || '').trim();
+    if (!text) return;
+    rsend.disabled = true; rsend.textContent = 'Sending\u2026';
+    const key = item.dataset.key, title = item.dataset.title;
+    sendNote(text + ' (re: ' + title + ')', 'answer', key, function (ok, msg) {
+      if (!ok) { rsend.disabled = false; rsend.textContent = 'Send'; input.value = ''; input.placeholder = msg; return; }
+      rhLocalAnswers[key] = { text: text }; rhRerenderCurated();
+    });
+  }
+});
 
 /* JSONP write like the stress tap: no reply is not proof of failure. */
 function sendNote(text, kind, qid, done) {
