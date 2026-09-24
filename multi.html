@@ -2783,8 +2783,62 @@ function initLiftLogger() {
 
 renderStaticConfig();
 initLiftLogger();
+/* The 30-second refresh, but only while this page is actually being drawn.
+ *
+ * WHY (24 Sep 2026)
+ * Two things can hide this dashboard, and they need different tests:
+ *
+ *  - The browser tab or the installed app is in the background. `document.hidden`
+ *    says so.
+ *  - The dashboard is inside the health app's Plan tab and Plan is not the tab
+ *    showing. The app gives the frame `display:none`, which does NOT set
+ *    `document.hidden`: visibility belongs to the top-level page, not to an
+ *    iframe's CSS. So the old line went on hitting Apps Script every thirty
+ *    seconds for as long as the app was open, however long ago he last looked at
+ *    Plan — on a phone, on his data, all day.
+ *
+ * A frame that is not being rendered stops getting `requestAnimationFrame`
+ * callbacks, and that is the honest test for "am I on screen": it catches both
+ * cases and needs nothing from the page around it.
+ *
+ * Coming back is the other half. There is no event for a frame being shown
+ * again, so the heartbeat itself notices the gap in frames and refreshes at
+ * once, rather than showing half-minute-old numbers until the next tick.
+ */
+var rhDrawnAt = 0;
+var rhRefreshedAt = 0;
+
+function rhOnScreen() {
+  return !document.hidden && rhDrawnAt > 0 && performance.now() - rhDrawnAt < 2000;
+}
+
+/** Refresh, unless this page is hidden or one just ran. */
+function rhRefreshIfVisible() {
+  if (!rhOnScreen()) return;
+  // Two refreshes inside five seconds is the return-to-screen catch-up landing
+  // on top of a scheduled tick. One is enough.
+  if (Date.now() - rhRefreshedAt < 5000) return;
+  rhRefreshedAt = Date.now();
+  refreshAll();
+}
+
+function rhHeartbeat() {
+  var now = performance.now();
+  // A gap in the frames means nobody was drawing this page.
+  var wasAway = rhDrawnAt > 0 && now - rhDrawnAt > 2000;
+  rhDrawnAt = now;
+  if (wasAway) rhRefreshIfVisible();
+  requestAnimationFrame(rhHeartbeat);
+}
+
+rhRefreshedAt = Date.now();
 refreshAll();
-setInterval(refreshAll, CONFIG.refreshMs);
+requestAnimationFrame(rhHeartbeat);
+setInterval(rhRefreshIfVisible, CONFIG.refreshMs);
+// Backgrounded tabs do fire this, and it arrives before the first frame does.
+document.addEventListener('visibilitychange', function () {
+  if (!document.hidden) { rhDrawnAt = performance.now(); rhRefreshIfVisible(); }
+});
 </script>
 
 </body>
