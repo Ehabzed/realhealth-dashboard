@@ -1387,7 +1387,7 @@ function applyCurated(rows) {
     const key = rhKey('prio', r['Title']), a = notesSupported ? rhAnswer(key) : null;
     const talk = !notesSupported ? '' : (a && a.text
       ? '<div class="t-reply"><b>You:</b> ' + esc(a.text.replace(/\s*\(re: [^)]*\)\s*$/, '')) + ' <button type="button" class="t-link" data-act="reply">reply again</button></div>'
-      : '<button type="button" class="t-link" data-act="reply">Reply to Ehab about this</button>');
+      : '<button type="button" class="t-link" data-act="reply">Reply to your coach about this</button>');
     return '<div class="todo-item" data-key="' + esc(key) + '" data-title="' + esc(r['Title']) + '"><div class="todo-priority p-' + esc(lvl) + '">' + (i + 1) + '</div><div class="todo-body"><div class="t-main">' + esc(r['Title']) + '</div><div class="t-sub">' + esc(r['Detail']) + '</div>' + talk + '</div></div>';
   }).join(''));
 
@@ -1948,12 +1948,12 @@ function renderNotes() {
   const list = (cache.notes || []).filter(function (r) { return String(r['Text'] || '').trim() && String(r['Kind'] || '') !== 'answer'; })
     .sort(function (a, b) { return (String(b['Date']) + String(b['Time'])).localeCompare(String(a['Date']) + String(a['Time'])); }).slice(0, 6);
   const el = document.getElementById('notesList');
-  if (!list.length) { el.innerHTML = '<div class="note">Nothing yet. Notes you send the Telegram assistant, or type here, show up in this list and in Ehab\u2019s weekly review.</div>'; return; }
+  if (!list.length) { el.innerHTML = '<div class="note">Nothing yet. Notes you send the Telegram assistant, or type here, show up in this list, and your coach reads them.</div>'; return; }
   el.innerHTML = list.map(function (r) {
     const d = String(r['Date'] || ''), t = String(r['Time'] || '').slice(0, 5);
     const when = d ? (function () { const m = d.match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? (parseInt(m[3], 10) + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(m[2], 10) - 1]) : d; })() : '';
     const kind = String(r['Kind'] || 'note');
-    const badge = kind === 'for_ehab' ? '<span class="kind for_ehab">to Ehab</span>' : kind === 'urgent' ? '<span class="kind urgent">urgent</span>' : '';
+    const badge = kind === 'for_ehab' ? '<span class="kind for_ehab">to coach</span>' : kind === 'urgent' ? '<span class="kind urgent">urgent</span>' : '';
     return '<div class="note-item"><div class="when">' + esc(when + (t ? ' ' + t : '')) + '</div><div>' + badge + esc(r['Text']) + '</div></div>';
   }).join('');
 }
@@ -2044,7 +2044,7 @@ document.addEventListener('click', function (e) {
     const body = link.closest('.todo-body');
     if (body.querySelector('.t-replybox')) return;
     const box = document.createElement('div'); box.className = 't-replybox';
-    box.innerHTML = '<input type="text" maxlength="900" placeholder="Your reply to Ehab\u2026" aria-label="Reply"><button type="button">Send</button>';
+    box.innerHTML = '<input type="text" maxlength="900" placeholder="Your reply to your coach\u2026" aria-label="Reply"><button type="button">Send</button>';
     body.appendChild(box); box.querySelector('input').focus();
     return;
   }
