@@ -1833,7 +1833,10 @@ function applyCurated(rows) {
   (S['target'] || []).forEach(function (r) {
     const k = String(r['Title'] || '').trim();
     const v = parseFloat(r['Detail']);
-    if (!isNaN(v) && ['kcal','protein','fat','water'].indexOf(k) !== -1) CONFIG.targets[k] = v;
+    if (['kcal','protein','fat','water'].indexOf(k) === -1) return;
+    // A target written as words ("Coming once I have your weight", 8 Oct 2026) means not set yet:
+    // the bar shows what they logged, never the template's numbers as if they were theirs.
+    CONFIG.targets[k] = isNaN(v) ? null : v;
   });
   readDayTargets(S); // calorie bar switches rest / training by day
   if (S['target']) {
@@ -2689,14 +2692,16 @@ function renderNutrition() {
   const kcal = sum('Kcal'), p = sum('Protein'), c = sum('Carbs'), f = sum('Fat'), water = sum('Water_ml');
 
   const kd = kcalToday();
-  setText('mb-kcal-txt', Math.round(kcal) + ' / ' + kd.target); setWidth('mb-kcal', (kcal/kd.target)*100);
+  const ofT = function (v, t, u) { return Math.round(v) + u + (t ? ' / ' + t + u : ' logged'); };
+  const pct = function (v, t) { return t ? (v / t) * 100 : 0; };
+  setText('mb-kcal-txt', ofT(kcal, kd.target, '')); setWidth('mb-kcal', pct(kcal, kd.target));
   renderKcalDay(kd);
-  setText('mb-p-txt', Math.round(p) + 'g / ' + CONFIG.targets.protein + 'g'); setWidth('mb-p', (p/CONFIG.targets.protein)*100);
-  document.getElementById('mb-p').style.background = p >= CONFIG.targets.protein ? 'var(--green)' : 'var(--gold)';
+  setText('mb-p-txt', ofT(p, CONFIG.targets.protein, 'g')); setWidth('mb-p', pct(p, CONFIG.targets.protein));
+  document.getElementById('mb-p').style.background = CONFIG.targets.protein && p >= CONFIG.targets.protein ? 'var(--green)' : 'var(--gold)';
   setText('mb-c-txt', Math.round(c) + 'g'); setWidth('mb-c', Math.min(100,(c/300)*100));
-  setText('mb-f-txt', Math.round(f) + 'g / ' + CONFIG.targets.fat + 'g'); setWidth('mb-f', (f/CONFIG.targets.fat)*100);
-  document.getElementById('mb-f').style.background = f > CONFIG.targets.fat ? 'var(--red)' : 'var(--gold)';
-  setText('mb-water-txt', Math.round(water) + ' / ' + CONFIG.targets.water + 'ml'); setWidth('mb-water', (water/CONFIG.targets.water)*100);
+  setText('mb-f-txt', ofT(f, CONFIG.targets.fat, 'g')); setWidth('mb-f', pct(f, CONFIG.targets.fat));
+  document.getElementById('mb-f').style.background = CONFIG.targets.fat && f > CONFIG.targets.fat ? 'var(--red)' : 'var(--gold)';
+  setText('mb-water-txt', ofT(water, CONFIG.targets.water, 'ml')); setWidth('mb-water', pct(water, CONFIG.targets.water));
 
   const strip = document.getElementById('timingStrip');
   if (strip) {
