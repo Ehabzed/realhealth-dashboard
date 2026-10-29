@@ -1066,15 +1066,21 @@
 // The data token is NOT in this file: this repo is public. A device is unlocked
 // once by opening the private link (.../#k=TOKEN). The token is kept in this
 // browser's localStorage and the #k= part is wiped from the address bar.
+// The key from the link is also held in memory for the life of the page. Inside the app's Plan tab
+// this page is a frame, and an iPhone Home Screen app may refuse a frame any storage at all: the
+// key was read, could not be saved, and the page said "not unlocked" (30 Oct 2026).
+let rhTokenMem = '';
 function rhToken() {
   try {
-    const m = location.hash.match(/(?:^#|&)k=([^&]+)/);
+    const m = location.hash.match(/(?:^#|&)k=([^&?#]+)/);
     if (m) {
-      localStorage.setItem('rh_token', decodeURIComponent(m[1]));
+      rhTokenMem = decodeURIComponent(m[1]);
+      try { localStorage.setItem('rh_token', rhTokenMem); } catch (e) {}
       history.replaceState(null, '', location.pathname + location.search);
     }
-    return localStorage.getItem('rh_token') || '';
-  } catch (e) { return ''; }
+  } catch (e) {}
+  if (rhTokenMem) return rhTokenMem;
+  try { return localStorage.getItem('rh_token') || ''; } catch (e) { return ''; }
 }
 function rhUnlockPrompt() {
   const v = (prompt('Paste your dashboard key (or the whole unlock link)') || '').trim();
