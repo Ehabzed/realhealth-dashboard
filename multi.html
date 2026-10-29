@@ -2461,15 +2461,25 @@ function rhKey(prefix, title) {
   for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) >>> 0;
   return prefix + ':' + h.toString(36);
 }
-const rhLocalAnswers = {};   // what this device just sent, before the next refresh brings it back
+// What this device just sent, before the server's copy comes back. Kept on the device for 15
+// minutes, so a reload (the app's Plan tab reloads this page) no longer shows the old tick while
+// the write is still on its way (29 Oct 2026, Ehab: "I tick ... it comes back shortly after").
+const RH_LOCAL_KEEP_MS = 15 * 60000;
+const rhLocalAnswers = (function () { try { return JSON.parse(localStorage.getItem('rhLocalAnswers') || '{}') || {}; } catch (e) { return {}; } })();
+function rhSaveLocal() { try { localStorage.setItem('rhLocalAnswers', JSON.stringify(rhLocalAnswers)); } catch (e) {} }
 function rhAnswer(key) {
-  if (rhLocalAnswers[key]) return rhLocalAnswers[key];
+  const local = rhLocalAnswers[key];
   let best = null;
   (cache.notes || []).forEach(function (r) {
     if (String(r['Kind']) !== 'answer' || String(r['QuestionId'] || '').trim() !== key) return;
-    const stamp = String(r['Date']) + ' ' + String(r['Time']);
+    const stamp = String(r['Date']) + ' ' + String(r['Time']).trim().replace(/^(\d):/, '0$1:');   // 9:21 -> 09:21, or it sorts after 10:05
     if (!best || stamp >= best.stamp) best = { stamp: stamp, text: String(r['Text'] || '') };
   });
+  if (local) {
+    if (best && best.text === local.text) { delete rhLocalAnswers[key]; rhSaveLocal(); return best; }   // the server has it
+    if (!local.at || Date.now() - local.at < RH_LOCAL_KEEP_MS) return local;
+    delete rhLocalAnswers[key]; rhSaveLocal();
+  }
   return best;
 }
 function rhRerenderCurated() { if (lastCuratedRows) applyCurated(lastCuratedRows); }
@@ -2509,9 +2519,9 @@ document.addEventListener('click', function (e) {
   if (tick) {
     const item = tick.closest('.todo-item'), key = item.dataset.key, title = item.dataset.title, on = !tick.classList.contains('on');
     const prev = rhLocalAnswers[key];
-    rhLocalAnswers[key] = { text: (on ? 'done: ' : 'not done: ') + title };
+    rhLocalAnswers[key] = { text: (on ? 'done: ' : 'not done: ') + title, at: Date.now() }; rhSaveLocal();
     rhRerenderCurated();
-    sendNote((on ? 'done: ' : 'not done: ') + title, 'answer', key, function (ok) { if (!ok) { if (prev) rhLocalAnswers[key] = prev; else delete rhLocalAnswers[key]; rhRerenderCurated(); } });
+    sendNote((on ? 'done: ' : 'not done: ') + title, 'answer', key, function (ok) { if (!ok) { if (prev) rhLocalAnswers[key] = prev; else delete rhLocalAnswers[key]; rhSaveLocal(); rhRerenderCurated(); } });
     return;
   }
   const link = t.closest && t.closest('.t-link[data-act="reply"]');
@@ -2531,7 +2541,7 @@ document.addEventListener('click', function (e) {
     const key = item.dataset.key, title = item.dataset.title;
     sendNote(text + ' (re: ' + title + ')', 'answer', key, function (ok, msg) {
       if (!ok) { rsend.disabled = false; rsend.textContent = 'Send'; input.value = ''; input.placeholder = msg; return; }
-      rhLocalAnswers[key] = { text: text }; rhRerenderCurated();
+      rhLocalAnswers[key] = { text: text, at: Date.now() }; rhSaveLocal(); rhRerenderCurated();
     });
   }
 });
